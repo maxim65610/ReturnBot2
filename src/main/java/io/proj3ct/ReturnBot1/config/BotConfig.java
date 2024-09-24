@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 @PropertySource("application.properties")
+/**
+ * Класс конфигурации бота, который хранит имя и токен бота.
+ * Значения этих параметров считываются из внешнего источника конфигурации,
+ */
 public class BotConfig {
 
     @Value("${bot.name}")
@@ -14,12 +18,23 @@ public class BotConfig {
 
     @Value("${bot.token}")
     String token;
+
+    /**
+     * Возвращает имя бота.
+     *
+     * @return Имя бота, заданное в конфигурации.
+     */
     public String getBotName() {
         return botName;
     }
 
-    // Геттер для token
+    /**
+     * Возвращает токен бота.
+     *
+     * @return Токен бота, заданный в конфигурации.
+     */
     public String getToken() {
         return token;
     }
 }
+
