@@ -1,29 +1,28 @@
-package io.proj3ct.ReturnBot1.service;
+package io.proj3ct.ReturnBot1;
 
-import io.proj3ct.ReturnBot1.config.BotConfig;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-@Component
 /**
  * Представляет собой Telegram-бота, который наследует класс TelegramLongPollingBot.
  * Этот бот может отвечать на простые команды, такие как /start и /help,
  * а также повторять текстовые сообщения, отправленные ему.
  */
 public class TelegramBot extends TelegramLongPollingBot {
-
-    final BotConfig config;
+    private final String botName;
+    private final String botToken;
+    private final LogicBrain botLogic;
 
     /**
      * Конструктор класса TelegramBot.
      *
-     * @param config Объект конфигурации, содержащий имя и токен бота.
      */
-    public TelegramBot(BotConfig config) {
-        this.config = config;
+    public TelegramBot(String name, String token, LogicBrain logic) {
+        botName = name;
+        botToken = token;
+        botLogic = logic;
     }
 
     /**
@@ -37,29 +36,12 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
-            switch (messageText) {
-                case "/start":
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
-                    break;
-                case "/help":
-                    startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
-                    break;
-                default:
-                    sendMessage(chatId, "Вы ввели: " + messageText);
-            }
+            String answer = botLogic.slogic(messageText);
+            sendMessage(chatId, answer);
         }
     }
 
-    /**
-     * Обрабатывает команду /start, полученную от пользователя.
-     *
-     * @param chatId ID чата, в котором была получена команда.
-     * @param name   Имя пользователя, который отправил команду.
-     */
-    private void startCommandReceived(long chatId, String name) {
-        String answer = "Привет, я могу повторять за тобой.";
-        sendMessage(chatId, answer);
-    }
+
 
     /**
      * Отправляет сообщение в указанный чат.
@@ -86,7 +68,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public String getBotUsername() {
-        return config.getBotName();
+        return botName;
     }
 
     /**
@@ -96,7 +78,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public String getBotToken() {
-        return config.getToken();
+        return botToken;
     }
 }
 
