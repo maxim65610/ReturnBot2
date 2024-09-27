@@ -1,17 +1,22 @@
 package io.proj3ct.ReturnBot1;
 
+/**
+ * класс логики бота
+ */
 public class LogicBrain {
 
     /**
-     * Обрабатывает команду /start, полученную от пользователя.
-     *
-
+     * метод, который возвращает ответ бота
      */
     private String startCommandReceived() {
         String answer = "Привет, я могу повторять за тобой.";
         return answer;
     }
 
+    /**
+     * метод, который реализует основную логику работы бота
+     * @param messageText сообщение от пользователя
+     */
     public String slogic(String messageText){
         switch (messageText) {
             case "/start":

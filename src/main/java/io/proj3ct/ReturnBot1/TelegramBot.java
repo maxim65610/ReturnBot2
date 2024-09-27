@@ -11,6 +11,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * а также повторять текстовые сообщения, отправленные ему.
  */
 public class TelegramBot extends TelegramLongPollingBot {
+    /**
+     * Поля класса
+     */
     private final String botName;
     private final String botToken;
     private final LogicBrain botLogic;
@@ -18,6 +21,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     /**
      * Конструктор класса TelegramBot.
      *
+     * @param name имя бота
+     * @param token токен бота
+     * @param logic объект класса LogicBrain
      */
     public TelegramBot(String name, String token, LogicBrain logic) {
         botName = name;
