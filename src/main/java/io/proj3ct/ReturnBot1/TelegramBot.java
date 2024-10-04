@@ -5,6 +5,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Представляет собой Telegram-бота, который наследует класс TelegramLongPollingBot.
  * Этот бот может отвечать на простые команды, такие как /start и /help,
@@ -17,7 +20,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
     private final LogicBrain botLogic;
-
     /**
      * Конструктор класса TelegramBot.
      *
