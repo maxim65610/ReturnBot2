@@ -1,6 +1,13 @@
 package io.proj3ct.ReturnBot1;
 
+
+/**
+ * Класс для контроля над выводимой с клавиатур информации
+ */
 public class dataInfoTo {
+    /**
+     * Класс, обрабатывает хеши и по хешам возвращает текст, который должен отправляться по нажатии на кнопку
+     */
     public String takeInfo(String data){
         switch (data){
             case "1":

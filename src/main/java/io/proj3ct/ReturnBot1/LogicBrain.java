@@ -1,41 +1,56 @@
 package io.proj3ct.ReturnBot1;
 
-
+/**
+ * Класс логики бота
+ */
 public class LogicBrain {
 
     /**
-     * метод, который возвращает ответ бота
+     * Метод, который возвращает стартовый ответ бота
      */
     private String questionCommandReceived() {
-        String answer = "Привет, эта функция пока, что находиться в разработка(((. Если хотите начать работу напишите /work";
-        return answer;
-    }
-    private String defaultCommandReceived() {
-        String answer = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work";
-        return answer;
-    }
-
-    private String workCommandReceived() {
-        String answer = "Вот все институты у которых ты можешь посмотреть факультеты:";
-        return answer;
-    }
-    private String inst1CommandReceived() {
-        String answer = "Вот все факультеты которые есть в институте ИЕНИМ:";
-        return answer;
-    }
-    private String inst2CommandReceived() {
-        String answer = "Вот все факультеты которые есть в институте РТФ:";
-        return answer;
-    }
-    private String inst3CommandReceived() {
-        String answer = "Вот все факультеты которые есть в институте ХТИ:";
-        return answer;
+        return "Привет, эта функция пока, что находиться в разработка(((. Если хотите начать работу напишите /work";
     }
 
     /**
-     * метод, который реализует основную логику работы бота
+     * Метод, который возвращает обычный ответ бота
+     */
+    private String defaultCommandReceived() {
+        return "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
+                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
+                " Если хотите начать работу напишите /work";
+    }
+
+    /**
+     * Метод, который возвращает ответ бота, для главного ряда кнопок
+     */
+    private String workCommandReceived() {
+        return  "Вот все институты у которых ты можешь посмотреть факультеты:";
+    }
+
+    /**
+     * Метод, который возвращает ответ бота, для кнопок института ИЕНИМ
+     */
+    private String inst1CommandReceived() {
+        return "Вот все факультеты которые есть в институте ИЕНИМ:";
+    }
+
+    /**
+     * Метод, который возвращает ответ бота, для кнопок института РТФ
+     */
+    private String inst2CommandReceived() {
+        return "Вот все факультеты которые есть в институте РТФ:";
+    }
+
+    /**
+     * Метод, который возвращает ответ бота, для кнопок института ХТИ
+     */
+    private String inst3CommandReceived() {
+        return "Вот все факультеты которые есть в институте ХТИ:";
+    }
+
+    /**
+     * Метод, который реализует основную логику работы бота
      * @param messageText сообщение от пользователя
      */
     public String slogic(String messageText){
@@ -59,3 +74,4 @@ public class LogicBrain {
         }
     }
 }
+

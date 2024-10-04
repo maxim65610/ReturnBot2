@@ -1,18 +1,21 @@
 package io.proj3ct.ReturnBot1;
 
-
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Класс для контроля над клавиатурами
+ */
 public class keyboardLogic {
+    /**
+     * Метод, который обрабатывает клавиатуры отправляющиеся вместе с сообщением
+     */
+    public SendMessage keyboards(SendMessage message, String data){
 
-    public SendMessage keyboards(SendMessage message, int key1,int key2){
-
-        if (key1 == 1) {
+        if (data.equals("/work")) {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List keyboard = new ArrayList<>();
             List<InlineKeyboardButton> row1 = new ArrayList<>();
@@ -31,11 +34,10 @@ public class keyboardLogic {
             markup.setKeyboard(keyboard);
             message.setReplyMarkup(markup);
         }
-        if (key2 == 1) {
+        if (data.equals("ИЕНИМ")) {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
 
-// Создание и добавление кнопок
 
             List<InlineKeyboardButton> row1 = new ArrayList<>();
             row1.add(new InlineKeyboardButton().builder().text("Компьютерные Науки").callbackData("1").build());
@@ -61,7 +63,7 @@ public class keyboardLogic {
             message.setReplyMarkup(markup);
         }
 
-        if (key2 == 2) {
+        if (data.equals("РТФ")) {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
 
@@ -89,7 +91,7 @@ public class keyboardLogic {
             message.setReplyMarkup(markup);
         }
 
-        if (key2 == 3) {
+        if (data.equals("ХТИ")) {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
 
@@ -112,3 +114,4 @@ public class keyboardLogic {
         return message;
     }
 }
+
