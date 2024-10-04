@@ -11,77 +11,75 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
  * а также повторять текстовые сообщения, отправленные ему.
  */
 public class TelegramBot extends TelegramLongPollingBot {
-    /**
-     * Поля класса
-     */
     private final String botName;
     private final String botToken;
     private final LogicBrain botLogic;
-
-    /**
-     * Конструктор класса TelegramBot.
-     *
-     * @param name имя бота
-     * @param token токен бота
-     * @param logic объект класса LogicBrain
-     */
     public TelegramBot(String name, String token, LogicBrain logic) {
         botName = name;
         botToken = token;
         botLogic = logic;
     }
-
-    /**
-     * Вызывается, когда бот получает обновление от Telegram.
-     * Этот метод обрабатывает входящие сообщения и выполняет соответствующие действия.
-     *
-     * @param update Объект обновления, содержащий информацию о входящем сообщении.
-     */
-    @Override
-    public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            String messageText = update.getMessage().getText();
-            long chatId = update.getMessage().getChatId();
-            String answer = botLogic.slogic(messageText);
-            sendMessage(chatId, answer);
+    public int testkey(String messageText){
+        int key = 0 ;
+        if(messageText.equals("/work")) {
+            key = 1;
         }
+        return key;
+    }
+    public int testkey2(String messageText){
+        int key2 = 0 ;
+        if(messageText.equals("ИЕНИМ")) {
+            key2 = 1;
+        }
+        if(messageText.equals("РТФ")) {
+            key2 = 2;
+        }
+        if(messageText.equals("ХТИ")) {
+            key2 = 3;
+        }
+        return key2;
     }
 
 
+    @Override
+    public void onUpdateReceived(Update update) {
+        if(update.hasCallbackQuery() && update.getCallbackQuery() != null) {
+            String data = update.getCallbackQuery().getData();
+            String answer = botLogic.slogic(data);
+            sendMessage( update.getCallbackQuery().getFrom().getId(), answer, testkey(data), testkey2(data));
 
-    /**
-     * Отправляет сообщение в указанный чат.
-     *
-     * @param chatId    ID чата, в который будет отправлено сообщение.
-     * @param textToSend Текстовое содержимое сообщения, которое будет отправлено.
-     */
-    void sendMessage(long chatId, String textToSend) {
+        }
+
+        if (update.hasMessage() && update.getMessage() != null) {
+            String messageText = update.getMessage().getText();
+            String answer = botLogic.slogic(messageText);
+            sendMessage(update.getMessage().getChatId(), answer, testkey(messageText), testkey2(messageText));
+        }
+    }
+
+    void sendMessage(long chatId, String textToSend, int key, int key2) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
 
+        keyboardLogic keyboardLogicObj = new keyboardLogic();
+        keyboardLogicObj.keyboards(message, key, key2);
+
         try {
+
+            System.out.println(message);
             execute(message);
         } catch (TelegramApiException e) {
             // Обработка исключения (опционально: логирование)
         }
     }
 
-    /**
-     * Возвращает имя бота, указанное в конфигурации.
-     *
-     * @return Имя бота.
-     */
+
     @Override
     public String getBotUsername() {
         return botName;
     }
 
-    /**
-     * Возвращает токен бота, указанный в конфигурации.
-     *
-     * @return Токен бота.
-     */
     @Override
     public String getBotToken() {
         return botToken;
