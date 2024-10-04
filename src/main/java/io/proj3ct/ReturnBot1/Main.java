@@ -18,6 +18,13 @@ public class Main {
         LogicBrain botLogic = new LogicBrain();
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN,botLogic);
 
+
+        String username = System.getenv("mail"); // Ваша почта
+        String password = System.getenv("passwordForMail"); // Ваш пароль (или App Password)
+        // emailSender.sendEmail("maximmanveiler@gmail.com", "Тема сообщения", "Текст сообщения");
+        EmailSender emailSender = new EmailSender(username, password);
+
+        botLogic.setEmailSender(emailSender);
         /**
          * Запуск бота
          */
