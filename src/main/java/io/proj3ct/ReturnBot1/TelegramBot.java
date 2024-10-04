@@ -14,6 +14,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
     private final LogicBrain botLogic;
+
     public TelegramBot(String name, String token, LogicBrain logic) {
         botName = name;
         botToken = token;
@@ -39,27 +40,34 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
         return key2;
     }
+    public String checkWhatTodo(String data){
 
+        if(data.equals("ИЕНИМ")||data.equals("РТФ")||data.equals("ХТИ")){
+            return botLogic.slogic(data);
+        }
+        else {
+            return data;
+        }
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
         if(update.hasCallbackQuery() && update.getCallbackQuery() != null) {
             String data = update.getCallbackQuery().getData();
-            String answer = botLogic.slogic(data);
-            sendMessage( update.getCallbackQuery().getFrom().getId(), answer, testkey(data), testkey2(data));
-
+            sendMessage(update.getCallbackQuery().getFrom().getId(), checkWhatTodo(data), 2, testkey2(data), data);
         }
-
         if (update.hasMessage() && update.getMessage() != null) {
             String messageText = update.getMessage().getText();
-            String answer = botLogic.slogic(messageText);
-            sendMessage(update.getMessage().getChatId(), answer, testkey(messageText), testkey2(messageText));
+            sendMessage(update.getMessage().getChatId(), botLogic.slogic(messageText), testkey(messageText), testkey2(messageText),messageText);
         }
     }
 
-    void sendMessage(long chatId, String textToSend, int key, int key2) {
+    void sendMessage(long chatId, String textToSend, int key, int key2, String data) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
+
+        dataInfoTo infoObj = new dataInfoTo();
+        textToSend = infoObj.takeInfo(textToSend);
         message.setText(textToSend);
 
         keyboardLogic keyboardLogicObj = new keyboardLogic();
@@ -67,7 +75,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         try {
 
-            System.out.println(message);
             execute(message);
         } catch (TelegramApiException e) {
             // Обработка исключения (опционально: логирование)
@@ -85,4 +92,3 @@ public class TelegramBot extends TelegramLongPollingBot {
         return botToken;
     }
 }
-
