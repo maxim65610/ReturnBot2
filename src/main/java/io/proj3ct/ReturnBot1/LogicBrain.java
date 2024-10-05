@@ -5,12 +5,6 @@ package io.proj3ct.ReturnBot1;
  */
 public class LogicBrain {
 
-    /**
-     * Метод, который возвращает стартовый ответ бота
-     */
-    private String questionCommandReceived() {
-        return "Привет, эта функция пока, что находиться в разработка(((. Если хотите начать работу напишите /work";
-    }
 
     /**
      * Метод, который возвращает обычный ответ бота
@@ -47,6 +41,39 @@ public class LogicBrain {
      */
     private String inst3CommandReceived() {
         return "Вот все факультеты которые есть в институте ХТИ:";
+    }
+
+
+    private EmailSender emailSender;
+    // Метод для установки EmailSender
+    public void setEmailSender(EmailSender emailSender) {
+        this.emailSender = emailSender;
+    }
+
+    public String handleEmailInput(String email) {
+        // Здесь вы можете добавить проверку формата email и отправку сообщения
+        // Сбрасываем состояние после обработки
+
+        if(emailSender.isValidEmail(email)){
+            return "Почта указана корректно, напишите ваш вопрос";
+        }
+        return "Адрес электронной почты был указан неправильно отправьте его ещё раз";
+
+    }
+
+    public void sendMail(String mailMessage, String question){
+        emailSender.sendEmail(emailSender.getUsername(), "Вопрос от абитуриента " + mailMessage, question);
+
+    }
+
+    private String questionCommandReceived() {
+        String answer = "Пожалуйста, отправьте свою почту";
+        // Замените на адрес получателя и тему/текст сообщения
+        return answer;
+    }
+    private String startCommandReceived() {
+        String answer = "Привет, я могу повторять за тобой.";
+        return answer;
     }
 
     /**
