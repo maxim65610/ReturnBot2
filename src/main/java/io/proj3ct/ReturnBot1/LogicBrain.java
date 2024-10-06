@@ -1,16 +1,52 @@
 package io.proj3ct.ReturnBot1;
 
 /**
- * класс логики бота
+ * Класс логики бота
  */
 public class LogicBrain {
 
+
     /**
-     * метод, который возвращает ответ бота
+     * Метод, который возвращает обычный ответ бота
      */
+    private String defaultCommandReceived() {
+        return "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
+                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
+                " Если хотите начать работу напишите /work";
+    }
+
+    /**
+     * Метод, который возвращает ответ бота, для главного ряда кнопок
+     */
+    private String workCommandReceived() {
+        return  "Вот все институты у которых ты можешь посмотреть факультеты:";
+    }
+
+    /**
+     * Метод, который возвращает ответ бота, для кнопок института ИЕНИМ
+     */
+    private String inst1CommandReceived() {
+        return "Вот все факультеты которые есть в институте ИЕНИМ:";
+    }
+
+    /**
+     * Метод, который возвращает ответ бота, для кнопок института РТФ
+     */
+    private String inst2CommandReceived() {
+        return "Вот все факультеты которые есть в институте РТФ:";
+
+    }
+
+    /**
+     * Метод, который возвращает ответ бота, для кнопок института ХТИ
+     */
+    private String inst3CommandReceived() {
+        return "Вот все факультеты которые есть в институте ХТИ:";
+    }
 
     private EmailSender emailSender;
     // Метод для установки EmailSender
+
     public void setEmailSender(EmailSender emailSender) {
         this.emailSender = emailSender;
     }
@@ -29,29 +65,38 @@ public class LogicBrain {
         emailSender.sendEmail(emailSender.getUsername(), "Вопрос от абитуриента " + mailMessage, question);
 
     }
+
+
     private String questionCommandReceived() {
         String answer = "Пожалуйста, отправьте свою почту";
         // Замените на адрес получателя и тему/текст сообщения
         return answer;
     }
-    private String startCommandReceived() {
-        String answer = "Привет, я могу повторять за тобой.";
-        return answer;
-    }
+
+
     /**
-     * метод, который реализует основную логику работы бота
+     * Метод, который реализует основную логику работы бота
      * @param messageText сообщение от пользователя
      */
     public String slogic(String messageText){
         switch (messageText) {
             case "/start":
-                return startCommandReceived();
+                return defaultCommandReceived();
             case "/help":
-                return startCommandReceived();
+                return defaultCommandReceived();
             case "/question":
                 return questionCommandReceived();
+            case "/work":
+                return workCommandReceived();
+            case "ИЕНИМ":
+                return inst1CommandReceived();
+            case "РТФ":
+                return inst2CommandReceived();
+            case "ХТИ":
+                return inst3CommandReceived();
             default:
-                 return "Вы ввели: " + messageText;
+                return defaultCommandReceived();
         }
     }
 }
+
