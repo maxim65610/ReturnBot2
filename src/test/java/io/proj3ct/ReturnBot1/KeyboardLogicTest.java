@@ -8,33 +8,49 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Класс для тестирования логики работы клавиатуры в Telegram-боте.
+ * Содержит тесты для проверки правильности формирования клавиатур в зависимости от команд,
+ * введенных пользователем.
+ */
 public class KeyboardLogicTest {
 
+    /**
+     * Тест для проверки работы клавиатуры при вводе команды /work.
+     * Проверяет, что клавиатура содержит три кнопки.
+     */
+    @Test
+    public void testKeyboardsWorkCommand() {
+        keyboardLogic logic = new keyboardLogic();
+        SendMessage message = new SendMessage();
 
+        String data = "/work";
+        SendMessage resultMessage = logic.keyboards(message, data);
 
-        @Test
-        public void testKeyboardsWorkCommand() {
-            keyboardLogic logic = new keyboardLogic();
-            SendMessage message = new SendMessage();
+        InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
+        assertEquals(3, markup.getKeyboard().size());
+    }
 
-            String data = "/work";
-            SendMessage resultMessage = logic.keyboards(message, data);
+    /**
+     * Тест для проверки работы клавиатуры при вводе команды ИЕНИМ.
+     * Проверяет, что клавиатура содержит пять кнопок.
+     */
+    @Test
+    public void testKeyboardsIENIMCommand() {
+        keyboardLogic logic = new keyboardLogic();
+        SendMessage message = new SendMessage();
 
-            InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
-            assertEquals(3, markup.getKeyboard().size());
-        }
+        String data = "ИЕНИМ";
+        SendMessage resultMessage = logic.keyboards(message, data);
 
-        @Test
-        public void testKeyboardsIENIMCommand() {
-            keyboardLogic logic = new keyboardLogic();
-            SendMessage message = new SendMessage();
+        InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
+        assertEquals(5, markup.getKeyboard().size());
+    }
 
-            String data = "ИЕНИМ";
-            SendMessage resultMessage = logic.keyboards(message, data);
-
-            InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
-            assertEquals(5, markup.getKeyboard().size());
-        }
+    /**
+     * Тест для проверки работы клавиатуры при вводе команды РТФ.
+     * Проверяет, что клавиатура содержит пять кнопок.
+     */
     @Test
     public void testKeyboardsRTFCommand() {
         keyboardLogic logic = new keyboardLogic();
@@ -47,6 +63,10 @@ public class KeyboardLogicTest {
         assertEquals(5, markup.getKeyboard().size());
     }
 
+    /**
+     * Тест для проверки работы клавиатуры при вводе команды ХТИ.
+     * Проверяет, что клавиатура содержит три кнопки.
+     */
     @Test
     public void testKeyboardsHTICommand() {
         keyboardLogic logic = new keyboardLogic();
@@ -59,3 +79,4 @@ public class KeyboardLogicTest {
         assertEquals(3, markup.getKeyboard().size());
     }
 }
+
