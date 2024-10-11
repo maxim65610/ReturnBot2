@@ -3,6 +3,11 @@ package io.proj3ct.ReturnBot1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -11,14 +16,17 @@ import static org.mockito.Mockito.*;
  * Класс для тестирования логики работы класса LogicBrain.
  * Содержит тесты для различных команд и методов обработки ввода пользователя.
  */
-class LogicBrainTest {
+public class LogicBrainTest {
 
     private LogicBrain logicBrain;
-
+    private Map<Long, String> userStates;
+    private Map<Long, String> userMails;
     @BeforeEach
     void setUp() {
         // Создаем экземпляр LogicBrain
         logicBrain = new LogicBrain();
+        userStates = new HashMap<>();
+        userMails = new HashMap<>();
     }
 
     @Test
@@ -96,7 +104,6 @@ class LogicBrainTest {
                 " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
                 " Если хотите начать работу напишите /work", answer);
     }
-
     @Test
     /**
      * Тест для случая, когда пользователь ввел корректный адрес электронной почты.
@@ -146,7 +153,99 @@ class LogicBrainTest {
         // Проверяем, что метод sendEmail был вызван с правильными параметрами
         verify(mockEmailSender).sendEmail(eq(mockEmailSender.getUsername()), eq("Вопрос от абитуриента " + mailMessage), eq(question));
     }
+
+    /**
+     * Проверяет начальное состояние работы пользователя с функцией отправки сообщения на почту через /question
+     */
+    @Test
+    void testWorksWithMail_QuestionCommand() {
+        Update update = Mockito.mock(Update.class);
+        Message message = Mockito.mock(Message.class);
+        Mockito.when(update.getMessage()).thenReturn(message);
+        Mockito.when(message.getText()).thenReturn("/question");
+        Long userId = 1L;
+
+        String result = logicBrain.worksWithMail(update, "/question", userId, null, userStates, userMails);
+
+        assertEquals("awaiting_email", userStates.get(userId));
+        assertEquals("Пожалуйста, отправьте свою почту", result);
+    }
+
+    /**
+     * Проверяет состояние awaiting_email с корректной почтой
+     */
+    @Test
+    void testWorksWithMail_AwaitingEmailValidInput() {
+        Update update = Mockito.mock(Update.class);
+        Message message = Mockito.mock(Message.class);
+        Mockito.when(update.getMessage()).thenReturn(message);
+        Mockito.when(message.getText()).thenReturn("valid@example.com");
+        Long userId = 1L;
+        userStates.put(userId, "awaiting_email");
+
+        // Мокируем EmailSender
+        EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
+        Mockito.when(mockEmailSender.isValidEmail("valid@example.com")).thenReturn(true);
+        logicBrain.setEmailSender(mockEmailSender);
+
+        String result = logicBrain.worksWithMail(update, "valid@example.com", userId, "awaiting_email", userStates, userMails);
+
+        assertEquals("awaiting_question", userStates.get(userId));
+        assertEquals("valid@example.com", userMails.get(userId));
+        assertEquals("Почта указана корректно, напишите ваш вопрос", result);
+    }
+    /**
+     * Проверяет состояние awaiting_email с некорректной почтой
+     */
+    @Test
+    void testWorksWithMail_AwaitingEmailInvalidInput() {
+        Update update = Mockito.mock(Update.class);
+        Message message = Mockito.mock(Message.class);
+        Mockito.when(update.getMessage()).thenReturn(message);
+        Mockito.when(message.getText()).thenReturn("invalid-email");
+        Long userId = 1L;
+        userStates.put(userId, "awaiting_email");
+
+        // Мокируем EmailSender
+        EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
+        Mockito.when(mockEmailSender.isValidEmail("invalid-email")).thenReturn(false);
+        logicBrain.setEmailSender(mockEmailSender);
+
+        String result = logicBrain.worksWithMail(update, "invalid-email", userId, "awaiting_email", userStates, userMails);
+
+        assertEquals(null, userMails.get(userId)); // Почта должна быть удалена
+        assertEquals("awaiting_email", userStates.get(userId)); // Состояние не должно измениться
+        assertEquals("Адрес электронной почты был указан неправильно отправьте его ещё раз", result);
+    }
+
+    /**
+     * Проверяет состояние awaiting_question и то, что метод отправки почты был вызван
+     */
+    @Test
+    void testWorksWithMail_AwaitingQuestion() {
+        Update update = Mockito.mock(Update.class);
+        Message message = Mockito.mock(Message.class);
+        Mockito.when(update.getMessage()).thenReturn(message);
+        Mockito.when(message.getText()).thenReturn("Это мой вопрос");
+        Long userId = 1L;
+        userStates.put(userId, "awaiting_question");
+        userMails.put(userId, "valid@example.com");
+
+        // Мокируем EmailSender
+        EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
+        logicBrain.setEmailSender(mockEmailSender);
+
+        String result = logicBrain.worksWithMail(update, "Это мой вопрос", userId, "awaiting_question", userStates, userMails);
+
+        assertEquals(null, userStates.get(userId)); // Состояние должно быть удалено
+        assertEquals(null, userMails.get(userId)); // Почта должна быть удалена
+        assertEquals("Ваш вопрос отправлен", result);
+
+        // Проверяем, что метод отправки почты был вызван
+        verify(mockEmailSender).sendEmail(eq(mockEmailSender.getUsername()), eq("Вопрос от абитуриента valid@example.com"), eq("Это мой вопрос"));
+    }
 }
+
 
 
 
