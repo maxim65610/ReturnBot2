@@ -6,19 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RetrieveData {
+public class RetrieveData extends DatabaseConnection {
 
     /**
      * Метод для извлечения строки данных из таблицы AnswersData по id_question
-     * @param DB_URL URL базы данных
-     * @param DB_USER имя пользователя базы данных
-     * @param DB_PASSWORD пароль пользователя базы данных
+     * @ DB_URL URL базы данных
+     * @ DB_USER имя пользователя базы данных
+     * @ DB_PASSWORD пароль пользователя базы данных
      * @param id идентификатор строки
      */
-    public void getDataById(String DB_URL, String DB_USER, String DB_PASSWORD, int id) {
+    public void getDataById(int id) {
         String sql = "SELECT * FROM AnswersData WHERE id_question = ?";
 
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        try (Connection conn = DriverManager.getConnection(getDB_URL(), getDB_USER(), getDB_PASSWORD());
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, id);

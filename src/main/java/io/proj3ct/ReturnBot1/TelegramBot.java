@@ -17,7 +17,7 @@ import java.util.Map;
 public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
-    private final LogicBrain botLogic;
+    private final messageLogic botLogic;
 
     // Хранит состояния пользователей
     Map<Long, String> userStates = new HashMap<>();
@@ -31,7 +31,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param token Токен бота.
      * @param logic Логика бота для обработки команд.
      */
-    public TelegramBot(String name, String token, LogicBrain logic) {
+    public TelegramBot(String name, String token, messageLogic logic) {
         botName = name;
         botToken = token;
         botLogic = logic;

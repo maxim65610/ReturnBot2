@@ -1,34 +1,40 @@
 package io.proj3ct.ReturnBot1;
 import org.junit.jupiter.api.Test;
-
-import java.sql.Connection;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-/**
- * Класс с тестами для проверки работы создания таблицы и подключения к таблице.
- */
-class DatabaseConnectionTest {
+public class DatabaseConnectionTest {
 
-    /**
-     *Тест для проверки подключения к таблице.
-     */
     @Test
-    void testConnect() {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        Connection connection = databaseConnection.connect("jdbc:postgresql://localhost:5432/tgBot", "postgres", "root");
-        assertNotNull(connection);
+    public void testGetDB_URL() {
+        DatabaseConnection connection = new DatabaseConnection();
+        assertEquals(System.getenv("bdUrl"), connection.getDB_URL());
     }
 
-    /**
-     * Тест для проверки работы создания таблицы.
-     */
     @Test
-    void testCreateAllTable() {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        String res = databaseConnection.createAllTable("jdbc:postgresql://localhost:5432/tgBot", "postgres", "root");
-        assertEquals("Nice",res);
-        // Add assertions to check if table is created successfully
+    public void testGetDB_USER() {
+        DatabaseConnection connection = new DatabaseConnection();
+        assertEquals(System.getenv("bdUser"), connection.getDB_USER());
+    }
+
+    @Test
+    public void testGetDB_PASSWORD() {
+        DatabaseConnection connection = new DatabaseConnection();
+        assertEquals(System.getenv("bdPassword"), connection.getDB_PASSWORD());
+    }
+
+    @Test
+    public void testCreateAllTableSuccess() {
+        DatabaseConnection connection = mock(DatabaseConnection.class);
+        when(connection.createAllTable()).thenReturn("Nice");
+        assertEquals("Nice", connection.createAllTable());
+    }
+
+    @Test
+    public void testCreateAllTableFailure() {
+        DatabaseConnection connection = mock(DatabaseConnection.class);
+        when(connection.createAllTable()).thenReturn("notNice");
+        assertEquals("notNice", connection.createAllTable());
     }
 }

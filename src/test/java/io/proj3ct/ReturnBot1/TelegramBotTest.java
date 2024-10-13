@@ -16,15 +16,15 @@ import static org.mockito.Mockito.*;
 class TelegramBotTest {
 
     private TelegramBot telegramBot;
-    private LogicBrain mockLogic;
+    private messageLogic mockLogic;
 
     /**
      * Настраивает тестовую среду перед каждым методом тестирования.
-     * Инициализирует мок экземпляра {@link LogicBrain} и {@link TelegramBot} для тестирования.
+     * Инициализирует мок экземпляра {@link messageLogic} и {@link TelegramBot} для тестирования.
      */
     @BeforeEach
     void setUp() {
-        mockLogic = mock(LogicBrain.class);
+        mockLogic = mock(messageLogic.class);
         telegramBot = new TelegramBot("testBot", "testToken", mockLogic);
     }
 

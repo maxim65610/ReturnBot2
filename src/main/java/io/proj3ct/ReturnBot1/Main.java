@@ -26,7 +26,7 @@ public class Main {
          * LogicBrain отвечает за логику работы бота, а TelegramBot
          * - за взаимодействие с Telegram API.
          */
-        LogicBrain botLogic = new LogicBrain();
+        messageLogic botLogic = new messageLogic();
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic);
 
         /**
@@ -35,10 +35,10 @@ public class Main {
          */
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
-        databaseConnection.createAllTable(DB_URL,DB_USER,DB_PASSWORD);
+        databaseConnection.createAllTable();
 
         RetrieveData retrieveData = new RetrieveData();
-        retrieveData.getDataById(DB_URL,DB_USER,DB_PASSWORD,208);
+        retrieveData.getDataById(208);
         // Извлечение электронной почты и пароля из переменных окружения
         String username = System.getenv("mail"); // Ваша почта
         String password = System.getenv("passwordForMail"); // Ваш пароль (или App Password)
