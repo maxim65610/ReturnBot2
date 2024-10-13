@@ -17,7 +17,7 @@ import java.util.Map;
 public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
-    private final LogicBrain botLogic;
+    private final messageLogic botLogic;
 
     // Хранит состояния пользователей
     Map<Long, String> userStates = new HashMap<>();
@@ -31,7 +31,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param token Токен бота.
      * @param logic Логика бота для обработки команд.
      */
-    public TelegramBot(String name, String token, LogicBrain logic) {
+    public TelegramBot(String name, String token, messageLogic logic) {
         botName = name;
         botToken = token;
         botLogic = logic;
@@ -44,7 +44,8 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @return Ответ на введенные данные.
      */
     public String checkWhatTodo(String data) {
-        if (data.equals("ИЕНИМ") || data.equals("РТФ") || data.equals("ХТИ")) {
+        if (data.equals("ИЕНИМ") || data.equals("РТФ") || data.equals("МАТЕМАТИКА")
+                || data.equals("ИНФОРМАТИКА") || data.equals("ФИЗИКА") || data.equals("ХТИ")) {
             return botLogic.slogic(data);
         } else {
             return data;
@@ -85,11 +86,11 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void worksWithMail(Update update, String messageText, Long userId, String currentState) {
         if ("/question".equals(messageText)) {
             userStates.put(userId, "awaiting_email");
-            sendMailMessage(userId, botLogic.slogic(messageText));
+            sendMessage(userId, botLogic.slogic(messageText), "0");
         } else if ("awaiting_email".equals(currentState)) {
             String mailUser = update.getMessage().getText();
             String anwserhandleEmailInput = botLogic.handleEmailInput(mailUser);
-            sendMailMessage(userId, anwserhandleEmailInput);
+            sendMessage(userId, anwserhandleEmailInput, "0");
             if (anwserhandleEmailInput.equals("Почта указана корректно, напишите ваш вопрос")) {
                 userMails.put(userId, mailUser);
                 userStates.put(userId, "awaiting_question");
@@ -102,7 +103,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             botLogic.sendMail(mailUser, question);
             userStates.remove(userId);
             userMails.remove(userId);
-            sendMailMessage(userId, "Ваш вопрос отправлен");
+            sendMessage(userId, "Ваш вопрос отправлен", "0");
         }
     }
 
@@ -123,27 +124,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         keyboardLogic keyboardLogicObj = new keyboardLogic();
         keyboardLogicObj.keyboards(message, data);
-
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            // Обработка исключения (опционально: логирование)
-        }
-    }
-
-    /**
-     * Отправляет сообщение пользователю без дополнительных параметров.
-     *
-     * @param chatId     ID чата, куда отправляется сообщение.
-     * @param textToSend Текст сообщения.
-     */
-    void sendMailMessage(long chatId, String textToSend) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        if (textToSend == null) {
-            textToSend = "Сообщение не может быть пустым."; // Сообщение по умолчанию
-        }
-        message.setText(textToSend);
 
         try {
             execute(message);
