@@ -1,10 +1,16 @@
 package io.proj3ct.ReturnBot1;
 
+import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.util.Map;
+
 /**
  * Класс, отвечающий за основную логику работы Telegram-бота.
  * Включает методы для обработки команд пользователя и отправки электронных писем.
  */
 public class LogicBrain {
+
+    private EmailSender emailSender;
 
     /**
      * Метод, который возвращает стандартный ответ бота на нераспознанные команды.
@@ -48,8 +54,6 @@ public class LogicBrain {
         return "Вот все факультеты которые есть в институте ХТИ:";
     }
 
-    private EmailSender emailSender;
-
     /**
      * Метод для установки объекта EmailSender.
      * @param emailSender объект EmailSender, отвечающий за отправку электронных писем.
@@ -86,6 +90,41 @@ public class LogicBrain {
      */
     private String questionCommandReceived() {
         return "Пожалуйста, отправьте свою почту";
+    }
+
+    /**
+     * Обрабатывает ввод пользователя, связанный с электронной почтой и вопросами.
+     *
+     * @param update      Обновлениe.
+     * @param messageText Сообщение, введенное пользователем.
+     * @param userId      ID пользователя.
+     * @param currentState Текущее состояние пользователя.
+     * @param userStates  Состояние пользователя.
+     * @param userMails Mail пользователя.
+     */
+    public String worksWithMail(Update update, String messageText, Long userId, String currentState, Map<Long, String> userStates, Map<Long, String> userMails) {
+        if ("/question".equals(messageText)) {
+            userStates.put(userId, "awaiting_email");;
+        } else if ("awaiting_email".equals(currentState)) {
+            String mailUser = update.getMessage().getText();
+            String anwserhandleEmailInput = handleEmailInput(mailUser);
+            if(anwserhandleEmailInput.equals("Почта указана корректно, напишите ваш вопрос")) {
+                userMails.put(userId, mailUser);
+                userStates.put(userId, "awaiting_question");
+            } else {
+                userMails.remove(userId, mailUser);
+            }
+            return  anwserhandleEmailInput;
+
+        } else if ("awaiting_question".equals(currentState)) {
+            String question = update.getMessage().getText();
+            String mailUser = userMails.get(userId);
+            sendMail(mailUser, question);
+            userStates.remove(userId);
+            userMails.remove(userId);
+            return "Ваш вопрос отправлен";
+        }
+        return questionCommandReceived();
     }
 
     /**
