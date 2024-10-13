@@ -111,6 +111,22 @@ public class keyboardLogic {
             message.setReplyMarkup(markup);
 
         }
+
+        if (data.equals("/testAbit")) {
+            InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+            List<InlineKeyboardButton> row = new ArrayList<>();
+
+            row.add(new InlineKeyboardButton().builder().text("Математика").callbackData("МАТЕМАТИКА").build());
+            row.add(new InlineKeyboardButton().builder().text("Информатика").callbackData("ИНФОРМАТИКА").build());
+            row.add(new InlineKeyboardButton().builder().text("Физика").callbackData("ФИЗИКА").build());
+
+            List keyboard = new ArrayList<>();
+            keyboard.add(row);
+
+            markup.setKeyboard(keyboard);
+            message.setReplyMarkup(markup);
+        }
+
         return message;
     }
 }

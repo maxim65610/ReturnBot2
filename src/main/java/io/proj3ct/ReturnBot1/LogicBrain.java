@@ -48,6 +48,17 @@ public class LogicBrain {
         return "Вот все факультеты которые есть в институте ХТИ:";
     }
 
+
+    /**
+     * Метод, который возвращает ответ бота для кнопок института ИЕНИМ.
+     * @return сообщение со списком факультетов института ИЕНИМ.
+     */
+    private String testAbitCommandReceived() {
+        return "Вот все факультеты которые есть в институте ИЕНИМ:";
+    }
+
+
+
     private EmailSender emailSender;
 
     /**
@@ -87,6 +98,18 @@ public class LogicBrain {
     private String questionCommandReceived() {
         return "Пожалуйста, отправьте свою почту";
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Метод, который реализует основную логику работы бота.
