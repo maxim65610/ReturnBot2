@@ -19,7 +19,6 @@ public class keyboardLogic {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List keyboard = new ArrayList<>();
             List<InlineKeyboardButton> row1 = new ArrayList<>();
-
             row1.add(new InlineKeyboardButton().builder().text("Математика, Механика и Компьютерные Науки").callbackData("ИЕНИМ").build());
             keyboard.add(row1);
 
@@ -112,13 +111,13 @@ public class keyboardLogic {
 
         }
 
-        if (data.equals("/testAbit")) {
+        if (data.equals("/test")) {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<InlineKeyboardButton> row = new ArrayList<>();
 
-            row.add(new InlineKeyboardButton().builder().text("Математика").callbackData("МАТЕМАТИКА").build());
-            row.add(new InlineKeyboardButton().builder().text("Информатика").callbackData("ИНФОРМАТИКА").build());
-            row.add(new InlineKeyboardButton().builder().text("Физика").callbackData("ФИЗИКА").build());
+            row.add(new InlineKeyboardButton().builder().text("Математика").callbackData("100").build());
+            row.add(new InlineKeyboardButton().builder().text("Информатика").callbackData("200").build());
+            row.add(new InlineKeyboardButton().builder().text("Физика").callbackData("300").build());
 
             List keyboard = new ArrayList<>();
             keyboard.add(row);
@@ -129,5 +128,40 @@ public class keyboardLogic {
 
         return message;
     }
+    public SendMessage keyboardDB(SendMessage message, String answer1, String answer2, String answer3, String cash, String choice1, String choice2){
+        if (!answer3.equals("0")) {
+            InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+            List keyboard = new ArrayList<>();
+            List<InlineKeyboardButton> row = new ArrayList<>();
+
+            row.add(new InlineKeyboardButton().builder().text(answer1).callbackData(cash).build());
+
+
+            row.add(new InlineKeyboardButton().builder().text(answer2).callbackData(cash).build());
+
+
+            row.add(new InlineKeyboardButton().builder().text(answer3).callbackData(cash).build());
+            keyboard.add(row);
+
+            markup.setKeyboard(keyboard);
+            message.setReplyMarkup(markup);
+        }
+        else{
+            InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+            List keyboard = new ArrayList<>();
+            List<InlineKeyboardButton> row = new ArrayList<>();
+
+            row.add(new InlineKeyboardButton().builder().text(answer1).callbackData(cash).build());
+
+            row.add(new InlineKeyboardButton().builder().text(answer2).callbackData(cash).build());
+            keyboard.add(row);
+
+            markup.setKeyboard(keyboard);
+            message.setReplyMarkup(markup);
+
+        }
+        return message;
+    }
+
 }
 

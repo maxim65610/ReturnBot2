@@ -1,16 +1,17 @@
 package io.proj3ct.ReturnBot1;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Класс, отвечающий за основную логику работы Telegram-бота.
  * Включает методы для обработки команд пользователя и отправки электронных писем.
  */
-public class LogicBrain {
-
-    private EmailSender emailSender;
+public class messageLogic {
 
     /**
      * Метод, который возвращает стандартный ответ бота на нераспознанные команды.
@@ -19,7 +20,8 @@ public class LogicBrain {
     private String defaultCommandReceived() {
         return "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
                 " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work";
+                " Если хотите начать работу напишите /work. Также у тебя есть возможность пройти тест на то, какое направление " +
+                "вам больше подходит, просто напишите /test";
     }
 
     /**
@@ -53,6 +55,15 @@ public class LogicBrain {
     private String inst3CommandReceived() {
         return "Вот все факультеты которые есть в институте ХТИ:";
     }
+
+
+    private String testAbitCommandReceived() {
+        return "Вы начали проходить тестирование по выбору факультета, выберите один предмет из этих трех:";
+    }
+
+
+
+    private EmailSender emailSender;
 
     /**
      * Метод для установки объекта EmailSender.
@@ -126,7 +137,90 @@ public class LogicBrain {
         }
         return questionCommandReceived();
     }
+    private String[] resultsTestAbi = new String[10];
+    RetrieveData retrieveData = new RetrieveData();
 
+    public String[] worksWithTestAPI(String messageText, Long userId,Map<Long, String> userStatesforTest, String data) {
+        String currentState = userStatesforTest.get(userId);
+        String[] valuesBD = new String[7];
+        if(messageText.equals("/test") && userStatesforTest.isEmpty()){
+            userStatesforTest.put(userId, "awaiting_testABI_1");
+        }
+        else if("awaiting_testABI_1".equals(currentState)){
+            if(data.equals("100")){
+                valuesBD = arrayBDforTestABI("101");
+
+            }
+            else if(data.equals("200"))
+            {
+                valuesBD =arrayBDforTestABI("201");
+
+            }
+            else if(data.equals("300")){
+                valuesBD = arrayBDforTestABI("301");
+
+            }
+            userStatesforTest.remove(userId);
+            userStatesforTest.put(userId, "awaiting_testABI_2");
+        }
+        else if("awaiting_testABI_2".equals(currentState)){
+            valuesBD = arrayBDforTestABI(data);
+            userStatesforTest.remove(userId);
+            userStatesforTest.put(userId, "awaiting_testABI_3");
+        }
+        else if("awaiting_testABI_3".equals(currentState)){
+            valuesBD = arrayBDforTestABI(data);
+            userStatesforTest.remove(userId);
+            userStatesforTest.put(userId, "awaiting_testABI_4");
+        }
+        else if("awaiting_testABI_4".equals(currentState)){
+            valuesBD = arrayBDforTestABI(data);
+            userStatesforTest.remove(userId);
+            userStatesforTest.put(userId, "awaiting_testABI_5");
+        }
+        else if("awaiting_testABI_5".equals(currentState)){
+            valuesBD = arrayBDforTestABI(data);
+            userStatesforTest.remove(userId);
+            userStatesforTest.put(userId, "awaiting_testABI_6");
+        }
+        else if("awaiting_testABI_6".equals(currentState)){
+            valuesBD = arrayBDforTestABI(data);
+            userStatesforTest.remove(userId);
+            userStatesforTest.put(userId, "awaiting_testABI_7");
+        }
+        else if("awaiting_testABI_7".equals(currentState)){
+            valuesBD = arrayBDforTestABI(data);
+            userStatesforTest.remove(userId);
+            userStatesforTest.put(userId, "awaiting_testABI_8");
+        }
+        else if("awaiting_testABI_8".equals(currentState)) {
+            valuesBD = arrayBDforTestABI(data);
+            userStatesforTest.remove(userId);
+            userStatesforTest.put(userId, "awaiting_testABI_9");
+        }
+        else if("awaiting_testABI_9".equals(currentState)){
+            valuesBD = arrayBDforTestABI(data);
+            userStatesforTest.remove(userId);
+            userStatesforTest.put(userId, "awaiting_testABI_10");
+        }
+
+
+        return valuesBD;
+    }
+    public String[] arrayBDforTestABI(String data){
+        String[] valuesBD = new String[7];
+        int intData = Integer.parseInt(data);
+        valuesBD[0] = retrieveData.getDataById(intData, "question");
+        valuesBD[1] = retrieveData.getDataById(intData, "answer1");
+        valuesBD[2] = retrieveData.getDataById(intData, "answer2");
+        valuesBD[3] = retrieveData.getDataById(intData, "answer3");
+
+        int cash = intData + 1;
+        valuesBD[4] = String.valueOf(cash);
+        valuesBD[5] = retrieveData.getDataById(intData, "cash1");
+        valuesBD[6] = retrieveData.getDataById(intData, "cash2");
+        return valuesBD;
+    }
     /**
      * Метод, который реализует основную логику работы бота.
      * Обрабатывает сообщения от пользователя и возвращает соответствующий ответ.
@@ -140,6 +234,8 @@ public class LogicBrain {
                 return defaultCommandReceived();
             case "/question":
                 return questionCommandReceived();
+            case "/test":
+                return testAbitCommandReceived();
             case "/work":
                 return workCommandReceived();
             case "ИЕНИМ":
@@ -152,5 +248,7 @@ public class LogicBrain {
                 return defaultCommandReceived();
         }
     }
+
+
 }
 

@@ -17,7 +17,7 @@ import java.util.Map;
 public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
-    private final LogicBrain botLogic;
+    private final messageLogic botLogic;
 
     // Хранит состояния пользователей
     private Map<Long, String> userStates = new HashMap<>();
@@ -25,6 +25,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     // Хранит электронные адреса пользователей
     private  Map<Long, String> userMails = new HashMap<>();
 
+
+    private Map<Long, String> userStatesforTest = new HashMap<>();
     /**
      * Конструктор класса TelegramBot.
      *
@@ -32,7 +34,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param token Токен бота.
      * @param logic Логика бота для обработки команд.
      */
-    public TelegramBot(String name, String token, LogicBrain logic) {
+    public TelegramBot(String name, String token, messageLogic logic) {
         botName = name;
         botToken = token;
         botLogic = logic;
@@ -60,19 +62,32 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
+        if((update.hasCallbackQuery() && update.getCallbackQuery() != null) && (!userStatesforTest.isEmpty())){
+            String data = update.getCallbackQuery().getData();
+            String[] valuesBD = botLogic.worksWithTestAPI("", update.getCallbackQuery().getFrom().getId(), userStatesforTest, data);
+            sendMessage(update.getCallbackQuery().getFrom().getId(), valuesBD[0], valuesBD[1], valuesBD[2], valuesBD[3], valuesBD[4], valuesBD[5], valuesBD[6]);
+        }
+        /*else if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
             String data = update.getCallbackQuery().getData();
             sendMessage(update.getCallbackQuery().getFrom().getId(), checkWhatTodo(data), data);
-        }
+
+        }*/
+
         if (update.hasMessage() && update.getMessage() != null) {
+
             String messageText = update.getMessage().getText();
             Long userId = update.getMessage().getChatId();
             String currentState = userStates.get(userId);
             if ("/question".equals(messageText) || "awaiting_email".equals(currentState) || "awaiting_question".equals(currentState)) {
                 String answer = botLogic.worksWithMail(update, messageText, userId, currentState, userStates, userMails);
                 sendMessage(userId, answer);
-            } else {
-                sendMessage(update.getMessage().getChatId(), botLogic.slogic(messageText), messageText);
+            }
+            else if("/test".equals(messageText)){
+                botLogic.worksWithTestAPI(messageText, userId, userStatesforTest, "");
+                sendMessage(userId, botLogic.slogic(messageText), messageText);
+            }
+            else {
+                sendMessage(update.getMessage().getChatId(),  messageText);
             }
         }
     }
@@ -94,6 +109,22 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         keyboardLogic keyboardLogicObj = new keyboardLogic();
         keyboardLogicObj.keyboards(message, data);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            // Обработка исключения (опционально: логирование)
+        }
+    }
+
+    void sendMessage(long chatId, String textToSend, String answer1, String answer2, String answer3, String cash, String choice1, String choice2) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+
+        message.setText(textToSend);
+
+        keyboardLogic keyboardLogicObj = new keyboardLogic();
+        keyboardLogicObj.keyboardDB(message, answer1, answer2, answer3, cash, choice1, choice2);
 
         try {
             execute(message);
