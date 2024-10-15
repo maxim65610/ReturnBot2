@@ -33,13 +33,22 @@ public class Main {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         databaseConnection.createAllTable();
 
+        /**
+         * Создание объектов классов RetrieveData.
+         * retrieveData.getDataById отвечает за вывод информации из бд
+         */
+
         RetrieveData retrieveData = new RetrieveData();
         System.out.println(retrieveData.getDataById(203, "question") );
 
-        DepartInfoBD DepartInfoBD = new DepartInfoBD();
-        String info = DepartInfoBD.takeInfo( "14");
+        /**
+         * Создание объектов классов DepartInfoBD.
+         * DepartInfoBD.takeInfo отвечает за вывод информации из бд
+         */
 
-        System.out.println(info);
+        DepartInfoBD DepartInfoBD = new DepartInfoBD();
+        System.out.println(DepartInfoBD.takeInfo( "12"));
+
         // Извлечение электронной почты и пароля из переменных окружения
         String username = System.getenv("mail"); // Ваша почта
         String password = System.getenv("passwordForMail"); // Ваш пароль (или App Password)

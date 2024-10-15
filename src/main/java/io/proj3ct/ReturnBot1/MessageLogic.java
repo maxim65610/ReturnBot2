@@ -16,9 +16,9 @@ public class MessageLogic {
      */
     private String defaultCommandReceived() {
         return "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work. Также у тебя есть возможность пройти тест на то, какое направление " +
-                "вам больше подходит, просто напишите /test";
+                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
+                "командой /question. Если хотите начать работу напишите /work. Также у тебя есть возможность" +
+                " пройти тест на то, какое направление вам больше подходит, просто напишите /test";
     }
 
     /**
@@ -49,15 +49,15 @@ public class MessageLogic {
      * Метод, который возвращает ответ бота для кнопок института ХТИ.
      * @return сообщение со списком факультетов института ХТИ.
      */
-    private String inst3CommandReceived() {
-        return "Вот все факультеты которые есть в институте ХТИ:";
-    }
+    private String inst3CommandReceived() {return "Вот все факультеты которые есть в институте ХТИ:";}
 
-
+    /**
+     * Метод, который возвращает ответ бота для начала работы с testAbit.
+     * @return сообщение для начала работы с testAbit.
+     */
     private String testAbitCommandReceived() {
         return "Вы начали проходить тестирование по выбору факультета, выберите один предмет из этих трех:";
     }
-
 
 
     private EmailSender emailSender;
@@ -134,7 +134,7 @@ public class MessageLogic {
         }
         return questionCommandReceived();
     }
-    private String[] resultsTestAbi = new String[10];
+
     RetrieveData retrieveData = new RetrieveData();
 
     public String[] worksWithTestAPI(String messageText, Long userId,Map<Long, String> userStatesforTest, String data) {
@@ -227,6 +227,7 @@ public class MessageLogic {
     public String slogic(String messageText) {
         switch (messageText) {
             case "/start":
+                return defaultCommandReceived();
             case "/help":
                 return defaultCommandReceived();
             case "/question":

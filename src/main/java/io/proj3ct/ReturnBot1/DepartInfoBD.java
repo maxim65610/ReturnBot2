@@ -1,16 +1,14 @@
 package io.proj3ct.ReturnBot1;
 
-
-/**
- * Класс для контроля над выводимой с клавиатур информации
- */
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Класс для контроля над выводимой с клавиатур информации
+ */
 
 public class DepartInfoBD {
     /**
@@ -24,25 +22,19 @@ public class DepartInfoBD {
 
         try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
                 databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            int num = Integer.parseInt(data.trim());
-            pstmt.setInt(1, num);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, Integer.parseInt(data.trim()));
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-
-                String info = rs.getString("info");
-                return info;
-
+                return rs.getString("info");
             } else {
                 return data;
             }
         } catch (SQLException e) {
             System.out.println("Ошибка извлечения данных: " + e.getMessage());
         }
-
-
         return data;
     }
 }
