@@ -1,17 +1,14 @@
 package io.proj3ct.ReturnBot1;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Класс, отвечающий за основную логику работы Telegram-бота.
  * Включает методы для обработки команд пользователя и отправки электронных писем.
  */
-public class messageLogic {
+public class MessageLogic {
 
     /**
      * Метод, который возвращает стандартный ответ бота на нераспознанные команды.
@@ -113,7 +110,7 @@ public class messageLogic {
      * @param userStates  Состояние пользователя.
      * @param userMails Mail пользователя.
      */
-    public String worksWithMail(Update update, String messageText, Long userId, String currentState, Map<Long, String> userStates, Map<Long, String> userMails) {
+    public  String worksWithMail(Update update, String messageText, Long userId, String currentState, Map<Long, String> userStates, Map<Long, String> userMails) {
         if ("/question".equals(messageText)) {
             userStates.put(userId, "awaiting_email");;
         } else if ("awaiting_email".equals(currentState)) {

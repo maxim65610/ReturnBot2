@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Класс для контроля над клавиатурами
  */
-public class keyboardLogic {
+public class KeyboardLogic {
     /**
      * Метод, который обрабатывает клавиатуры отправляющиеся вместе с сообщением
      */
@@ -27,7 +27,7 @@ public class keyboardLogic {
             keyboard.add(row2);
 
             List<InlineKeyboardButton> row3 = new ArrayList<>();
-            row3.add(new InlineKeyboardButton().builder().text("Химико Технический").callbackData("ХТИ").build());
+            row3.add(new InlineKeyboardButton().builder().text("Химико Технологический").callbackData("ХТИ").build());
             keyboard.add(row3);
 
             markup.setKeyboard(keyboard);

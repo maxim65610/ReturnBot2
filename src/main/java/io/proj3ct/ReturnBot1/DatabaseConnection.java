@@ -89,12 +89,20 @@ public class DatabaseConnection {
         cash3 text NOT NULL
         );""";
 
+        String sql2 = """
+        CREATE TABLE IF NOT EXISTS DepartsInfo (
+        id_depart int PRIMARY KEY, 
+        info text NOT NULL  
+        );""";
+
         try {
             Connection conn = connect();
             if (conn != null) {
                 try (Statement stmt = conn.createStatement()) {
                     stmt.executeUpdate(sql1);
                     System.out.println("Таблица AnswersData успешно создана.");
+                    stmt.executeUpdate(sql2);
+                    System.out.println("Таблица DepartsInfo успешно создана.");
                     return "Nice";
                 }
             } else {

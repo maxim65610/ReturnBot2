@@ -18,13 +18,13 @@ import static org.mockito.Mockito.*;
  */
 class messageLogicTest {
 
-    private messageLogic messageLogic;
+    private MessageLogic messageLogic;
     private Map<Long, String> userStates;
     private Map<Long, String> userMails;
     @BeforeEach
     void setUp() {
         // Создаем экземпляр LogicBrain
-        messageLogic = new messageLogic();
+        messageLogic = new MessageLogic();
         userStates = new HashMap<>();
         userMails = new HashMap<>();
     }
@@ -189,7 +189,7 @@ class messageLogicTest {
         Mockito.when(mockEmailSender.isValidEmail("valid@example.com")).thenReturn(true);
         messageLogic.setEmailSender(mockEmailSender);
 
-        String result = io.proj3ct.ReturnBot1.messageLogic.worksWithMail(update, "valid@example.com", userId, "awaiting_email", userStates, userMails);
+        String result = MessageLogic.worksWithMail(update, "valid@example.com", userId, "awaiting_email", userStates, userMails);
 
         assertEquals("awaiting_question", userStates.get(userId));
         assertEquals("valid@example.com", userMails.get(userId));

@@ -3,10 +3,10 @@ package io.proj3ct.ReturnBot1;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 /**
- * Класс для тестирования функциональности класса {@link dataInfoTo}.
+ * Класс для тестирования функциональности класса {@link DepartInfoBD}.
  * Содержит методы для проверки корректности возвращаемых данных.
  */
-public class dataInfoToTest {
+public class departInfoBDTest {
 
     @Test
 
@@ -14,7 +14,7 @@ public class dataInfoToTest {
      * Тест для случая, когда пользователь ввел /start
      */
     void testDataReturn() {
-        dataInfoTo infoObj = new dataInfoTo();
+        DepartInfoBD infoObj = new DepartInfoBD();
         String textToSend = infoObj.takeInfo("sdfsdfsdfsdf");
         Assertions.assertEquals("sdfsdfsdfsdf", textToSend);
     }

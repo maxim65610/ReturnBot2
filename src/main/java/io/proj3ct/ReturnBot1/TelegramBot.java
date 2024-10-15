@@ -17,7 +17,7 @@ import java.util.Map;
 public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
-    private final messageLogic botLogic;
+    private final MessageLogic botLogic;
 
     // Хранит состояния пользователей
     private Map<Long, String> userStates = new HashMap<>();
@@ -34,7 +34,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param token Токен бота.
      * @param logic Логика бота для обработки команд.
      */
-    public TelegramBot(String name, String token, messageLogic logic) {
+    public TelegramBot(String name, String token, MessageLogic logic) {
         botName = name;
         botToken = token;
         botLogic = logic;
@@ -103,11 +103,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
 
-        dataInfoTo infoObj = new dataInfoTo();
+        DepartInfoBD infoObj = new DepartInfoBD();
         textToSend = infoObj.takeInfo(textToSend);
         message.setText(textToSend);
 
-        keyboardLogic keyboardLogicObj = new keyboardLogic();
+        KeyboardLogic keyboardLogicObj = new KeyboardLogic();
         keyboardLogicObj.keyboards(message, data);
 
         try {
@@ -123,7 +123,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         message.setText(textToSend);
 
-        keyboardLogic keyboardLogicObj = new keyboardLogic();
+        KeyboardLogic keyboardLogicObj = new KeyboardLogic();
         keyboardLogicObj.keyboardDB(message, answer1, answer2, answer3, cash, choice1, choice2);
 
         try {

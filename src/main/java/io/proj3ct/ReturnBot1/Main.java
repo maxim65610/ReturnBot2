@@ -22,7 +22,7 @@ public class Main {
          * LogicBrain отвечает за логику работы бота, а TelegramBot
          * - за взаимодействие с Telegram API.
          */
-        messageLogic botLogic = new messageLogic();
+        MessageLogic botLogic = new MessageLogic();
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic);
 
         /**
@@ -35,6 +35,11 @@ public class Main {
 
         RetrieveData retrieveData = new RetrieveData();
         System.out.println(retrieveData.getDataById(203, "question") );
+
+        DepartInfoBD DepartInfoBD = new DepartInfoBD();
+        String info = DepartInfoBD.takeInfo( "14");
+
+        System.out.println(info);
         // Извлечение электронной почты и пароля из переменных окружения
         String username = System.getenv("mail"); // Ваша почта
         String password = System.getenv("passwordForMail"); // Ваш пароль (или App Password)
