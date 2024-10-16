@@ -16,25 +16,25 @@ public class DepartInfoBD {
      */
     DatabaseConnection databaseConnection = new DatabaseConnection();
 
-    public String takeInfo(String data){
+    public String takeInfo(String data,String textToSend) {
 
         String sql = "SELECT * FROM DepartsInfo WHERE id_depart = ?";
 
         try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
                 databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
 
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, Integer.parseInt(data.trim()));
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1,data);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
                 return rs.getString("info");
-            } else {
-                return data;
+
             }
+
         } catch (SQLException e) {
             System.out.println("Ошибка извлечения данных: " + e.getMessage());
         }
-        return data;
+        return textToSend;
     }
 }

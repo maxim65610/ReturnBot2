@@ -38,6 +38,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         botName = name;
         botToken = token;
         botLogic = logic;
+
+
     }
 
 
@@ -67,17 +69,18 @@ public class TelegramBot extends TelegramLongPollingBot {
             String[] valuesBD = botLogic.worksWithTestAPI("", update.getCallbackQuery().getFrom().getId(), userStatesforTest, data);
             sendMessage(update.getCallbackQuery().getFrom().getId(), valuesBD[0], valuesBD[1], valuesBD[2], valuesBD[3], valuesBD[4], valuesBD[5], valuesBD[6]);
         }
-        /*else if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
+        else if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
             String data = update.getCallbackQuery().getData();
             sendMessage(update.getCallbackQuery().getFrom().getId(), checkWhatTodo(data), data);
 
-        }*/
+        }
 
         if (update.hasMessage() && update.getMessage() != null) {
 
             String messageText = update.getMessage().getText();
             Long userId = update.getMessage().getChatId();
             String currentState = userStates.get(userId);
+
             if ("/question".equals(messageText) || "awaiting_email".equals(currentState) || "awaiting_question".equals(currentState)) {
                 String answer = botLogic.worksWithMail(update, messageText, userId, currentState, userStates, userMails);
                 sendMessage(userId, answer);
@@ -87,7 +90,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendMessage(userId, botLogic.slogic(messageText), messageText);
             }
             else {
-                sendMessage(update.getMessage().getChatId(),  messageText);
+                sendMessage(update.getMessage().getChatId(), botLogic.slogic(messageText), messageText);
+
             }
         }
     }
@@ -100,11 +104,14 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param data       Дополнительные данные для обработки клавиатуры.
      */
     void sendMessage(long chatId, String textToSend, String data) {
+
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
 
-        DepartInfoBD infoObj = new DepartInfoBD();
-        textToSend = infoObj.takeInfo(textToSend);
+
+        DepartInfoBD DepartInfoBD = new DepartInfoBD();
+        textToSend = DepartInfoBD.takeInfo(data,textToSend);
+
         message.setText(textToSend);
 
         KeyboardLogic keyboardLogicObj = new KeyboardLogic();
@@ -117,7 +124,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    void sendMessage(long chatId, String textToSend, String answer1, String answer2, String answer3, String cash, String choice1, String choice2) {
+    void sendMessage(long chatId, String textToSend, String answer1, String answer2
+            , String answer3, String cash, String choice1, String choice2) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
 

@@ -38,16 +38,14 @@ public class Main {
          * retrieveData.getDataById отвечает за вывод информации из бд
          */
 
-        RetrieveData retrieveData = new RetrieveData();
-        System.out.println(retrieveData.getDataById(203, "question") );
+
 
         /**
          * Создание объектов классов DepartInfoBD.
          * DepartInfoBD.takeInfo отвечает за вывод информации из бд
          */
 
-        DepartInfoBD DepartInfoBD = new DepartInfoBD();
-        System.out.println(DepartInfoBD.takeInfo( "12"));
+
 
         // Извлечение электронной почты и пароля из переменных окружения
         String username = System.getenv("mail"); // Ваша почта

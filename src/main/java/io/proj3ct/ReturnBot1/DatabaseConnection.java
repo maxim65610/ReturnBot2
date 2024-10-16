@@ -91,7 +91,7 @@ public class DatabaseConnection {
 
         String sql2 = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
-        id_depart int PRIMARY KEY, 
+        id_depart text PRIMARY KEY, 
         info text NOT NULL  
         );""";
 
