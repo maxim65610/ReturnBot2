@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,8 +70,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         if((update.hasCallbackQuery() && update.getCallbackQuery() != null) && (!userStatesforTest.isEmpty())){
 
             String data = update.getCallbackQuery().getData();
-            String[] valuesBD = messageAndKeyboardLogic.worksWithTestAPI("", update.getCallbackQuery().getFrom().getId(), userStatesforTest, data);
-            sendMessage(update.getCallbackQuery().getFrom().getId(), valuesBD[0], valuesBD[1], valuesBD[2], valuesBD[3], valuesBD[4], valuesBD[5]);
+            List<String> list_with_dataBD  = messageAndKeyboardLogic.worksWithTestAPI("", update.getCallbackQuery().getFrom().getId(), userStatesforTest, data);
+            sendMessage(update.getCallbackQuery().getFrom().getId(), list_with_dataBD.get(0), list_with_dataBD);
         }
         else if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
             String data = update.getCallbackQuery().getData();
@@ -98,13 +99,12 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
         }
     }
-    void sendMessage(long chatId, String textToSend, String answer1, String answer2
-            , String answer3, String choice1, String choice2) {
+    void sendMessage(long chatId, String textToSend, List<String> list_with_dataBD) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
         KeyboardLogic keyboardLogicObj = new KeyboardLogic();
-        keyboardLogicObj.keyboardforTestAPI(message, answer1, answer2, answer3,  choice1, choice2);
+        keyboardLogicObj.keyboardforTestAPI(message, list_with_dataBD);
         try {
 
             execute(message);

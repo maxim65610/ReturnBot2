@@ -129,15 +129,15 @@ public class KeyboardLogic {
 
         return message;
     }
-    public SendMessage keyboardforTestAPI(SendMessage message, String answer1, String answer2, String answer3, String choice1, String choice2){
-        if (answer3.equals("-"))
+    public SendMessage keyboardforTestAPI(SendMessage message, List<String> list_with_dataBD ){
+        if (list_with_dataBD.get(3).equals("-"))
         {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<InlineKeyboardButton> row = new ArrayList<>();
 
 
-            row.add(new InlineKeyboardButton().builder().text(answer1).callbackData(choice1).build());
-            row.add(new InlineKeyboardButton().builder().text(answer2).callbackData(choice2).build());
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(1)).callbackData(list_with_dataBD.get(4)).build());
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(2)).callbackData(list_with_dataBD.get(5)).build());
 
             List keyboard = new ArrayList<>();
             keyboard.add(row);
@@ -151,13 +151,13 @@ public class KeyboardLogic {
             List keyboard = new ArrayList<>();
             List<InlineKeyboardButton> row = new ArrayList<>();
 
-            row.add(new InlineKeyboardButton().builder().text(answer1).callbackData(choice1).build());
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(1)).callbackData(list_with_dataBD.get(4)).build());
 
 
-            row.add(new InlineKeyboardButton().builder().text(answer2).callbackData(choice2).build());
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(2)).callbackData(list_with_dataBD.get(5)).build());
 
 
-            row.add(new InlineKeyboardButton().builder().text(answer3).callbackData("0").build());
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(3)).callbackData("-").build());
             keyboard.add(row);
 
             markup.setKeyboard(keyboard);
