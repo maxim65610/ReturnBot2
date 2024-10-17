@@ -4,6 +4,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -27,7 +28,7 @@ public class KeyboardLogic {
             keyboard.add(row2);
 
             List<InlineKeyboardButton> row3 = new ArrayList<>();
-            row3.add(new InlineKeyboardButton().builder().text("Химико Технологический").callbackData("ХТИ").build());
+            row3.add(new InlineKeyboardButton().builder().text("Химико Технический").callbackData("ХТИ").build());
             keyboard.add(row3);
 
             markup.setKeyboard(keyboard);
@@ -128,37 +129,39 @@ public class KeyboardLogic {
 
         return message;
     }
-    public SendMessage keyboardDB(SendMessage message, String answer1, String answer2, String answer3, String cash, String choice1, String choice2){
-        if (!answer3.equals("0")) {
+    public SendMessage keyboardforTestAPI(SendMessage message, String answer1, String answer2, String answer3, String choice1, String choice2){
+        if (answer3.equals("-"))
+        {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-            List keyboard = new ArrayList<>();
             List<InlineKeyboardButton> row = new ArrayList<>();
 
-            row.add(new InlineKeyboardButton().builder().text(answer1).callbackData(cash).build());
 
+            row.add(new InlineKeyboardButton().builder().text(answer1).callbackData(choice1).build());
+            row.add(new InlineKeyboardButton().builder().text(answer2).callbackData(choice2).build());
 
-            row.add(new InlineKeyboardButton().builder().text(answer2).callbackData(cash).build());
-
-
-            row.add(new InlineKeyboardButton().builder().text(answer3).callbackData(cash).build());
+            List keyboard = new ArrayList<>();
             keyboard.add(row);
 
             markup.setKeyboard(keyboard);
             message.setReplyMarkup(markup);
+
         }
         else{
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List keyboard = new ArrayList<>();
             List<InlineKeyboardButton> row = new ArrayList<>();
 
-            row.add(new InlineKeyboardButton().builder().text(answer1).callbackData(cash).build());
+            row.add(new InlineKeyboardButton().builder().text(answer1).callbackData(choice1).build());
 
-            row.add(new InlineKeyboardButton().builder().text(answer2).callbackData(cash).build());
+
+            row.add(new InlineKeyboardButton().builder().text(answer2).callbackData(choice2).build());
+
+
+            row.add(new InlineKeyboardButton().builder().text(answer3).callbackData("0").build());
             keyboard.add(row);
 
             markup.setKeyboard(keyboard);
             message.setReplyMarkup(markup);
-
         }
         return message;
     }

@@ -141,7 +141,7 @@ class MessageLogicTest {
      * Проверяет состояние awaiting_email с корректной почтой
      */
 
-    /*
+
     @Test
     void testWorksWithMail_AwaitingEmailValidInput() {
         Update update = Mockito.mock(Update.class);
@@ -156,14 +156,14 @@ class MessageLogicTest {
         Mockito.when(mockEmailSender.isValidEmail("valid@example.com")).thenReturn(true);
         messageLogic.setEmailSender(mockEmailSender);
 
-        String result = MessageLogic.worksWithMail(update, "valid@example.com", userId, "awaiting_email", userStates, userMails);
+        String result = messageLogic.worksWithMail(update, "valid@example.com", userId, "awaiting_email", userStates, userMails);
 
         assertEquals("awaiting_question", userStates.get(userId));
         assertEquals("valid@example.com", userMails.get(userId));
         assertEquals("Почта указана корректно, напишите ваш вопрос", result);
     }
 
-     */
+
 
     /**
      * Проверяет состояние awaiting_email с некорректной почтой
