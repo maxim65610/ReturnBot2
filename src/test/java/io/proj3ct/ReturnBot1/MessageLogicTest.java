@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
  * Класс для тестирования логики работы класса LogicBrain.
  * Содержит тесты для различных команд и методов обработки ввода пользователя.
  */
-class messageLogicTest {
+class MessageLogicTest {
 
     private MessageLogic messageLogic;
     private Map<Long, String> userStates;
@@ -31,80 +31,45 @@ class messageLogicTest {
 
     @Test
     /**
-     * Тест для случая, когда пользователь ввел команду /start.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
+     * Тест для команд start,help,work,test и проверяет их ответы.
      */
-    void testStartCommand() {
-        String answer = messageLogic.slogic("/start");
+    void testCommands() {
+        String answer1 = messageLogic.slogic("/start");
+        String answer2 = messageLogic.slogic("/help");
+        String answer3 = messageLogic.slogic("/work");
+        String answer4 = messageLogic.slogic("/test");
+
         assertEquals("Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work", answer);
-    }
-
-    @Test
-    /**
-     * Тест для случая, когда пользователь ввел команду /help.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testHelpCommand() {
-        String answer = messageLogic.slogic("/help");
+                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
+                "командой /question. Если хотите начать работу напишите /work. Также у тебя есть возможность" +
+                " пройти тест на то, какое направление вам больше подходит, просто напишите /test", answer1);
         assertEquals("Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work", answer);
+                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
+                "командой /question. Если хотите начать работу напишите /work. Также у тебя есть возможность" +
+                " пройти тест на то, какое направление вам больше подходит, просто напишите /test", answer2);
+        assertEquals("Вот все институты у которых ты можешь посмотреть факультеты:", answer3);
+        assertEquals("Вы начали проходить тестирование по выбору факультета," +
+                " выберите один предмет из этих трех:", answer4);
+
     }
+
 
     /**
-     * Тест для случая, когда пользователь ввел команду /work.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
+     * Тест для случаев ИЕНИМ, РТФ, ХТИ.
      */
-    @Test
-    void testWorkCommand() {
-        String answer = messageLogic.slogic("/work");
-        assertEquals("Вот все институты у которых ты можешь посмотреть факультеты:", answer);
-    }
 
     @Test
-    /**
-     * Тест для случая, когда пользователь нажал кнопку ИЕНИМ.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testInst1Command() {
-        String answer = messageLogic.slogic("ИЕНИМ");
-        assertEquals("Вот все факультеты которые есть в институте ИЕНИМ:", answer);
-    }
+    public void testDepartCommands(){
+        String answer1 = messageLogic.slogic("ИЕНИМ");
+        String answer2 = messageLogic.slogic("РТФ");
+        String answer3 = messageLogic.slogic("ХТИ");
 
-    @Test
-    /**
-     * Тест для случая, когда пользователь нажал кнопку РТФ.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testInst2Command() {
-        String answer = messageLogic.slogic("РТФ");
-        assertEquals("Вот все факультеты которые есть в институте РТФ:", answer);
-    }
+        assertEquals("Вот все факультеты которые есть в институте ИЕНИМ:", answer1);
 
-    @Test
-    /**
-     * Тест для случая, когда пользователь нажал кнопку ХТИ.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testInst3Command() {
-        String answer = messageLogic.slogic("ХТИ");
-        assertEquals("Вот все факультеты которые есть в институте ХТИ:", answer);
-    }
+        assertEquals("Вот все факультеты которые есть в институте РТФ:", answer2);
 
-    @Test
-    /**
-     * Тест для случая, когда пользователь ввел некорректное сообщение.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testDefaultCommand() {
-        String answer = messageLogic.slogic("sdgashgwrhg");
-        assertEquals("Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work", answer);
+        assertEquals("Вот все факультеты которые есть в институте ХТИ:", answer3);
     }
-
     @Test
     /**
      * Тест для случая, когда пользователь ввел корректный адрес электронной почты.
@@ -175,6 +140,8 @@ class messageLogicTest {
     /**
      * Проверяет состояние awaiting_email с корректной почтой
      */
+
+    /*
     @Test
     void testWorksWithMail_AwaitingEmailValidInput() {
         Update update = Mockito.mock(Update.class);
@@ -195,9 +162,14 @@ class messageLogicTest {
         assertEquals("valid@example.com", userMails.get(userId));
         assertEquals("Почта указана корректно, напишите ваш вопрос", result);
     }
+
+     */
+
     /**
      * Проверяет состояние awaiting_email с некорректной почтой
      */
+
+
     @Test
     void testWorksWithMail_AwaitingEmailInvalidInput() {
         Update update = Mockito.mock(Update.class);

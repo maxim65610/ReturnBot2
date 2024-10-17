@@ -7,30 +7,39 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Класс для контроля над выводимой с клавиатур информации
+ * Класс для вывода информации о факультетах урфу
+ * @ DB_URL URL базы данных
+ * @ DB_USER имя пользователя базы данных
+ * @ DB_PASSWORD пароль пользователя базы данных
  */
 
 public class DepartInfoBD {
-    /**
-     * Класс, обрабатывает хеши и по хешам возвращает текст, который должен отправляться по нажатии на кнопку
-     */
     DatabaseConnection databaseConnection = new DatabaseConnection();
+    String url = databaseConnection.getDB_URL();
+    String user =databaseConnection.getDB_USER();
+    String password = databaseConnection.getDB_PASSWORD();
+
+    /**
+     * Извлекает информацию из базы данных по заданному идентификатору.
+     * @param data Идентификатор для поиска информации.
+     * @param textToSend Текст, возвращаемый при отсутствии информации.
+     */
 
     public String takeInfo(String data,String textToSend) {
 
         String sql = "SELECT * FROM DepartsInfo WHERE id_depart = ?";
 
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+        try (Connection conn = DriverManager.getConnection(url, user, password);
 
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1,data);
-            ResultSet rs = pstmt.executeQuery();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1,data);
+            ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 return rs.getString("info");
 
             }
+
 
         } catch (SQLException e) {
             System.out.println("Ошибка извлечения данных: " + e.getMessage());

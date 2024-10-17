@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
  * Класс для тестирования функциональности класса {@link DepartInfoBD}.
  * Содержит методы для проверки корректности возвращаемых данных.
  */
-public class departInfoBDTest {
+public class DepartInfoBDTest {
 
     @Test
 
@@ -14,8 +14,10 @@ public class departInfoBDTest {
      * Тест для случая, когда пользователь ввел /start
      */
     void testDataReturn() {
+
         DepartInfoBD infoObj = new DepartInfoBD();
-        String textToSend = infoObj.takeInfo("sdfsdfsdfsdf", "sdfsdfsdfsdf");
+
+        String textToSend = infoObj.takeInfo("1442", "sdfsdfsdfsdf");
         Assertions.assertEquals("sdfsdfsdfsdf", textToSend);
     }
 

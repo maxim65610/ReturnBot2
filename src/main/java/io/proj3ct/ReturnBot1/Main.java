@@ -33,19 +33,6 @@ public class Main {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         databaseConnection.createAllTable();
 
-        /**
-         * Создание объектов классов RetrieveData.
-         * retrieveData.getDataById отвечает за вывод информации из бд
-         */
-
-
-
-        /**
-         * Создание объектов классов DepartInfoBD.
-         * DepartInfoBD.takeInfo отвечает за вывод информации из бд
-         */
-
-
 
         // Извлечение электронной почты и пароля из переменных окружения
         String username = System.getenv("mail"); // Ваша почта
