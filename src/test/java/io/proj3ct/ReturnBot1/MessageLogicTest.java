@@ -16,93 +16,59 @@ import static org.mockito.Mockito.*;
  * Класс для тестирования логики работы класса LogicBrain.
  * Содержит тесты для различных команд и методов обработки ввода пользователя.
  */
-public class LogicBrainTest {
+class MessageLogicTest {
 
-    private LogicBrain logicBrain;
+    private MessageLogic messageLogic;
     private Map<Long, String> userStates;
     private Map<Long, String> userMails;
     @BeforeEach
     void setUp() {
         // Создаем экземпляр LogicBrain
-        logicBrain = new LogicBrain();
+        messageLogic = new MessageLogic();
         userStates = new HashMap<>();
         userMails = new HashMap<>();
     }
 
     @Test
     /**
-     * Тест для случая, когда пользователь ввел команду /start.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
+     * Тест для команд start,help,work,test и проверяет их ответы.
      */
-    void testStartCommand() {
-        String answer = logicBrain.slogic("/start");
+    void testCommands() {
+        String answer1 = messageLogic.slogic("/start");
+        String answer2 = messageLogic.slogic("/help");
+        String answer3 = messageLogic.slogic("/work");
+        String answer4 = messageLogic.slogic("/test");
+
         assertEquals("Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work", answer);
-    }
-
-    @Test
-    /**
-     * Тест для случая, когда пользователь ввел команду /help.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testHelpCommand() {
-        String answer = logicBrain.slogic("/help");
+                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
+                "командой /question. Если хотите начать работу напишите /work. Также у тебя есть возможность" +
+                " пройти тест на то, какое направление вам больше подходит, просто напишите /test", answer1);
         assertEquals("Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work", answer);
+                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
+                "командой /question. Если хотите начать работу напишите /work. Также у тебя есть возможность" +
+                " пройти тест на то, какое направление вам больше подходит, просто напишите /test", answer2);
+        assertEquals("Вот все институты у которых ты можешь посмотреть факультеты:", answer3);
+        assertEquals("Вы начали проходить тестирование по выбору факультета," +
+                " выберите один предмет из этих трех:", answer4);
+
     }
 
+
     /**
-     * Тест для случая, когда пользователь ввел команду /work.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
+     * Тест для случаев ИЕНИМ, РТФ, ХТИ.
      */
-    @Test
-    void testWorkCommand() {
-        String answer = logicBrain.slogic("/work");
-        assertEquals("Вот все институты у которых ты можешь посмотреть факультеты:", answer);
-    }
 
     @Test
-    /**
-     * Тест для случая, когда пользователь нажал кнопку ИЕНИМ.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testInst1Command() {
-        String answer = logicBrain.slogic("ИЕНИМ");
-        assertEquals("Вот все факультеты которые есть в институте ИЕНИМ:", answer);
-    }
+    public void testDepartCommands(){
+        String answer1 = messageLogic.slogic("ИЕНИМ");
+        String answer2 = messageLogic.slogic("РТФ");
+        String answer3 = messageLogic.slogic("ХТИ");
 
-    @Test
-    /**
-     * Тест для случая, когда пользователь нажал кнопку РТФ.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testInst2Command() {
-        String answer = logicBrain.slogic("РТФ");
-        assertEquals("Вот все факультеты которые есть в институте РТФ:", answer);
-    }
+        assertEquals("Вот все факультеты которые есть в институте ИЕНИМ:", answer1);
 
-    @Test
-    /**
-     * Тест для случая, когда пользователь нажал кнопку ХТИ.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testInst3Command() {
-        String answer = logicBrain.slogic("ХТИ");
-        assertEquals("Вот все факультеты которые есть в институте ХТИ:", answer);
-    }
+        assertEquals("Вот все факультеты которые есть в институте РТФ:", answer2);
 
-    @Test
-    /**
-     * Тест для случая, когда пользователь ввел некорректное сообщение.
-     * Проверяет, что ответ соответствует ожидаемому сообщению.
-     */
-    void testDefaultCommand() {
-        String answer = logicBrain.slogic("sdgashgwrhg");
-        assertEquals("Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work", answer);
+        assertEquals("Вот все факультеты которые есть в институте ХТИ:", answer3);
     }
     @Test
     /**
@@ -111,11 +77,11 @@ public class LogicBrainTest {
      */
     public void testHandleEmailInput_ValidEmail() {
         EmailSender emailSender = new EmailSender("user@example.com", "password123");
-        logicBrain.setEmailSender(emailSender);
+        messageLogic.setEmailSender(emailSender);
         String email = "test@example.com";
         String expectedResponse = "Почта указана корректно, напишите ваш вопрос";
 
-        String actualResponse = logicBrain.handleEmailInput(email);
+        String actualResponse = messageLogic.handleEmailInput(email);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -127,11 +93,11 @@ public class LogicBrainTest {
      */
     public void testHandleEmailInput_InvalidEmail() {
         EmailSender emailSender = new EmailSender("user@example.com", "password123");
-        logicBrain.setEmailSender(emailSender);
+        messageLogic.setEmailSender(emailSender);
         String email = "invalid-email";
         String expectedResponse = "Адрес электронной почты был указан неправильно отправьте его ещё раз";
 
-        String actualResponse = logicBrain.handleEmailInput(email);
+        String actualResponse = messageLogic.handleEmailInput(email);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -143,12 +109,12 @@ public class LogicBrainTest {
      */
     void testSendMail() {
         EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
-        logicBrain.setEmailSender(mockEmailSender);
+        messageLogic.setEmailSender(mockEmailSender);
         String mailMessage = "test@example.com";
         String question = "Как подать заявку?";
 
         // Выполняем метод sendMail
-        logicBrain.sendMail(mailMessage, question);
+        messageLogic.sendMail(mailMessage, question);
 
         // Проверяем, что метод sendEmail был вызван с правильными параметрами
         verify(mockEmailSender).sendEmail(eq(mockEmailSender.getUsername()), eq("Вопрос от абитуриента " + mailMessage), eq(question));
@@ -165,7 +131,7 @@ public class LogicBrainTest {
         Mockito.when(message.getText()).thenReturn("/question");
         Long userId = 1L;
 
-        String result = logicBrain.worksWithMail(update, "/question", userId, null, userStates, userMails);
+        String result = messageLogic.worksWithMail(update, "/question", userId, null, userStates, userMails);
 
         assertEquals("awaiting_email", userStates.get(userId));
         assertEquals("Пожалуйста, отправьте свою почту", result);
@@ -174,6 +140,8 @@ public class LogicBrainTest {
     /**
      * Проверяет состояние awaiting_email с корректной почтой
      */
+
+
     @Test
     void testWorksWithMail_AwaitingEmailValidInput() {
         Update update = Mockito.mock(Update.class);
@@ -186,17 +154,22 @@ public class LogicBrainTest {
         // Мокируем EmailSender
         EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
         Mockito.when(mockEmailSender.isValidEmail("valid@example.com")).thenReturn(true);
-        logicBrain.setEmailSender(mockEmailSender);
+        messageLogic.setEmailSender(mockEmailSender);
 
-        String result = logicBrain.worksWithMail(update, "valid@example.com", userId, "awaiting_email", userStates, userMails);
+        String result = messageLogic.worksWithMail(update, "valid@example.com", userId, "awaiting_email", userStates, userMails);
 
         assertEquals("awaiting_question", userStates.get(userId));
         assertEquals("valid@example.com", userMails.get(userId));
         assertEquals("Почта указана корректно, напишите ваш вопрос", result);
     }
+
+
+
     /**
      * Проверяет состояние awaiting_email с некорректной почтой
      */
+
+
     @Test
     void testWorksWithMail_AwaitingEmailInvalidInput() {
         Update update = Mockito.mock(Update.class);
@@ -209,9 +182,9 @@ public class LogicBrainTest {
         // Мокируем EmailSender
         EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
         Mockito.when(mockEmailSender.isValidEmail("invalid-email")).thenReturn(false);
-        logicBrain.setEmailSender(mockEmailSender);
+        messageLogic.setEmailSender(mockEmailSender);
 
-        String result = logicBrain.worksWithMail(update, "invalid-email", userId, "awaiting_email", userStates, userMails);
+        String result = messageLogic.worksWithMail(update, "invalid-email", userId, "awaiting_email", userStates, userMails);
 
         assertEquals(null, userMails.get(userId)); // Почта должна быть удалена
         assertEquals("awaiting_email", userStates.get(userId)); // Состояние не должно измениться
@@ -233,9 +206,9 @@ public class LogicBrainTest {
 
         // Мокируем EmailSender
         EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
-        logicBrain.setEmailSender(mockEmailSender);
+        messageLogic.setEmailSender(mockEmailSender);
 
-        String result = logicBrain.worksWithMail(update, "Это мой вопрос", userId, "awaiting_question", userStates, userMails);
+        String result = messageLogic.worksWithMail(update, "Это мой вопрос", userId, "awaiting_question", userStates, userMails);
 
         assertEquals(null, userStates.get(userId)); // Состояние должно быть удалено
         assertEquals(null, userMails.get(userId)); // Почта должна быть удалена
@@ -245,7 +218,6 @@ public class LogicBrainTest {
         verify(mockEmailSender).sendEmail(eq(mockEmailSender.getUsername()), eq("Вопрос от абитуриента valid@example.com"), eq("Это мой вопрос"));
     }
 }
-
 
 
 

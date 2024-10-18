@@ -21,7 +21,7 @@ public class KeyboardLogicTest {
      */
     @Test
     public void testKeyboardsWorkCommand() {
-        keyboardLogic logic = new keyboardLogic();
+        KeyboardLogic logic = new KeyboardLogic();
         SendMessage message = new SendMessage();
 
         String data = "/work";
@@ -37,7 +37,7 @@ public class KeyboardLogicTest {
      */
     @Test
     public void testKeyboardsIENIMCommand() {
-        keyboardLogic logic = new keyboardLogic();
+        KeyboardLogic logic = new KeyboardLogic();
         SendMessage message = new SendMessage();
 
         String data = "ИЕНИМ";
@@ -53,7 +53,7 @@ public class KeyboardLogicTest {
      */
     @Test
     public void testKeyboardsRTFCommand() {
-        keyboardLogic logic = new keyboardLogic();
+        KeyboardLogic logic = new KeyboardLogic();
         SendMessage message = new SendMessage();
 
         String data = "РТФ";
@@ -69,7 +69,7 @@ public class KeyboardLogicTest {
      */
     @Test
     public void testKeyboardsHTICommand() {
-        keyboardLogic logic = new keyboardLogic();
+        KeyboardLogic logic = new KeyboardLogic();
         SendMessage message = new SendMessage();
 
         String data = "ХТИ";

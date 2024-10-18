@@ -12,19 +12,26 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class Main {
     public static void main(String[] args) {
         /**
-         * Инициализация токена и имени бота.
-         * Токен и имя бота извлекаются из переменных окружения.
+         * Инициализация токена, имени бота и данных для базы данных.
+         * Данные извлекаются из переменных окружения.
          */
         String BOT_TOKEN = System.getenv("tgToken");
         String BOT_NAME = System.getenv("tgName");
-
         /**
          * Создание объектов классов LogicBrain и TelegramBot.
          * LogicBrain отвечает за логику работы бота, а TelegramBot
          * - за взаимодействие с Telegram API.
          */
-        LogicBrain botLogic = new LogicBrain();
+        MessageLogic botLogic = new MessageLogic();
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic);
+
+        /**
+         * Создание объектов классов databaseConnection.
+         * databaseConnection отвечает за подключение к базе данных
+         */
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        databaseConnection.createAllTable();
+
 
         // Извлечение электронной почты и пароля из переменных окружения
         String username = System.getenv("mail"); // Ваша почта

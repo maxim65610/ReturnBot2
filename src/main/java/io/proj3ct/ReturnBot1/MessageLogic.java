@@ -8,9 +8,7 @@ import java.util.Map;
  * Класс, отвечающий за основную логику работы Telegram-бота.
  * Включает методы для обработки команд пользователя и отправки электронных писем.
  */
-public class LogicBrain {
-
-    private EmailSender emailSender;
+public class MessageLogic {
 
     /**
      * Метод, который возвращает стандартный ответ бота на нераспознанные команды.
@@ -18,8 +16,9 @@ public class LogicBrain {
      */
     private String defaultCommandReceived() {
         return "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться командой /question." +
-                " Если хотите начать работу напишите /work";
+                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
+                "командой /question. Если хотите начать работу напишите /work. Также у тебя есть возможность" +
+                " пройти тест на то, какое направление вам больше подходит, просто напишите /test";
     }
 
     /**
@@ -50,9 +49,18 @@ public class LogicBrain {
      * Метод, который возвращает ответ бота для кнопок института ХТИ.
      * @return сообщение со списком факультетов института ХТИ.
      */
-    private String inst3CommandReceived() {
-        return "Вот все факультеты которые есть в институте ХТИ:";
+    private String inst3CommandReceived() {return "Вот все факультеты которые есть в институте ХТИ:";}
+
+    /**
+     * Метод, который возвращает ответ бота для начала работы с testAbit.
+     * @return сообщение для начала работы с testAbit.
+     */
+    private String testAbitCommandReceived() {
+        return "Вы начали проходить тестирование по выбору факультета, выберите один предмет из этих трех:";
     }
+
+
+    private EmailSender emailSender;
 
     /**
      * Метод для установки объекта EmailSender.
@@ -102,7 +110,7 @@ public class LogicBrain {
      * @param userStates  Состояние пользователя.
      * @param userMails Mail пользователя.
      */
-    public String worksWithMail(Update update, String messageText, Long userId, String currentState, Map<Long, String> userStates, Map<Long, String> userMails) {
+    public  String worksWithMail(Update update, String messageText, Long userId, String currentState, Map<Long, String> userStates, Map<Long, String> userMails) {
         if ("/question".equals(messageText)) {
             userStates.put(userId, "awaiting_email");;
         } else if ("awaiting_email".equals(currentState)) {
@@ -136,10 +144,13 @@ public class LogicBrain {
     public String slogic(String messageText) {
         switch (messageText) {
             case "/start":
+                return defaultCommandReceived();
             case "/help":
                 return defaultCommandReceived();
             case "/question":
                 return questionCommandReceived();
+            case "/test":
+                return testAbitCommandReceived();
             case "/work":
                 return workCommandReceived();
             case "ИЕНИМ":
@@ -152,5 +163,7 @@ public class LogicBrain {
                 return defaultCommandReceived();
         }
     }
+
+
 }
 
