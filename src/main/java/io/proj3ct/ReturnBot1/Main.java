@@ -29,7 +29,6 @@ public class Main {
          * Создание объектов классов databaseConnection.
          * databaseConnection отвечает за подключение к базе данных
          */
-
         DatabaseConnection databaseConnection = new DatabaseConnection();
         databaseConnection.createAllTable();
 

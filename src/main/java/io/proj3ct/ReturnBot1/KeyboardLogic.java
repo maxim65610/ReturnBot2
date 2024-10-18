@@ -129,7 +129,14 @@ public class KeyboardLogic {
 
         return message;
     }
-    public SendMessage keyboardforTestAPI(SendMessage message, List<String> list_with_dataBD ){
+    /**
+     * Метод для создания клавиатуры для тестирования ABI.
+     *
+     * @param message         Сообщение, к которому добавляется клавиатура.
+     * @param list_with_dataBD Список данных для настройки клавиатуры.
+     * @return Изменённое сообщение с установленной клавиатурой.
+     */
+    public SendMessage keyboardforTestABI(SendMessage message, List<String> list_with_dataBD ){
         if (list_with_dataBD.get(3).equals("-"))
         {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();

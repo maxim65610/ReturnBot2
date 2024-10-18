@@ -29,7 +29,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private Map<Long, String> userStatesforTest = new HashMap<>();
 
-    private MessageAndKeyboardLogic messageAndKeyboardLogic = new MessageAndKeyboardLogic();
+    private LogicForTestABI logicForTestABI = new LogicForTestABI();
     /**
      * Конструктор класса TelegramBot.
      *
@@ -68,10 +68,20 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if((update.hasCallbackQuery() && update.getCallbackQuery() != null) && (!userStatesforTest.isEmpty())){
-
+            long chatID = update.getCallbackQuery().getFrom().getId();
             String data = update.getCallbackQuery().getData();
-            List<String> list_with_dataBD  = messageAndKeyboardLogic.worksWithTestAPI("", update.getCallbackQuery().getFrom().getId(), userStatesforTest, data);
-            sendMessage(update.getCallbackQuery().getFrom().getId(), list_with_dataBD.get(0), list_with_dataBD);
+
+            List<String> list_with_dataBD  = logicForTestABI.worksWithTestAPI("", chatID, userStatesforTest, data);
+            if(!userStatesforTest.get(chatID).equals("awaiting_testABI_11")){
+                sendMessage(chatID, list_with_dataBD.get(0), list_with_dataBD);
+
+            }
+            else{
+                sendMessage(chatID, "Поздравляю, вы прошли тест. Чтобы узнать результат напишите /result");
+                userStatesforTest.remove(chatID);
+            }
+
+
         }
         else if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
             String data = update.getCallbackQuery().getData();
@@ -90,8 +100,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
             else if("/test".equals(messageText)){
 
-                messageAndKeyboardLogic.worksWithTestAPI(messageText, userId, userStatesforTest, "100");
+                logicForTestABI.worksWithTestAPI(messageText, userId, userStatesforTest, "100");
                 sendMessage(userId, botLogic.slogic(messageText), messageText);
+            }
+            else if("/result".equals(messageText)){
+                sendMessage(update.getMessage().getChatId(), logicForTestABI.getResult(update.getMessage().getChatId()));
             }
             else {
                 sendMessage(update.getMessage().getChatId(), botLogic.slogic(messageText), messageText);
@@ -99,12 +112,19 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
         }
     }
+    /**
+     * Отправляет сообщение в указанный чат с заданным текстом и данными для клавиатуры.
+     *
+     * @param chatId Идентификатор чата, в который будет отправлено сообщение.
+     * @param textToSend Текст сообщения, которое будет отправлено.
+     * @param list_with_dataBD Список данных, используемых для настройки клавиатуры, связанной с сообщением.
+     */
     void sendMessage(long chatId, String textToSend, List<String> list_with_dataBD) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
         KeyboardLogic keyboardLogicObj = new KeyboardLogic();
-        keyboardLogicObj.keyboardforTestAPI(message, list_with_dataBD);
+        keyboardLogicObj.keyboardforTestABI(message, list_with_dataBD);
         try {
 
             execute(message);
@@ -139,8 +159,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             // Обработка исключения (опционально: логирование)
         }
     }
-
-
 
     /**
      * Отправляет сообщение пользователю без дополнительных параметров.

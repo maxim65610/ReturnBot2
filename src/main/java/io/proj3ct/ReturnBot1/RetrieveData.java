@@ -5,7 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+/**
+ * Класс для извлечения данных из базы данных.
+ * Унаследован от класса DatabaseConnection.
+ */
 public class RetrieveData extends DatabaseConnection {
 
     /**
