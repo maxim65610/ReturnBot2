@@ -14,7 +14,6 @@ public class DatabaseConnection {
     private final String DB_URL;
     private final String DB_USER;
     private final String DB_PASSWORD;
-
     /**
      * Конструктор для базы данных
      * @ DB_URL URL базы данных
@@ -89,12 +88,18 @@ public class DatabaseConnection {
         cash3 text NOT NULL
         );""";
 
+        String sql2 = """
+        CREATE TABLE IF NOT EXISTS DepartsInfo (
+        id_depart text PRIMARY KEY, 
+        info text NOT NULL  
+        );""";
+
         try {
             Connection conn = connect();
-            if (conn != null) {
+            if (conn != null ) {
                 try (Statement stmt = conn.createStatement()) {
                     stmt.executeUpdate(sql1);
-                    System.out.println("Таблица AnswersData успешно создана.");
+                    stmt.executeUpdate(sql2);
                     return "Nice";
                 }
             } else {
@@ -103,8 +108,6 @@ public class DatabaseConnection {
         } catch (SQLException e) {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
-
         return "notNice";
     }
-
 }

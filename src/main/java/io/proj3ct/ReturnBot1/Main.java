@@ -17,28 +17,22 @@ public class Main {
          */
         String BOT_TOKEN = System.getenv("tgToken");
         String BOT_NAME = System.getenv("tgName");
-        String DB_URL = System.getenv("bdUrl");
-        String DB_USER = System.getenv("bdUser");
-        String DB_PASSWORD = System.getenv("bdPassword");
-
         /**
          * Создание объектов классов LogicBrain и TelegramBot.
          * LogicBrain отвечает за логику работы бота, а TelegramBot
          * - за взаимодействие с Telegram API.
          */
-        messageLogic botLogic = new messageLogic();
+        MessageLogic botLogic = new MessageLogic();
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic);
 
         /**
          * Создание объектов классов databaseConnection.
          * databaseConnection отвечает за подключение к базе данных
          */
-
         DatabaseConnection databaseConnection = new DatabaseConnection();
         databaseConnection.createAllTable();
 
-        RetrieveData retrieveData = new RetrieveData();
-        retrieveData.getDataById(208);
+
         // Извлечение электронной почты и пароля из переменных окружения
         String username = System.getenv("mail"); // Ваша почта
         String password = System.getenv("passwordForMail"); // Ваш пароль (или App Password)

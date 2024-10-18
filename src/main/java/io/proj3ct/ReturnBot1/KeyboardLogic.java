@@ -4,12 +4,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.ArrayList;
 import java.util.List;
 /**
  * Класс для контроля над клавиатурами
  */
-public class keyboardLogic {
+public class KeyboardLogic {
     /**
      * Метод, который обрабатывает клавиатуры отправляющиеся вместе с сообщением
      */
@@ -19,7 +20,6 @@ public class keyboardLogic {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List keyboard = new ArrayList<>();
             List<InlineKeyboardButton> row1 = new ArrayList<>();
-
             row1.add(new InlineKeyboardButton().builder().text("Математика, Механика и Компьютерные Науки").callbackData("ИЕНИМ").build());
             keyboard.add(row1);
 
@@ -112,13 +112,13 @@ public class keyboardLogic {
 
         }
 
-        if (data.equals("/testAbit")) {
+        if (data.equals("/test")) {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<InlineKeyboardButton> row = new ArrayList<>();
 
-            row.add(new InlineKeyboardButton().builder().text("Математика").callbackData("МАТЕМАТИКА").build());
-            row.add(new InlineKeyboardButton().builder().text("Информатика").callbackData("ИНФОРМАТИКА").build());
-            row.add(new InlineKeyboardButton().builder().text("Физика").callbackData("ФИЗИКА").build());
+            row.add(new InlineKeyboardButton().builder().text("Математика").callbackData("300").build());
+            row.add(new InlineKeyboardButton().builder().text("Информатика").callbackData("200").build());
+            row.add(new InlineKeyboardButton().builder().text("Физика").callbackData("100").build());
 
             List keyboard = new ArrayList<>();
             keyboard.add(row);
@@ -129,5 +129,49 @@ public class keyboardLogic {
 
         return message;
     }
+    /**
+     * Метод для создания клавиатуры для тестирования ABI.
+     *
+     * @param message         Сообщение, к которому добавляется клавиатура.
+     * @param list_with_dataBD Список данных для настройки клавиатуры.
+     * @return Изменённое сообщение с установленной клавиатурой.
+     */
+    public SendMessage keyboardforTestABI(SendMessage message, List<String> list_with_dataBD ){
+        if (list_with_dataBD.get(3).equals("-"))
+        {
+            InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+            List<InlineKeyboardButton> row = new ArrayList<>();
+
+
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(1)).callbackData(list_with_dataBD.get(4)).build());
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(2)).callbackData(list_with_dataBD.get(5)).build());
+
+            List keyboard = new ArrayList<>();
+            keyboard.add(row);
+
+            markup.setKeyboard(keyboard);
+            message.setReplyMarkup(markup);
+
+        }
+        else{
+            InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+            List keyboard = new ArrayList<>();
+            List<InlineKeyboardButton> row = new ArrayList<>();
+
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(1)).callbackData(list_with_dataBD.get(4)).build());
+
+
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(2)).callbackData(list_with_dataBD.get(5)).build());
+
+
+            row.add(new InlineKeyboardButton().builder().text(list_with_dataBD.get(3)).callbackData("-").build());
+            keyboard.add(row);
+
+            markup.setKeyboard(keyboard);
+            message.setReplyMarkup(markup);
+        }
+        return message;
+    }
+
 }
 
