@@ -3,7 +3,7 @@ package io.proj3ct.ReturnBot1;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 /**
- * Класс для тестирования функциональности класса {@link DepartInfoBD}.
+ * Класс для тестирования функциональности класса DepartInfoBD.
  * Содержит методы для проверки корректности возвращаемых данных.
  */
 public class DepartInfoBDTest {
@@ -11,7 +11,7 @@ public class DepartInfoBDTest {
     @Test
 
     /**
-     * Тест для случая, когда пользователь ввел /start
+     * Тест для метода по подтягиванию данных из дб
      */
     void testDataReturn() {
 

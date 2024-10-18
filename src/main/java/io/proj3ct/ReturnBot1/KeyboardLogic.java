@@ -116,9 +116,9 @@ public class KeyboardLogic {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<InlineKeyboardButton> row = new ArrayList<>();
 
-            row.add(new InlineKeyboardButton().builder().text("Математика").callbackData("100").build());
+            row.add(new InlineKeyboardButton().builder().text("Математика").callbackData("300").build());
             row.add(new InlineKeyboardButton().builder().text("Информатика").callbackData("200").build());
-            row.add(new InlineKeyboardButton().builder().text("Физика").callbackData("300").build());
+            row.add(new InlineKeyboardButton().builder().text("Физика").callbackData("100").build());
 
             List keyboard = new ArrayList<>();
             keyboard.add(row);

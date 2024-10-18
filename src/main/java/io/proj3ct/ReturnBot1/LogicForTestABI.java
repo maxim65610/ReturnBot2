@@ -196,8 +196,16 @@ public class LogicForTestABI {
      * @return строка с результатом теста
      */
     public String getResult(long chatID){
-        return "Вам больше всего подходит факультет: " + resultsTestAbi.get(chatID);
+        if ( resultsTestAbi.get(chatID) != null || resultsTestAbi.get(chatID).length() ==1 ) {
+            return "Вам больше всего подходит факультет: " + resultsTestAbi.get(chatID);
+        }
+        else if  (resultsTestAbi.get(chatID) != null || resultsTestAbi.get(chatID).length() >1){
+            return "Вам больше всего подходят несколько факультетов: " + resultsTestAbi.get(chatID);
+        }
+        else
+            return  "Вы еще не прошли тест) ";
     }
+
 
     /**
      * Сетер для поля resultsTestAbi
