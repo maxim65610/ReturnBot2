@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * Класс для извлечения данных из базы данных.
  * Унаследован от класса DatabaseConnection.
  */
-public class RetrieveData extends DatabaseConnection {
+public class RetrieveData {
 
     /**
      * Метод для извлечения строки данных из таблицы AnswersData по id_question
@@ -18,11 +18,16 @@ public class RetrieveData extends DatabaseConnection {
      * @ DB_PASSWORD пароль пользователя базы данных
      * @param id идентификатор строки
      */
+
+    DatabaseConnection databaseConnection = new DatabaseConnection();
+
     public String getDataById(int id, String data) {
         String sql = "SELECT * FROM AnswersData WHERE id_question = ?";
 
 
-        try (Connection conn = DriverManager.getConnection(getDB_URL(), getDB_USER(), getDB_PASSWORD());
+        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
+                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, id);

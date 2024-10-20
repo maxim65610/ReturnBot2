@@ -1,7 +1,10 @@
 package io.proj3ct.ReturnBot1;
 
+import org.telegram.telegrambots.meta.api.objects.Update;
+
 import javax.mail.*;
 import javax.mail.internet.*;
+import java.util.Map;
 import java.util.Properties;
 import javax.mail.internet.InternetAddress;
 /**

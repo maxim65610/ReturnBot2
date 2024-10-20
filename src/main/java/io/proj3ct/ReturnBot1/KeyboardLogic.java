@@ -112,7 +112,7 @@ public class KeyboardLogic {
 
         }
 
-        if (data.equals("/test")) {
+        if (data.equals("/testAbit")) {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<InlineKeyboardButton> row = new ArrayList<>();
 

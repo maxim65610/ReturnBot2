@@ -19,13 +19,14 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
     private final MessageLogic botLogic;
+    private final EmailSender emailSender;
+    private final EmailLogic emailLogic;
 
     // Хранит состояния пользователей
     private Map<Long, String> userStates = new HashMap<>();
 
     // Хранит электронные адреса пользователей
     private  Map<Long, String> userMails = new HashMap<>();
-
 
     private Map<Long, String> userStatesforTest = new HashMap<>();
 
@@ -37,12 +38,12 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param token Токен бота.
      * @param logic Логика бота для обработки команд.
      */
-    public TelegramBot(String name, String token, MessageLogic logic) {
+    public TelegramBot(String name, String token, MessageLogic logic, EmailSender emailSender, EmailLogic emailLogic) {
         botName = name;
         botToken = token;
         botLogic = logic;
-
-
+        this.emailSender = emailSender;
+        this.emailLogic = emailLogic;
     }
 
 
@@ -54,7 +55,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     public String checkWhatTodo(String data) {
         if (data.equals("ИЕНИМ") || data.equals("РТФ") || data.equals("ХТИ")) {
-            return botLogic.slogic(data);
+            return botLogic.handleMessage(data);
         } else {
             return data;
         }
@@ -77,7 +78,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             }
             else{
-                sendMessage(chatID, "Поздравляю, вы прошли тест. Чтобы узнать результат напишите /result");
+                sendMessage(chatID, "Поздравляю, вы прошли тест. Чтобы узнать результат напишите /testres ");
                 userStatesforTest.remove(chatID);
             }
 
@@ -93,21 +94,18 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             Long userId = update.getMessage().getChatId();
             String currentState = userStates.get(userId);
-
             if ("/question".equals(messageText) || "awaiting_email".equals(currentState) || "awaiting_question".equals(currentState)) {
-                String answer = botLogic.worksWithMail(update, messageText, userId, currentState, userStates, userMails);
-                sendMessage(userId, answer);
+                sendMessage(userId, emailLogic.worksWithMail(update, messageText, userId, currentState, userStates, userMails, emailSender));
             }
-            else if("/test".equals(messageText)){
-
+            else if("/testAbit".equals(messageText)){
                 logicForTestABI.worksWithTestAPI(messageText, userId, userStatesforTest, "100");
-                sendMessage(userId, botLogic.slogic(messageText), messageText);
+                sendMessage(userId, botLogic.handleMessage(messageText), messageText);
             }
-            else if("/result".equals(messageText)){
+            else if("/testres".equals(messageText)){
                 sendMessage(update.getMessage().getChatId(), logicForTestABI.getResult(update.getMessage().getChatId()));
             }
             else {
-                sendMessage(update.getMessage().getChatId(), botLogic.slogic(messageText), messageText);
+                sendMessage(update.getMessage().getChatId(), botLogic.handleMessage(messageText), messageText);
 
             }
         }

@@ -11,9 +11,9 @@ import java.sql.Statement;
  */
 
 public class DatabaseConnection {
-    private final String DB_URL;
-    private final String DB_USER;
-    private final String DB_PASSWORD;
+    private String DB_URL;
+    private String DB_USER;
+    private String DB_PASSWORD;
     /**
      * Конструктор для базы данных
      * @ DB_URL URL базы данных
@@ -71,12 +71,9 @@ public class DatabaseConnection {
 
     /**
      * Метод для создания таблицы AnswersData в базе данных
-     * @ DB_URL URL базы данных
-     * @ DB_USER имя пользователя базы данных
-     * @ DB_PASSWORD пароль пользователя базы данных
      */
-    public String createAllTable() {
-        String sql1 = """
+    public void createAllTable() {
+        String AnswersDataTable = """
         CREATE TABLE IF NOT EXISTS AnswersData (
         id_question int PRIMARY KEY, 
         question text NOT NULL,
@@ -88,7 +85,7 @@ public class DatabaseConnection {
         cash3 text NOT NULL
         );""";
 
-        String sql2 = """
+        String DepartsInfoTable = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
         id_depart text PRIMARY KEY, 
         info text NOT NULL  
@@ -98,9 +95,9 @@ public class DatabaseConnection {
             Connection conn = connect();
             if (conn != null ) {
                 try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(sql1);
-                    stmt.executeUpdate(sql2);
-                    return "Nice";
+                    stmt.executeUpdate(AnswersDataTable);
+                    stmt.executeUpdate(DepartsInfoTable);
+
                 }
             } else {
                 System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
@@ -108,6 +105,6 @@ public class DatabaseConnection {
         } catch (SQLException e) {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
-        return "notNice";
+
     }
 }
