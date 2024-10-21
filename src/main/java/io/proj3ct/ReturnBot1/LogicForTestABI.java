@@ -9,13 +9,13 @@ public class LogicForTestABI {
     /**
      * Экземпляр класса RetrieveData, используемый для получения данных из базы данных.
      */
-    RetrieveData retrieveData = new RetrieveData();
+    private RetrieveData retrieveData = new RetrieveData();
 
     /**
      * Карта, связывающая идентификаторы пользователей с идентификаторами тестов ABI.
      * Ключ: Идентификатор пользователя, Значение: Идентификатор строки в БД.
      */
-    private Map<Long, Integer> id_testABI = new HashMap<>();
+    private Map<Long, Integer> idTestABI = new HashMap<>();
 
     /**
      * Карта, хранящая выборы пользователей во время теста ABI.
@@ -43,13 +43,13 @@ public class LogicForTestABI {
         String currentState = userStatesforTest.get(userId);
         List<String> data_BD = new ArrayList<>();
         if(data.equals("100")){
-            id_testABI.put(userId, 101);
+            idTestABI.put(userId, 101);
         }
         else if(data.equals("200")){
-            id_testABI.put(userId, 201);
+            idTestABI.put(userId, 201);
         }
         else if(data.equals("300")){
-            id_testABI.put(userId, 301);
+            idTestABI.put(userId, 301);
         }
         else if(!data.equals("-")){
             choiceABI.putIfAbsent(userId, new ArrayList<>());
@@ -58,66 +58,66 @@ public class LogicForTestABI {
         }
 
 
-        if(messageText.equals("/test") && userStatesforTest.isEmpty()){
+        if(messageText.equals("/testAbit") && userStatesforTest.isEmpty()){
             userStatesforTest.put(userId, "awaiting_testABI_1");
         }
         else if("awaiting_testABI_1".equals(currentState)){
             if(data.equals("100")){
-                data_BD = arrayBDforTestABI(id_testABI.get(userId));
+                data_BD = arrayBDforTestABI(idTestABI.get(userId));
             }
             else if(data.equals("200"))
             {
-                data_BD =arrayBDforTestABI(id_testABI.get(userId));
+                data_BD =arrayBDforTestABI(idTestABI.get(userId));
             }
             else if(data.equals("300")){
-                data_BD = arrayBDforTestABI(id_testABI.get(userId));
+                data_BD = arrayBDforTestABI(idTestABI.get(userId));
             }
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_2");
         }
         else if("awaiting_testABI_2".equals(currentState)){
-            data_BD = arrayBDforTestABI(id_testABI.get(userId) + 1);
+            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 1);
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_3");
 
         }
         else if("awaiting_testABI_3".equals(currentState)){
-            data_BD = arrayBDforTestABI(id_testABI.get(userId) + 2);
+            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 2);
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_4");
         }
         else if("awaiting_testABI_4".equals(currentState)){
-            data_BD = arrayBDforTestABI(id_testABI.get(userId) + 3);
+            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 3);
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_5");
         }
         else if("awaiting_testABI_5".equals(currentState)){
-            data_BD = arrayBDforTestABI(id_testABI.get(userId) + 4);
+            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 4);
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_6");
         }
         else if("awaiting_testABI_6".equals(currentState)){
-            data_BD = arrayBDforTestABI(id_testABI.get(userId) + 5);
+            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 5);
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_7");
         }
         else if("awaiting_testABI_7".equals(currentState)){
-            data_BD = arrayBDforTestABI(id_testABI.get(userId) + 6);
+            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 6);
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_8");
         }
         else if("awaiting_testABI_8".equals(currentState)) {
-            data_BD = arrayBDforTestABI(id_testABI.get(userId) + 7);
+            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 7);
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_9");
         }
         else if("awaiting_testABI_9".equals(currentState)){
-            data_BD = arrayBDforTestABI(id_testABI.get(userId) + 8);
+            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 8);
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_10");
         }
         else if("awaiting_testABI_10".equals(currentState)){
-            resultsTestAbi.put(userId, gettingresult(userId, choiceABI));
+            resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
             userStatesforTest.remove(userId);
             userStatesforTest.put(userId, "awaiting_testABI_11");
         }
@@ -130,7 +130,7 @@ public class LogicForTestABI {
      * @param id_testABI идентификатор строки в базе данных
      * @return список данных, включая вопрос,ответы и значения, для формирования ответа
      */
-    public List<String> arrayBDforTestABI(int id_testABI){
+    private List<String> arrayBDforTestABI(int id_testABI){
         List<String> data_BD = new ArrayList<>();
         data_BD.add(retrieveData.getDataById(id_testABI, "question"));
         data_BD.add(retrieveData.getDataById(id_testABI, "answer1"));
@@ -147,7 +147,7 @@ public class LogicForTestABI {
      * @param id_getfaculty идентификатор факультета
      * @return название факультета
      */
-    public String getnamefacultyfromBD(int id_getfaculty){
+    private String getNameFacultyFromBD(int id_getfaculty){
         return retrieveData.getDataById(id_getfaculty, "cash3");
     }
 
@@ -158,21 +158,20 @@ public class LogicForTestABI {
      * @param choiceABI выборы пользователя
      * @return название подходящего факультета
      */
-    public String gettingresult(Long userID, Map<Long, List<String>> choiceABI){
+    public String gettingResult(Long userID, Map<Long, List<String>> choiceABI){
         List<String> listofABIechoice= choiceABI.get(userID);
         int sizeListofABIechoice = listofABIechoice.size();
         List<String> listofABIechoiceWithoutGap= new ArrayList<>();
-        for(int i =0 ;i < sizeListofABIechoice; i++){
-            listofABIechoiceWithoutGap.add(listofABIechoice.get(i).trim());
+        for (String s : listofABIechoice) {
+            listofABIechoiceWithoutGap.add(s.trim());
         }
         Map<Integer, Integer> countChoiceABI = new HashMap<>();
-        for(int i = 1000; i < 1013; i++) {
+        final int idFromChoice = 1000;
+        for (int i = idFromChoice; i < 1013; i++) {
             for (int j = 0; j < sizeListofABIechoice; j++) {
-
                 if (listofABIechoiceWithoutGap.get(j).equals(String.valueOf(i))) {
-                    countChoiceABI.put(i, countChoiceABI.getOrDefault(i, 0) + 1);
+                    countChoiceABI.merge(i, 1, Integer::sum);
                 }
-
             }
         }
 
@@ -186,7 +185,7 @@ public class LogicForTestABI {
                 maxcountchoiceABI = value;
             }
         }
-        return getnamefacultyfromBD(idforchoiceABI);
+        return getNameFacultyFromBD(idforchoiceABI);
 
     }
     /**
@@ -196,22 +195,8 @@ public class LogicForTestABI {
      * @return строка с результатом теста
      */
     public String getResult(long chatID){
-        if ( resultsTestAbi.get(chatID) != null || resultsTestAbi.get(chatID).length() ==1 ) {
-            return "Вам больше всего подходит факультет: " + resultsTestAbi.get(chatID);
-        }
-        else if  (resultsTestAbi.get(chatID) != null || resultsTestAbi.get(chatID).length() >1){
-            return "Вам больше всего подходят несколько факультетов: " + resultsTestAbi.get(chatID);
-        }
-        else
-            return  "Вы еще не прошли тест) ";
+        return "Вам больше всего подходит факультет: " + resultsTestAbi.get(chatID);
     }
 
 
-    /**
-     * Сетер для поля resultsTestAbi
-     * @param results входящий results
-     */
-    public void setResultsTestAbi(Map<Long, String> results) {
-        this.resultsTestAbi = results;
-    }
 }
