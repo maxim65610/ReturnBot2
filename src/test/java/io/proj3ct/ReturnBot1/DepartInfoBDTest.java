@@ -17,8 +17,11 @@ public class DepartInfoBDTest {
 
         DepartInfoBD infoObj = new DepartInfoBD();
 
-        String textToSend = infoObj.takeInfo("1442", "sdfsdfsdfsdf");
-        Assertions.assertEquals("sdfsdfsdfsdf", textToSend);
+        String data = "testData";
+        String textToSend = "dataToSend";
+
+        textToSend = infoObj.takeInfo(data, textToSend);
+        Assertions.assertEquals("dataToSend", textToSend);
     }
 
 }
