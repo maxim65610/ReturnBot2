@@ -11,7 +11,6 @@ import java.sql.SQLException;
  */
 public class DepartInfoBD {
     private DatabaseConnection databaseConnection = new DatabaseConnection();
-
     /**
      * Извлекает информацию из базы данных по заданному идентификатору.
      * @param data Идентификатор для поиска информации.
@@ -19,22 +18,15 @@ public class DepartInfoBD {
      * Нужен для того, чтобы из бд вытащить информацию про нужный факультет.
      */
     public String takeInfo(String data,String textToSend) {
-
         String sql = "SELECT * FROM DepartsInfo WHERE id_depart = ?";
-
         try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
                 databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
-
             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1,data);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
                 return rs.getString("info");
-
             }
-
-
         } catch (SQLException e) {
             System.out.println("Ошибка извлечения данных: " + e.getMessage());
         }

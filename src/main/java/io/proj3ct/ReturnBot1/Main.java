@@ -26,14 +26,16 @@ public class Main {
         EmailSender emailSender = new EmailSender(username, password);
 
         /*
-         * Создание объектов классов MessageLogic, EmailLogic TelegramBot.
+         * Создание объектов классов MessageLogic, EmailLogic, LogicForTestABI, TelegramBot.
          * MessageLogic отвечает за логику работы сообщений бота,
          * EmailLogic отвечает за логику работы с почтой;
+         * LogicForTestABI отвечает за логику работы теста
          * а TelegramBot - за взаимодействие с Telegram API.
          */
         CommonMessageLogic botLogic = new CommonMessageLogic();
         EmailLogic emailLogic = new EmailLogic();
-        TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic);
+        LogicForTestABI logicForTestABI = new LogicForTestABI();
+        TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic, logicForTestABI);
 
 
         /*

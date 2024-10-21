@@ -4,7 +4,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -100,7 +99,6 @@ public class KeyboardLogic {
             markup.setKeyboard(keyboard);
             message.setReplyMarkup(markup);
         }
-
         if (data.equals("ХТИ")) {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -122,7 +120,6 @@ public class KeyboardLogic {
             message.setReplyMarkup(markup);
 
         }
-
         if (data.equals("/testAbit")) {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             List<InlineKeyboardButton> row = new ArrayList<>();
@@ -137,7 +134,6 @@ public class KeyboardLogic {
             markup.setKeyboard(keyboard);
             message.setReplyMarkup(markup);
         }
-
         return message;
     }
     /**
@@ -188,6 +184,5 @@ public class KeyboardLogic {
         }
         return message;
     }
-
 }
 
