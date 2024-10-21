@@ -25,6 +25,9 @@ public class Main {
         // Создание объекта EmailSender для отправки электронных писем
         EmailSender emailSender = new EmailSender(username, password);
 
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        databaseConnection.createAllTable();
+
         /*
          * Создание объектов классов MessageLogic, EmailLogic, LogicForTestABI, TelegramBot.
          * MessageLogic отвечает за логику работы сообщений бота,
@@ -36,6 +39,7 @@ public class Main {
         EmailLogic emailLogic = new EmailLogic();
         LogicForTestABI logicForTestABI = new LogicForTestABI();
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic, logicForTestABI);
+
 
 
         /*
