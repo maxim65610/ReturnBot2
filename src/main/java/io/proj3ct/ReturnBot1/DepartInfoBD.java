@@ -11,6 +11,7 @@ import java.sql.SQLException;
  */
 public class DepartInfoBD {
     private DatabaseConnection databaseConnection = new DatabaseConnection();
+
     /**
      * Извлекает информацию из базы данных по заданному идентификатору.
      * @param data Идентификатор для поиска информации.
