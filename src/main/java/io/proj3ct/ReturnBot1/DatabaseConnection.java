@@ -9,7 +9,6 @@ import java.sql.Statement;
  * Класс для подключения к базе данных, и
  * создания ее по необходимости
  */
-
 public class DatabaseConnection {
     private String DB_URL;
     private String DB_USER;
@@ -20,34 +19,29 @@ public class DatabaseConnection {
      * @ DB_USER имя пользователя базы данных
      * @ DB_PASSWORD пароль пользователя базы данных
      */
-
     public DatabaseConnection() {
         DB_URL = System.getenv("bdUrl");
         DB_USER = System.getenv("bdUser");
         DB_PASSWORD = System.getenv("bdPassword");
     }
-
     /**
      * Возвращает @param DB_URL
      */
-    public  String getDB_URL() {
+    public String getDB_URL() {
         return DB_URL;
     }
-
     /**
      * Возвращает @param DB_USER
      */
-    public  String getDB_USER() {
+    public String getDB_USER() {
         return DB_USER;
     }
-
     /**
      * Возвращает @param DB_PASSWORD
      */
     public  String getDB_PASSWORD() {
         return DB_PASSWORD;
     }
-
     /**
      * Метод для установления соединения с базой данных
      * @ DB_URL URL базы данных
@@ -55,7 +49,7 @@ public class DatabaseConnection {
      * @ DB_PASSWORD пароль пользователя базы данных
      * @return объект Connection
      */
-     Connection connect() {
+    Connection connect() {
         Connection connection = null;
         try {
             Class.forName("org.postgresql.Driver");
@@ -68,7 +62,6 @@ public class DatabaseConnection {
         }
         return connection;
     }
-
     /**
      * Метод для создания таблицы AnswersData в базе данных
      */

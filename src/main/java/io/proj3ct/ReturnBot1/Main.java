@@ -39,6 +39,7 @@ public class Main {
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic);
 
 
+
         /*
          * Запуск бота.
          * Инициализируется TelegramBotsApi и регистрируется созданный бот.
