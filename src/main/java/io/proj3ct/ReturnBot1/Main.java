@@ -25,6 +25,9 @@ public class Main {
         // Создание объекта EmailSender для отправки электронных писем
         EmailSender emailSender = new EmailSender(username, password);
 
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        databaseConnection.createAllTable();
+
         /*
          * Создание объектов классов MessageLogic, EmailLogic TelegramBot.
          * MessageLogic отвечает за логику работы сообщений бота,

@@ -55,7 +55,7 @@ public class DatabaseConnection {
      * @ DB_PASSWORD пароль пользователя базы данных
      * @return объект Connection
      */
-    private Connection connect() {
+     Connection connect() {
         Connection connection = null;
         try {
             Class.forName("org.postgresql.Driver");

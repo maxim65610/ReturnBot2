@@ -78,5 +78,21 @@ public class KeyboardLogicTest {
         InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
         assertEquals(3, markup.getKeyboard().size());
     }
+
+    /**
+     * Тест для проверки работы клавиатуры при вводе команды /testAbit.
+     * Проверяет, что клавиатура содержит один ряд кнопок.
+     */
+    @Test
+    public void testKeyboardsTestAbitCommand() {
+        KeyboardLogic logic = new KeyboardLogic();
+        SendMessage message = new SendMessage();
+
+        String data = "/testAbit";
+        SendMessage resultMessage = logic.keyboards(message, data);
+
+        InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
+        assertEquals(1, markup.getKeyboard().size());
+    }
 }
 
