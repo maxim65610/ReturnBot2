@@ -12,10 +12,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-/**
- * Класс для тестирования логики работы класса CommonMessageLogic.
- * Содержит тесты для различных команд и методов обработки ввода пользователя.
- */
+
 class CommonMessageLogicTest {
 
     private CommonMessageLogic commonMessageLogic;
