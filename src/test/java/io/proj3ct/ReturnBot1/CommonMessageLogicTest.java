@@ -16,15 +16,15 @@ import static org.mockito.Mockito.*;
  * Класс для тестирования логики работы класса LogicBrain.
  * Содержит тесты для различных команд и методов обработки ввода пользователя.
  */
-class MessageLogicTest {
+class CommonMessageLogicTest {
 
-    private MessageLogic messageLogic;
+    private CommonMessageLogic commonMessageLogic;
     private Map<Long, String> userStates;
     private Map<Long, String> userMails;
     @BeforeEach
     void setUp() {
         // Создаем экземпляр LogicBrain
-        messageLogic = new MessageLogic();
+        commonMessageLogic = new CommonMessageLogic();
         userStates = new HashMap<>();
         userMails = new HashMap<>();
     }
@@ -34,22 +34,21 @@ class MessageLogicTest {
      * Тест для команд start,help,work,test и проверяет их ответы.
      */
     void testCommands() {
-        String answer1 = messageLogic.slogic("/start");
-        String answer2 = messageLogic.slogic("/help");
-        String answer3 = messageLogic.slogic("/work");
-        String answer4 = messageLogic.slogic("/test");
+        String answerCommandDefault = commonMessageLogic.handleMessage("/start");
+        String answerCommandWork = commonMessageLogic.handleMessage("/work");
+        String answer4 = commonMessageLogic.handleMessage("/testAbit");
 
-        assertEquals("Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
-                "командой /question. Если хотите начать работу напишите /work. Также у тебя есть возможность" +
-                " пройти тест на то, какое направление вам больше подходит, просто напишите /test", answer1);
-        assertEquals("Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
-                " пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
-                "командой /question. Если хотите начать работу напишите /work. Также у тебя есть возможность" +
-                " пройти тест на то, какое направление вам больше подходит, просто напишите /test", answer2);
-        assertEquals("Вот все институты у которых ты можешь посмотреть факультеты:", answer3);
-        assertEquals("Вы начали проходить тестирование по выбору факультета," +
-                " выберите один предмет из этих трех:", answer4);
+        String ExpectedMessageDefault = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить, " +
+                "пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
+                "командой /question. Если хотите начать работу, напишите /work. Также у тебя есть " +
+                "возможность пройти тест на то, какое направление вам больше подходит, просто напиши /testAbit";
+        String ExpectedMessageWork = "Вот все институты, у которых ты можешь посмотреть факультеты:";
+        String ExpectedMessageTest = "Вы начали проходить тестирование по выбору факультета, " +
+                "выберите один предмет из этих трех:";
+
+        assertEquals(ExpectedMessageDefault, answerCommandDefault);
+        assertEquals(ExpectedMessageWork, answerCommandWork);
+        assertEquals(ExpectedMessageTest, answer4);
 
     }
 
@@ -60,9 +59,9 @@ class MessageLogicTest {
 
     @Test
     public void testDepartCommands(){
-        String answer1 = messageLogic.slogic("ИЕНИМ");
-        String answer2 = messageLogic.slogic("РТФ");
-        String answer3 = messageLogic.slogic("ХТИ");
+        String answer1 = commonMessageLogic.slogic("ИЕНИМ");
+        String answer2 = commonMessageLogic.slogic("РТФ");
+        String answer3 = commonMessageLogic.slogic("ХТИ");
 
         assertEquals("Вот все факультеты которые есть в институте ИЕНИМ:", answer1);
 
@@ -77,11 +76,11 @@ class MessageLogicTest {
      */
     public void testHandleEmailInput_ValidEmail() {
         EmailSender emailSender = new EmailSender("user@example.com", "password123");
-        messageLogic.setEmailSender(emailSender);
+        commonMessageLogic.setEmailSender(emailSender);
         String email = "test@example.com";
         String expectedResponse = "Почта указана корректно, напишите ваш вопрос";
 
-        String actualResponse = messageLogic.handleEmailInput(email);
+        String actualResponse = commonMessageLogic.handleEmailInput(email);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -93,11 +92,11 @@ class MessageLogicTest {
      */
     public void testHandleEmailInput_InvalidEmail() {
         EmailSender emailSender = new EmailSender("user@example.com", "password123");
-        messageLogic.setEmailSender(emailSender);
+        commonMessageLogic.setEmailSender(emailSender);
         String email = "invalid-email";
         String expectedResponse = "Адрес электронной почты был указан неправильно отправьте его ещё раз";
 
-        String actualResponse = messageLogic.handleEmailInput(email);
+        String actualResponse = commonMessageLogic.handleEmailInput(email);
 
         assertEquals(expectedResponse, actualResponse);
     }
@@ -109,12 +108,12 @@ class MessageLogicTest {
      */
     void testSendMail() {
         EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
-        messageLogic.setEmailSender(mockEmailSender);
+        commonMessageLogic.setEmailSender(mockEmailSender);
         String mailMessage = "test@example.com";
         String question = "Как подать заявку?";
 
         // Выполняем метод sendMail
-        messageLogic.sendMail(mailMessage, question);
+        commonMessageLogic.sendMail(mailMessage, question);
 
         // Проверяем, что метод sendEmail был вызван с правильными параметрами
         verify(mockEmailSender).sendEmail(eq(mockEmailSender.getUsername()), eq("Вопрос от абитуриента " + mailMessage), eq(question));
@@ -131,7 +130,7 @@ class MessageLogicTest {
         Mockito.when(message.getText()).thenReturn("/question");
         Long userId = 1L;
 
-        String result = messageLogic.worksWithMail(update, "/question", userId, null, userStates, userMails);
+        String result = commonMessageLogic.worksWithMail(update, "/question", userId, null, userStates, userMails);
 
         assertEquals("awaiting_email", userStates.get(userId));
         assertEquals("Пожалуйста, отправьте свою почту", result);
@@ -154,9 +153,9 @@ class MessageLogicTest {
         // Мокируем EmailSender
         EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
         Mockito.when(mockEmailSender.isValidEmail("valid@example.com")).thenReturn(true);
-        messageLogic.setEmailSender(mockEmailSender);
+        commonMessageLogic.setEmailSender(mockEmailSender);
 
-        String result = messageLogic.worksWithMail(update, "valid@example.com", userId, "awaiting_email", userStates, userMails);
+        String result = commonMessageLogic.worksWithMail(update, "valid@example.com", userId, "awaiting_email", userStates, userMails);
 
         assertEquals("awaiting_question", userStates.get(userId));
         assertEquals("valid@example.com", userMails.get(userId));
@@ -182,9 +181,9 @@ class MessageLogicTest {
         // Мокируем EmailSender
         EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
         Mockito.when(mockEmailSender.isValidEmail("invalid-email")).thenReturn(false);
-        messageLogic.setEmailSender(mockEmailSender);
+        commonMessageLogic.setEmailSender(mockEmailSender);
 
-        String result = messageLogic.worksWithMail(update, "invalid-email", userId, "awaiting_email", userStates, userMails);
+        String result = commonMessageLogic.worksWithMail(update, "invalid-email", userId, "awaiting_email", userStates, userMails);
 
         assertEquals(null, userMails.get(userId)); // Почта должна быть удалена
         assertEquals("awaiting_email", userStates.get(userId)); // Состояние не должно измениться
@@ -206,9 +205,9 @@ class MessageLogicTest {
 
         // Мокируем EmailSender
         EmailSender mockEmailSender = Mockito.mock(EmailSender.class);
-        messageLogic.setEmailSender(mockEmailSender);
+        commonMessageLogic.setEmailSender(mockEmailSender);
 
-        String result = messageLogic.worksWithMail(update, "Это мой вопрос", userId, "awaiting_question", userStates, userMails);
+        String result = commonMessageLogic.worksWithMail(update, "Это мой вопрос", userId, "awaiting_question", userStates, userMails);
 
         assertEquals(null, userStates.get(userId)); // Состояние должно быть удалено
         assertEquals(null, userMails.get(userId)); // Почта должна быть удалена

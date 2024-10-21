@@ -29,101 +29,65 @@ public class LogicForTestABI {
      */
     private Map<Long, String> resultsTestAbi = new HashMap<>();
 
+    private Map<Long, String> userStatesForTest = new HashMap<>();
+
+    public CommonMessageLogic commonMessageLogic = new CommonMessageLogic();
 
     /**
-     * Обрабатывает входящие сообщения от пользователей и управляет состоянием теста.
-     *
-     * @param messageText текст сообщения от пользователя
-     * @param userId идентификатор пользователя
-     * @param userStatesforTest состояние теста для каждого пользователя
-     * @param data данные, полученные с getCallbackQuery().getData()
-     * @return список данных, полученных из базы данных для текущего состояния теста
+     * Геттер для @param userStatesForTest
+     * Если userStatesForTest не пустой,
+     * возвращает его значение по ID.
      */
-    public List<String> worksWithTestAPI(String messageText, Long userId, Map<Long, String> userStatesforTest, String data) {
-        String currentState = userStatesforTest.get(userId);
-        List<String> data_BD = new ArrayList<>();
-        if(data.equals("100")){
-            idTestABI.put(userId, 101);
-        }
-        else if(data.equals("200")){
-            idTestABI.put(userId, 201);
-        }
-        else if(data.equals("300")){
-            idTestABI.put(userId, 301);
-        }
-        else if(!data.equals("-")){
-            choiceABI.putIfAbsent(userId, new ArrayList<>());
-            choiceABI.get(userId).add(data);
-
+    public String getUserStatesForTest(Long chatID){
+        if (userStatesForTest.isEmpty()) {
+            return ("0");
         }
 
-
-        if(messageText.equals("/testAbit") && userStatesforTest.isEmpty()){
-            userStatesforTest.put(userId, "awaiting_testABI_1");
-        }
-        else if("awaiting_testABI_1".equals(currentState)){
-            if(data.equals("100")){
-                data_BD = arrayBDforTestABI(idTestABI.get(userId));
-            }
-            else if(data.equals("200"))
-            {
-                data_BD =arrayBDforTestABI(idTestABI.get(userId));
-            }
-            else if(data.equals("300")){
-                data_BD = arrayBDforTestABI(idTestABI.get(userId));
-            }
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_2");
-        }
-        else if("awaiting_testABI_2".equals(currentState)){
-            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 1);
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_3");
-
-        }
-        else if("awaiting_testABI_3".equals(currentState)){
-            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 2);
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_4");
-        }
-        else if("awaiting_testABI_4".equals(currentState)){
-            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 3);
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_5");
-        }
-        else if("awaiting_testABI_5".equals(currentState)){
-            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 4);
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_6");
-        }
-        else if("awaiting_testABI_6".equals(currentState)){
-            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 5);
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_7");
-        }
-        else if("awaiting_testABI_7".equals(currentState)){
-            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 6);
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_8");
-        }
-        else if("awaiting_testABI_8".equals(currentState)) {
-            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 7);
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_9");
-        }
-        else if("awaiting_testABI_9".equals(currentState)){
-            data_BD = arrayBDforTestABI(idTestABI.get(userId) + 8);
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_10");
-        }
-        else if("awaiting_testABI_10".equals(currentState)){
-            resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
-            userStatesforTest.remove(userId);
-            userStatesforTest.put(userId, "awaiting_testABI_11");
+        else {
+            return (userStatesForTest.get(chatID));
         }
 
-        return data_BD;
     }
+
+    /**
+     * Очищает состояния пользователей.
+     * Этот метод удаляет все состояния из карты userStatesForTest.
+     */
+    public void removeUserStatesForTest(Long chatID) {
+        userStatesForTest.remove(chatID);
+    }
+
+    /**
+     * Устанавливает результат теста для указанного пользователя.
+     *
+     * @param userId идентификатор пользователя
+     */
+    public void setTestResult(Long userId, String result) {
+
+        resultsTestAbi.put(userId, result);
+    }
+
+    /**
+     * Получает результат теста для указанного идентификатора чата.
+     *
+     * @param chatID идентификатор чата
+     * @return строка с результатом теста
+     */
+    public String getTestResult(Long chatID) {
+        return resultsTestAbi.get(chatID);
+    }
+
+    /**
+     * Получает название факультета из базы данных по заданному идентификатору.
+     *
+     * @param id_getfaculty идентификатор факультета
+     * @return название факультета
+     */
+    private String getNameFacultyFromBD(int id_getfaculty){
+        return retrieveData.getDataById(id_getfaculty, "cash3");
+    }
+
+
     /**
      * Получает данные для теста по заданному идентификатору.
      *
@@ -142,16 +106,6 @@ public class LogicForTestABI {
     }
 
     /**
-     * Получает название факультета из базы данных по заданному идентификатору.
-     *
-     * @param id_getfaculty идентификатор факультета
-     * @return название факультета
-     */
-    private String getNameFacultyFromBD(int id_getfaculty){
-        return retrieveData.getDataById(id_getfaculty, "cash3");
-    }
-
-    /**
      * Определяет, какой факультет наиболее подходит пользователю на основе его выборов.
      *
      * @param userID идентификатор пользователя
@@ -160,6 +114,8 @@ public class LogicForTestABI {
      */
     public String gettingResult(Long userID, Map<Long, List<String>> choiceABI){
         List<String> listofABIechoice= choiceABI.get(userID);
+
+
         int sizeListofABIechoice = listofABIechoice.size();
         List<String> listofABIechoiceWithoutGap= new ArrayList<>();
         for (String s : listofABIechoice) {
@@ -188,6 +144,60 @@ public class LogicForTestABI {
         return getNameFacultyFromBD(idforchoiceABI);
 
     }
+
+    /**
+     * Обрабатывает входящие сообщения от пользователей и управляет состоянием теста.
+     *
+     * @param messageText текст сообщения от пользователя
+     * @param userId идентификатор пользователя
+     * @param data данные, полученные с getCallbackQuery().getData()
+     * @return список данных, полученных из базы данных для текущего состояния теста
+     */
+
+
+    public List<String> worksWithTestAPI(String messageText, Long userId,String data) {
+        String currentState = userStatesForTest.get(userId);
+        List<String> data_BD = new ArrayList<>();
+        if (data.equals("100")) {
+            idTestABI.put(userId, 101);
+        } else if (data.equals("200")) {
+            idTestABI.put(userId, 201);
+        } else if (data.equals("300")) {
+            idTestABI.put(userId, 301);
+        } else if (!data.equals("-")) {
+            choiceABI.putIfAbsent(userId, new ArrayList<>());
+            choiceABI.get(userId).add(data);
+
+        }
+
+
+        if (messageText.equals("/testAbit") && userStatesForTest.isEmpty()) {
+            userStatesForTest.put(userId, "awaiting_testABI_1");
+        } else if ("awaiting_testABI_1".equals(currentState)) {
+            if (data.equals("100")) {
+                data_BD = arrayBDforTestABI(idTestABI.get(userId));
+            } else if (data.equals("200")) {
+                data_BD = arrayBDforTestABI(idTestABI.get(userId));
+            } else if (data.equals("300")) {
+                data_BD = arrayBDforTestABI(idTestABI.get(userId));
+            }
+            userStatesForTest.remove(userId);
+            userStatesForTest.put(userId, "awaiting_testABI_2");
+        } else if (currentState != null && currentState.startsWith("awaiting_testABI")) {
+            int stepForAwaiting_testABI = Integer.parseInt(currentState.split("_")[2]);
+            if (stepForAwaiting_testABI == 10) {
+                resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
+                userStatesForTest.remove(userId);
+                userStatesForTest.put(userId, "awaiting_testABI_11");
+            } else {
+                data_BD = arrayBDforTestABI(idTestABI.get(userId) + stepForAwaiting_testABI - 1);
+                userStatesForTest.remove(userId);
+                userStatesForTest.put(userId, "awaiting_testABI_" + (stepForAwaiting_testABI + 1));
+            }
+        }
+        return data_BD;
+    }
+
     /**
      * Возвращает результат теста для заданного идентификатора чата.
      *
@@ -197,6 +207,8 @@ public class LogicForTestABI {
     public String getResult(long chatID){
         return "Вам больше всего подходит факультет: " + resultsTestAbi.get(chatID);
     }
+
+
 
 
 }

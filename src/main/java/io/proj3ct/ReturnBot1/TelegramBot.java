@@ -18,7 +18,7 @@ import java.util.Map;
 public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
-    private final MessageLogic botLogic;
+    private final CommonMessageLogic botLogic;
     private final EmailSender emailSender;
     private final EmailLogic emailLogic;
 
@@ -28,7 +28,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     // Хранит электронные адреса пользователей
     private  Map<Long, String> userMails = new HashMap<>();
 
-    private Map<Long, String> userStatesforTest = new HashMap<>();
+
 
     private LogicForTestABI logicForTestABI = new LogicForTestABI();
     /**
@@ -38,7 +38,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param token Токен бота.
      * @param logic Логика бота для обработки команд.
      */
-    public TelegramBot(String name, String token, MessageLogic logic, EmailSender emailSender, EmailLogic emailLogic) {
+    public TelegramBot(String name, String token, CommonMessageLogic logic, EmailSender emailSender, EmailLogic emailLogic) {
         botName = name;
         botToken = token;
         botLogic = logic;
@@ -66,20 +66,24 @@ public class TelegramBot extends TelegramLongPollingBot {
      *
      * @param update Обновление, полученное от Telegram.
      */
+    // TODO: Обработать случаи, когда update не содержит callbackQuery или message,
+    // чтобы избежать ошибок if((update.hasCallbackQuery() && update.getCallbackQuery() != null)
     @Override
     public void onUpdateReceived(Update update) {
-        if((update.hasCallbackQuery() && update.getCallbackQuery() != null) && (!userStatesforTest.isEmpty())){
+        if((update.hasCallbackQuery() && update.getCallbackQuery() != null) &&
+                (!(logicForTestABI.getUserStatesForTest(update.getCallbackQuery().getFrom().getId())).equals("0"))){
             long chatID = update.getCallbackQuery().getFrom().getId();
             String data = update.getCallbackQuery().getData();
 
-            List<String> list_with_dataBD  = logicForTestABI.worksWithTestAPI("", chatID, userStatesforTest, data);
-            if(!userStatesforTest.get(chatID).equals("awaiting_testABI_11")){
+            List<String> list_with_dataBD  = logicForTestABI.worksWithTestAPI("",
+                    chatID, data);
+            if(!logicForTestABI.getUserStatesForTest(chatID).equals("awaiting_testABI_11")){
                 sendMessage(chatID, list_with_dataBD.get(0), list_with_dataBD);
 
             }
             else{
-                sendMessage(chatID, "Поздравляю, вы прошли тест. Чтобы узнать результат напишите /testres ");
-                userStatesforTest.remove(chatID);
+                sendMessage(chatID, "Поздравляю, вы прошли тест. Чтобы узнать результат напишите /testres");
+                logicForTestABI.removeUserStatesForTest(chatID);
             }
 
 
@@ -98,7 +102,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendMessage(userId, emailLogic.worksWithMail(update, messageText, userId, currentState, userStates, userMails, emailSender));
             }
             else if("/testAbit".equals(messageText)){
-                logicForTestABI.worksWithTestAPI(messageText, userId, userStatesforTest, "100");
+                logicForTestABI.worksWithTestAPI(messageText, userId, "100");
                 sendMessage(userId, botLogic.handleMessage(messageText), messageText);
             }
             else if("/testres".equals(messageText)){
@@ -127,7 +131,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             execute(message);
         } catch (TelegramApiException e) {
-            // Обработка исключения (опционально: логирование)
+            // TODO: Логирование ошибки отправки сообщения
         }
     }
     /**
@@ -154,7 +158,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            // Обработка исключения (опционально: логирование)
+            // TODO: Логирование ошибки отправки сообщения
         }
     }
 
@@ -179,24 +183,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    /**
-     * Возвращает имя бота.
-     *
-     * @return Имя бота.
-     */
-    @Override
-    public String getBotUsername() {
-        return botName;
-    }
+     public String getBotUsername() {return botName;}
 
-    /**
-     * Возвращает токен бота.
-     *
-     * @return Токен бота.
-     */
-    @Override
-    public String getBotToken() {
-        return botToken;
-    }
+     public String getBotToken() {return botToken;}
 }
 

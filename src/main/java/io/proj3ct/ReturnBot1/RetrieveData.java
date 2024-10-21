@@ -7,28 +7,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 /**
  * Класс для извлечения данных из базы данных.
- * Унаследован от класса DatabaseConnection.
  */
 public class RetrieveData {
 
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
+
     /**
      * Метод для извлечения строки данных из таблицы AnswersData по id_question
-     * @ DB_URL URL базы данных
-     * @ DB_USER имя пользователя базы данных
-     * @ DB_PASSWORD пароль пользователя базы данных
      * @param id идентификатор строки
      */
-
-    DatabaseConnection databaseConnection = new DatabaseConnection();
-
     public String getDataById(int id, String data) {
-        String sql = "SELECT * FROM AnswersData WHERE id_question = ?";
+        String AnswersDataTable = "SELECT * FROM AnswersData WHERE id_question = ?";
 
 
         try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
                 databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
 
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(AnswersDataTable)) {
 
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
@@ -73,7 +68,8 @@ public class RetrieveData {
             }
         } catch (SQLException e) {
             System.out.println("Ошибка извлечения данных: " + e.getMessage());
+
         }
-        return sql;
+        return "ERROR";
     }
 }

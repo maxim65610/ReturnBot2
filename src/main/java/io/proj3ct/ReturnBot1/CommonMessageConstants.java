@@ -7,7 +7,7 @@ package io.proj3ct.ReturnBot1;
  * чтобы улучшить читаемость и управляемость кода.
  * </p>
  */
-public class MessageConstants {
+public class CommonMessageConstants {
 
     /**
      * Ответ бота по умолчанию на нераспознанные команды.

@@ -9,7 +9,7 @@ public class EmailLogic {
     // Хранит электронные адреса пользователей
     private  Map<Long, String> userMails = new HashMap<>();
     private String questionCommandReceived() {
-        return MessageConstants.QUESTION_COMMAND_RESPONSE;
+        return CommonMessageConstants.QUESTION_COMMAND_RESPONSE;
     }
     public String worksWithMail(Update update, String messageText, Long userId, String currentState, Map<Long, String> userStates, Map<Long, String> userMails, EmailSender emailSender) {
 

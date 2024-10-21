@@ -5,14 +5,14 @@ package io.proj3ct.ReturnBot1;
  * Класс, отвечающий за основную логику работы Telegram-бота.
  * Включает методы для обработки команд пользователя.
  */
-public class MessageLogic {
+public class CommonMessageLogic {
 
     /**
      * Метод, который возвращает стандартный ответ бота на нераспознанные команды.
      * @return сообщение с информацией о функционале бота.
      */
     private String defaultCommandReceived() {
-        return MessageConstants.DEFAULT_RESPONSE;
+        return CommonMessageConstants.DEFAULT_RESPONSE;
     }
 
     /**
@@ -20,7 +20,7 @@ public class MessageLogic {
      * @return сообщение со списком институтов.
      */
     private String workCommandReceived() {
-        return MessageConstants.WORK_COMMAND_RESPONSE;
+        return CommonMessageConstants.WORK_COMMAND_RESPONSE;
     }
 
     /**
@@ -28,7 +28,7 @@ public class MessageLogic {
      * @return сообщение со списком факультетов института ИЕНИМ.
      */
     private String instIENIMCommandReceived() {
-        return MessageConstants.INST_IENIM_COMMAND_RESPONSE;
+        return CommonMessageConstants.INST_IENIM_COMMAND_RESPONSE;
     }
 
     /**
@@ -36,7 +36,7 @@ public class MessageLogic {
      * @return сообщение со списком факультетов института РТФ.
      */
     private String instRTFCommandReceived() {
-        return MessageConstants.INST_RTF_COMMAND_RESPONSE;
+        return CommonMessageConstants.INST_RTF_COMMAND_RESPONSE;
     }
 
     /**
@@ -44,7 +44,7 @@ public class MessageLogic {
      * @return сообщение со списком факультетов института ХТИ.
      */
     private String instCHTICommandReceived() {
-        return MessageConstants.INST_CHTI_COMMAND_RESPONSE;
+        return CommonMessageConstants.INST_CHTI_COMMAND_RESPONSE;
     }
 
     /**
@@ -52,7 +52,7 @@ public class MessageLogic {
      * @return сообщение для начала работы с testAbit.
      */
     private String testAbitCommandReceived() {
-        return MessageConstants.TEST_ABIT_COMMAND_RESPONSE;
+        return CommonMessageConstants.TEST_ABIT_COMMAND_RESPONSE;
     }
 
     /**
@@ -61,6 +61,8 @@ public class MessageLogic {
      * @param messageText сообщение от пользователя.
      * @return ответ бота на введенное сообщение.
      */
+
+
     public String handleMessage(String messageText) {
         switch (messageText) {
             case "/testAbit":
@@ -73,6 +75,7 @@ public class MessageLogic {
                 return instRTFCommandReceived();
             case "ХТИ":
                 return instCHTICommandReceived();
+
             default:
                 return defaultCommandReceived();
         }

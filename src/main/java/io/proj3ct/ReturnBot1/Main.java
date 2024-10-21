@@ -31,7 +31,7 @@ public class Main {
          * EmailLogic отвечает за логику работы с почтой;
          * а TelegramBot - за взаимодействие с Telegram API.
          */
-        MessageLogic botLogic = new MessageLogic();
+        CommonMessageLogic botLogic = new CommonMessageLogic();
         EmailLogic emailLogic = new EmailLogic();
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic);
 
