@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <!-- Идентификатор проекта (пакет, id, версия) -->
     <groupId>io.proj3ct</groupId>
     <artifactId>ReturnBot1</artifactId>
@@ -56,6 +55,14 @@
             <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.4</version>
+        </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-engine -->
         <dependency>
             <groupId>org.junit.platform</groupId>

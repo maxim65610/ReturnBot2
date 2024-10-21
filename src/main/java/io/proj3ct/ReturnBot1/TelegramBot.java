@@ -5,9 +5,8 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import java.util.List;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Класс, представляющий Telegram-бота, который наследует функциональность
@@ -17,28 +16,28 @@ import java.util.Map;
 public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     private final String botToken;
-    private final LogicBrain botLogic;
-
-    // Хранит состояния пользователей
-    private Map<Long, String> userStates = new HashMap<>();
-
-    // Хранит электронные адреса пользователей
-    private  Map<Long, String> userMails = new HashMap<>();
-
+    private final CommonMessageLogic commonMessageLogic;
+    private final EmailSender emailSender;
+    private final EmailLogic emailLogic;
+    private final LogicForTestABI logicForTestABI;
     /**
      * Конструктор класса TelegramBot.
      *
      * @param name  Имя бота.
      * @param token Токен бота.
      * @param logic Логика бота для обработки команд.
+     * @param emailSender Отвечает за отправку сообщений на почту
+     * @param emailLogic Логика для работы с почтой
+     * @param logicForTestABI Логика для работы с тестом
      */
-    public TelegramBot(String name, String token, LogicBrain logic) {
+    public TelegramBot(String name, String token, CommonMessageLogic logic, EmailSender emailSender, EmailLogic emailLogic, LogicForTestABI logicForTestABI) {
         botName = name;
         botToken = token;
-        botLogic = logic;
+        commonMessageLogic = logic;
+        this.emailSender = emailSender;
+        this.emailLogic = emailLogic;
+        this.logicForTestABI = logicForTestABI;
     }
-
-
     /**
      * Проверяет, что делать в зависимости от введенных данных.
      *
@@ -47,36 +46,79 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     public String checkWhatTodo(String data) {
         if (data.equals("ИЕНИМ") || data.equals("РТФ") || data.equals("ХТИ")) {
-            return botLogic.slogic(data);
+            return commonMessageLogic.handleMessage(data);
         } else {
             return data;
         }
     }
-
     /**
      * Обрабатывает обновления от Telegram.
      *
      * @param update Обновление, полученное от Telegram.
      */
+    // TODO: Обработать случаи, когда update не содержит callbackQuery или message,
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
+        if((update.hasCallbackQuery() && update.getCallbackQuery() != null) &&
+                (!(logicForTestABI.getUserStatesForTest(update.getCallbackQuery().getFrom().getId())).equals("0"))){
+            long chatID = update.getCallbackQuery().getFrom().getId();
+            String data = update.getCallbackQuery().getData();
+
+            List<String> list_with_dataBD  = logicForTestABI.worksWithTestAPI("",
+                    chatID, data);
+            if(!logicForTestABI.getUserStatesForTest(chatID).equals("awaiting_testABI_11")){
+                sendMessage(chatID, list_with_dataBD.get(0), list_with_dataBD);
+
+            }
+            else{
+                String messageAfterTestABI = commonMessageLogic.handleMessage("resultAfterTestABI");
+                sendMessage(chatID, messageAfterTestABI.replace("default", logicForTestABI.getResult(chatID)));
+                logicForTestABI.removeUserStatesForTest(chatID);
+            }
+        }
+        else if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
             String data = update.getCallbackQuery().getData();
             sendMessage(update.getCallbackQuery().getFrom().getId(), checkWhatTodo(data), data);
+
         }
         if (update.hasMessage() && update.getMessage() != null) {
             String messageText = update.getMessage().getText();
             Long userId = update.getMessage().getChatId();
-            String currentState = userStates.get(userId);
-            if ("/question".equals(messageText) || "awaiting_email".equals(currentState) || "awaiting_question".equals(currentState)) {
-                String answer = botLogic.worksWithMail(update, messageText, userId, currentState, userStates, userMails);
-                sendMessage(userId, answer);
-            } else {
-                sendMessage(update.getMessage().getChatId(), botLogic.slogic(messageText), messageText);
+            if ("/question".equals(messageText) || (!(emailLogic.getUserStatesForEmail(userId).equals("0")))) {
+                sendMessage(userId, emailLogic.worksWithMail(update, messageText, userId, emailSender));
+            }
+            else if("/testAbit".equals(messageText)){
+                logicForTestABI.worksWithTestAPI(messageText, userId, "100");
+                sendMessage(userId, commonMessageLogic.handleMessage(messageText), messageText);
+            }
+            else if("/testres".equals(messageText)){
+                sendMessage(update.getMessage().getChatId(), logicForTestABI.getResult(update.getMessage().getChatId()));
+            }
+            else {
+                sendMessage(update.getMessage().getChatId(), commonMessageLogic.handleMessage(messageText), messageText);
             }
         }
     }
+    /**
+     * Отправляет сообщение в указанный чат с заданным текстом и данными для клавиатуры.
+     *
+     * @param chatId Идентификатор чата, в который будет отправлено сообщение.
+     * @param textToSend Текст сообщения, которое будет отправлено.
+     * @param list_with_dataBD Список данных, используемых для настройки клавиатуры, связанной с сообщением.
+     */
+    void sendMessage(long chatId, String textToSend, List<String> list_with_dataBD) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText(textToSend);
+        KeyboardLogic keyboardLogicObj = new KeyboardLogic();
+        keyboardLogicObj.keyboardforTestABI(message, list_with_dataBD);
+        try {
 
+            execute(message);
+        } catch (TelegramApiException e) {
+            // TODO: Логирование ошибки отправки сообщения
+        }
+    }
     /**
      * Отправляет сообщение пользователю с указанным ID и текстом.
      *
@@ -87,21 +129,17 @@ public class TelegramBot extends TelegramLongPollingBot {
     void sendMessage(long chatId, String textToSend, String data) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
-
-        dataInfoTo infoObj = new dataInfoTo();
-        textToSend = infoObj.takeInfo(textToSend);
+        DepartInfoBD DepartInfoBD = new DepartInfoBD();
+        textToSend = DepartInfoBD.takeInfo(data,textToSend);
         message.setText(textToSend);
-
-        keyboardLogic keyboardLogicObj = new keyboardLogic();
+        KeyboardLogic keyboardLogicObj = new KeyboardLogic();
         keyboardLogicObj.keyboards(message, data);
-
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            // Обработка исключения (опционально: логирование)
+            // TODO: Логирование ошибки отправки сообщения
         }
     }
-
     /**
      * Отправляет сообщение пользователю без дополнительных параметров.
      *
@@ -115,32 +153,13 @@ public class TelegramBot extends TelegramLongPollingBot {
             textToSend = "Сообщение не может быть пустым."; // Сообщение по умолчанию
         }
         message.setText(textToSend);
-
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            // Обработка исключения (опционально: логирование)
+            // TODO: Логирование ошибки отправки сообщения
         }
     }
-
-    /**
-     * Возвращает имя бота.
-     *
-     * @return Имя бота.
-     */
-    @Override
-    public String getBotUsername() {
-        return botName;
-    }
-
-    /**
-     * Возвращает токен бота.
-     *
-     * @return Токен бота.
-     */
-    @Override
-    public String getBotToken() {
-        return botToken;
-    }
+     public String getBotUsername() {return botName;}
+     public String getBotToken() {return botToken;}
 }
 
