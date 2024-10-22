@@ -9,7 +9,7 @@ import java.sql.SQLException;
 /**
  * Класс для вывода информации о факультетах урфу
  */
-public class DepartInfoBD {
+public class DepartInfo {
     private DatabaseConnection databaseConnection = new DatabaseConnection();
 
     /**

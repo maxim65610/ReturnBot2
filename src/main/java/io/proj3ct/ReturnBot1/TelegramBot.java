@@ -129,8 +129,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     void sendMessage(long chatId, String textToSend, String data) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
-        DepartInfoBD DepartInfoBD = new DepartInfoBD();
-        textToSend = DepartInfoBD.takeInfo(data,textToSend);
+        DepartInfo DepartInfo = new DepartInfo();
+        textToSend = DepartInfo.takeInfo(data,textToSend);
         message.setText(textToSend);
         KeyboardLogic keyboardLogicObj = new KeyboardLogic();
         keyboardLogicObj.keyboards(message, data);
