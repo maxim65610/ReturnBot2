@@ -11,12 +11,27 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
  */
 public class Main {
     public static void main(String[] args) {
-        /*
+        /**
          * Инициализация токена, имени бота и данных для базы данных.
          * Данные извлекаются из переменных окружения.
          */
         String BOT_TOKEN = System.getenv("tgToken");
         String BOT_NAME = System.getenv("tgName");
+        /**
+         * Создание объектов классов LogicBrain и TelegramBot.
+         * LogicBrain отвечает за логику работы бота, а TelegramBot
+         * - за взаимодействие с Telegram API.
+         */
+        MessageLogic botLogic = new MessageLogic();
+        TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic);
+
+        /**
+         * Создание объектов классов databaseConnection.
+         * databaseConnection отвечает за подключение к базе данных
+         */
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        databaseConnection.createAllTable();
+
 
         // Извлечение электронной почты и пароля из переменных окружения
         String username = System.getenv("mail"); // Ваша почта
@@ -25,24 +40,10 @@ public class Main {
         // Создание объекта EmailSender для отправки электронных писем
         EmailSender emailSender = new EmailSender(username, password);
 
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        databaseConnection.createAllTable();
+        // Установка отправителя электронной почты в логике бота
+        botLogic.setEmailSender(emailSender);
 
-        /*
-         * Создание объектов классов MessageLogic, EmailLogic, LogicForTestABI, TelegramBot.
-         * MessageLogic отвечает за логику работы сообщений бота,
-         * EmailLogic отвечает за логику работы с почтой;
-         * LogicForTestABI отвечает за логику работы теста
-         * а TelegramBot - за взаимодействие с Telegram API.
-         */
-        CommonMessageLogic botLogic = new CommonMessageLogic();
-        EmailLogic emailLogic = new EmailLogic();
-        LogicForTestABI logicForTestABI = new LogicForTestABI();
-        TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic, logicForTestABI);
-
-
-
-        /*
+        /**
          * Запуск бота.
          * Инициализируется TelegramBotsApi и регистрируется созданный бот.
          */
@@ -54,3 +55,4 @@ public class Main {
         }
     }
 }
+

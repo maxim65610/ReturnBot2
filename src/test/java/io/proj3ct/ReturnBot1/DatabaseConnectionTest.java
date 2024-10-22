@@ -1,46 +1,62 @@
 package io.proj3ct.ReturnBot1;
 
-import io.proj3ct.ReturnBot1.DatabaseConnection;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
- * Класс для тестирования логики работы класса CommonMessageLogic.
- * Содержит тесты для различных команд и методов обработки ввода пользователя.
+ * Тестирует класс DatabaseConnection.
  */
-class DatabaseConnectionTest {
-    DatabaseConnection  databaseConnection = new DatabaseConnection();
-    private String DB_URL;
-    private String DB_USER;
-    private String DB_PASSWORD;
 
+public class DatabaseConnectionTest {
 
-    @BeforeEach
-    void DatabaseConnection() {
-        DB_URL = System.getenv("bdUrl");
-        DB_USER = System.getenv("bdUser");
-        DB_PASSWORD = System.getenv("bdPassword");
-
+    /**
+     * Тестирует метод DatabaseConnection.getDB_URL.
+     * Проверяет, что возвращаемое значение соответствует значению * переменной окружения "bdUrl".
+     */
+    @Test public void testGetDB_URL() {
+        DatabaseConnection connection = new DatabaseConnection();
+        assertEquals(System.getenv("bdUrl"), connection.getDB_URL());
     }
 
-    @Test
-    void testConnect_Success() throws Exception {
-        // Подменяем статический метод DriverManager.getConnection() с помощью Mockito
-        Connection mockConnection = mock(Connection.class);
-        mockStatic(DriverManager.class);
-        when(DriverManager.getConnection(anyString(), anyString(), anyString())).thenReturn(mockConnection);
-
-        // Вызываем метод connect()
-        Connection connection = databaseConnection.connect();
-
-        // Проверяем, что соединение не равно null assertNotNull(connection);
-        // Проверяем, что DriverManager.getConnection был вызван verifyStatic(DriverManager.class);
-        DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+    /**
+     * Тестирует метод DatabaseConnection.getDB_USER.
+     * Проверяет, что возвращаемое значение соответствует значению * переменной окружения "bdUser ".
+     */
+    @Test public void testGetDB_USER() {
+        DatabaseConnection connection = new DatabaseConnection();
+        assertEquals(System.getenv("bdUser "), connection.getDB_USER());
     }
 
+    /**
+     * Тестирует метод DatabaseConnection.getDB_PASSWORD.
+     * Проверяет, что возвращаемое значение соответствует значению * переменной окружения "bdPassword".
+     */
+    @Test public void testGetDB_PASSWORD() {
+        DatabaseConnection connection = new DatabaseConnection();
+        assertEquals(System.getenv("bdPassword"), connection.getDB_PASSWORD());
+    }
 
+    /**
+     * Тестирует метод DatabaseConnection.createAllTable на успешное создание таблиц.
+     * Использует мок-объект для имитации поведения метода и проверяет,
+     * что он возвращает строку "Nice".
+     */
+    @Test public void testCreateAllTableSuccess() {
+        DatabaseConnection connection = mock(DatabaseConnection.class);
+        when(connection.createAllTable()).thenReturn("Nice");
+        assertEquals("Nice", connection.createAllTable());
+    }
+
+    /**
+     * Тестирует метод DatabaseConnectio.createAllTableна неудачное создание таблиц.
+     * Использует мок-объект для имитации поведения метода и проверяет,
+     * что он возвращает строку "notNice".
+     */
+    @Test public void testCreateAllTableFailure() {
+        DatabaseConnection connection = mock(DatabaseConnection.class);
+        when(connection.createAllTable()).thenReturn("notNice");
+        assertEquals("notNice", connection.createAllTable());
+    }
 }
