@@ -93,11 +93,16 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
             if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
                     getuserStatesForRegistration(userId).equals("0"))){
-                sendMessage(userId, logicAndDataForRegistrationUsers.worksWithRegistration(update, messageText, userId,emailSender));
+                sendMessage(userId, logicAndDataForRegistrationUsers.worksWithRegistration
+                        (update, messageText, userId,emailSender));
             }
             else if("/testAbit".equals(messageText)){
                 logicForTestABI.worksWithTestAPI(messageText, userId, "100");
                 sendMessage(userId, commonMessageLogic.handleMessage(messageText), messageText);
+            }
+            else if("/userInfo".equals(messageText)){
+                sendMessage(update.getMessage().getChatId(),
+                        logicAndDataForRegistrationUsers.takeData(update.getMessage().getChatId()));
             }
             else if("/testres".equals(messageText)){
                 sendMessage(update.getMessage().getChatId(), logicForTestABI.getResult(update.getMessage().getChatId()));

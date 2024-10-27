@@ -66,7 +66,7 @@ public class DatabaseConnection {
      * Метод для создания таблицы AnswersData в базе данных
      */
     public void createAllTable() {
-        String AnswersDataTable = """
+        String answersDataTable = """
         CREATE TABLE IF NOT EXISTS AnswersData (
         id_question int PRIMARY KEY, 
         question text NOT NULL,
@@ -78,13 +78,13 @@ public class DatabaseConnection {
         cash3 text NOT NULL
         );""";
 
-        String DepartsInfoTable = """
+        String departsInfoTable = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
         id_depart text PRIMARY KEY, 
         info text NOT NULL  
         );""";
 
-        String RegistrationDataTable = """
+        String registrationDataTable = """
         CREATE TABLE IF NOT EXISTS RegistrationDataTable (
         id_chat text PRIMARY KEY, 
         name text NOT NULL,
@@ -97,9 +97,9 @@ public class DatabaseConnection {
             Connection conn = connect();
             if (conn != null ) {
                 try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(AnswersDataTable);
-                    stmt.executeUpdate(DepartsInfoTable);
-                    stmt.executeUpdate(RegistrationDataTable);
+                    stmt.executeUpdate(answersDataTable);
+                    stmt.executeUpdate(departsInfoTable);
+                    stmt.executeUpdate(registrationDataTable);
 
 
                 }
