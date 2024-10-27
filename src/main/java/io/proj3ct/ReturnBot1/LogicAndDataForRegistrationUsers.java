@@ -42,21 +42,18 @@ public class LogicAndDataForRegistrationUsers {
         }
     }
 
-    public Boolean isExistData(Long userId) {
+    public void deleteData(Long userId) {
         DatabaseConnection databaseConnection = new DatabaseConnection();
-        String takeData = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
+        String dataRequest = "DELETE FROM RegistrationDataTable WHERE id_chat = ?";
         try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
                 databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
-             PreparedStatement stmt = conn.prepareStatement(takeData)) {
+             PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
             stmt.setString(1, userId.toString());
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return true;
-            }
+            stmt.executeUpdate();
+
         } catch (SQLException e) {
-            System.out.println("Ошибка получения данных: " + e.getMessage());
+            System.out.println("Ошибка удаления данных: " + e.getMessage());
         }
-        return false;
     }
 
     public String takeData(Long userId) {
@@ -84,16 +81,13 @@ public class LogicAndDataForRegistrationUsers {
     }
 
 
-
-
-
     private String registrationCommandReceived(){
         return CommonMessageConstants.REGISTRATION_COMMAND_RESPONSE;
     }
     public String worksWithRegistration(Update update, String messageText, Long userId,EmailSender emailSender){
+
         String currentState = userStatesForRegistration.get(userId);
         if ("/authorization".equals(messageText)) {
-            System.out.println(isExistData( userId));
             userStatesForRegistration.put(userId, "awaiting_nameUser");
         }
         else if("awaiting_nameUser".equals(currentState)) {
@@ -133,7 +127,8 @@ public class LogicAndDataForRegistrationUsers {
                 mailUser.put(userId, mail);
                 userStatesForRegistration.remove(userId);
                 insertData(userId);
-                return "Авторизация окончена успешно. Если хотите проверить данные воспользуйтесь /userInfo";
+                return "Авторизация окончена успешно.\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
+                        "\nЕсли хотите удалить данные воспользуйтесь /userDataDell";
 
             } else {
                 mailUser.remove(userId, mail);

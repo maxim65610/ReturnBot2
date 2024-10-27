@@ -104,6 +104,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendMessage(update.getMessage().getChatId(),
                         logicAndDataForRegistrationUsers.takeData(update.getMessage().getChatId()));
             }
+            else if("/userDataDell".equals(messageText)){
+                logicAndDataForRegistrationUsers.deleteData(update.getMessage().getChatId());
+                sendMessage(update.getMessage().getChatId(),"Ваши данные успешно удаленны");
+            }
             else if("/testres".equals(messageText)){
                 sendMessage(update.getMessage().getChatId(), logicForTestABI.getResult(update.getMessage().getChatId()));
             }

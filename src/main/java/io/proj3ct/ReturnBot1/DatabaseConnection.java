@@ -104,7 +104,7 @@ public class DatabaseConnection {
 
                 }
             } else {
-                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено..");
+                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
             }
         } catch (SQLException e) {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
