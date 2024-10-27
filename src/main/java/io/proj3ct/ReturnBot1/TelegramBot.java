@@ -20,6 +20,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final EmailSender emailSender;
     private final EmailLogic emailLogic;
     private final LogicForTestABI logicForTestABI;
+    private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers;
     /**
      * Конструктор класса TelegramBot.
      *
@@ -30,13 +31,16 @@ public class TelegramBot extends TelegramLongPollingBot {
      * @param emailLogic Логика для работы с почтой
      * @param logicForTestABI Логика для работы с тестом
      */
-    public TelegramBot(String name, String token, CommonMessageLogic logic, EmailSender emailSender, EmailLogic emailLogic, LogicForTestABI logicForTestABI) {
+    public TelegramBot(String name, String token, CommonMessageLogic logic, EmailSender emailSender,
+                       EmailLogic emailLogic, LogicForTestABI logicForTestABI,
+                       LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
         botName = name;
         botToken = token;
         commonMessageLogic = logic;
         this.emailSender = emailSender;
         this.emailLogic = emailLogic;
         this.logicForTestABI = logicForTestABI;
+        this.logicAndDataForRegistrationUsers = logicAndDataForRegistrationUsers;
     }
     /**
      * Проверяет, что делать в зависимости от введенных данных.
@@ -86,6 +90,10 @@ public class TelegramBot extends TelegramLongPollingBot {
             Long userId = update.getMessage().getChatId();
             if ("/question".equals(messageText) || (!(emailLogic.getUserStatesForEmail(userId).equals("0")))) {
                 sendMessage(userId, emailLogic.worksWithMail(update, messageText, userId, emailSender));
+            }
+            if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
+                    getuserStatesForRegistration(userId).equals("0"))){
+                sendMessage(userId, logicAndDataForRegistrationUsers.worksWithRegistration(update, messageText, userId,emailSender));
             }
             else if("/testAbit".equals(messageText)){
                 logicForTestABI.worksWithTestAPI(messageText, userId, "100");
