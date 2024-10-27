@@ -84,12 +84,23 @@ public class DatabaseConnection {
         info text NOT NULL  
         );""";
 
+        String RegistrationDataTable = """
+        CREATE TABLE IF NOT EXISTS RegistrationDataTable (
+        id_chat text PRIMARY KEY, 
+        name text NOT NULL,
+        surname text NOT NULL, 
+        school_сlass text NOT NULL,  
+        mail text NOT NULL
+        );""";
+
         try {
             Connection conn = connect();
             if (conn != null ) {
                 try (Statement stmt = conn.createStatement()) {
                     stmt.executeUpdate(AnswersDataTable);
                     stmt.executeUpdate(DepartsInfoTable);
+                    stmt.executeUpdate(RegistrationDataTable);
+
 
                 }
             } else {
