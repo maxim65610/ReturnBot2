@@ -2,9 +2,17 @@ package io.proj3ct.ReturnBot1;
 
 import java.sql.*;
 
-
+/**
+ Класс для работы с данными пользователей в базе данных
+ */
 public class UsersData {
 
+    /**
+     Метод для вставки данных пользователя в таблицу регистрации
+     @param userId идентификатор пользователя
+     @param logicAndDataForRegistrationUsers объект, содержащий логику и данные для регистрации пользователя
+     @param databaseConnection объект для подключения к базе данных
+     */
     public String insertData(Long userId, LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
             ,DatabaseConnection databaseConnection ) {
 
@@ -27,10 +35,16 @@ public class UsersData {
         return "";
     }
 
+    /**
+     Метод для проверки существования пользователя в таблице регистрации
+     @param userId идентификатор пользователя
+     @param databaseConnection объект для подключения к базе данных
+     @return true, если пользователь существует, false в противном случае
+     */
     public boolean checkUserIdExistsInRegistrationDataTable(Long userId,DatabaseConnection databaseConnection ) {
         try {
 
-// Подключение к базе данных
+            // Подключение к базе данных
             Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
                     databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
             String sql = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
@@ -53,6 +67,11 @@ public class UsersData {
         }
     }
 
+    /**
+     Метод для удаления данных пользователя из таблицы регистрации
+     @param userId идентификатор пользователя
+     @param databaseConnection объект для подключения к базе данных
+     */
     public void deleteData(Long userId,DatabaseConnection databaseConnection ) {
         String dataRequest = "DELETE FROM RegistrationDataTable WHERE id_chat = ?";
         try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
@@ -66,6 +85,12 @@ public class UsersData {
         }
     }
 
+    /**
+     Метод для получения данных пользователя из таблицы регистрации
+     @param userId идентификатор пользователя
+     @param databaseConnection объект для подключения к базе данных
+     @return данные пользователя или сообщение об ошибке
+     */
     public String takeData(Long userId,DatabaseConnection databaseConnection ) {
 
         String takeData = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";

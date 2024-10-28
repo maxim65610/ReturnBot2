@@ -61,6 +61,7 @@ public class DatabaseConnection {
         }
         return connection;
     }
+
     /**
      * Метод для создания таблицы AnswersData в базе данных
      */
@@ -90,6 +91,10 @@ public class DatabaseConnection {
         }
 
     }
+
+    /**
+     * Метод для создания таблицы DepartsInfoTable в базе данных
+     */
     public void createDepartsInfoTable() {
         String departsInfoTable = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
@@ -111,6 +116,10 @@ public class DatabaseConnection {
         }
 
     }
+
+    /**
+     * Метод для создания таблицы RegistrationDataTable в базе данных
+     */
     public void createRegistrationDataTable() {
 
         String registrationDataTable = """
