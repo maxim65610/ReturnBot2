@@ -19,6 +19,7 @@ public class DepartInfo {
      * Нужен для того, чтобы из бд вытащить информацию про нужный факультет.
      */
     public String takeInfo(String data,String textToSend) {
+        databaseConnection.createDepartsInfoTable();
         String sql = "SELECT * FROM DepartsInfo WHERE id_depart = ?";
         try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
                 databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());

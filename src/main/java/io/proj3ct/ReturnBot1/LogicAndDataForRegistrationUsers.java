@@ -12,7 +12,31 @@ public class LogicAndDataForRegistrationUsers {
     private Map<Long, String> schoolClassUser = new HashMap<>();
     private Map<Long, String> mailUser = new HashMap<>();
     private Map<Long, String> userStatesForRegistration = new HashMap<>();
+    private UsersData usersData = new UsersData();
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
 
+    public DatabaseConnection getDatabaseConnection(){
+        return databaseConnection;
+    }
+    public String getNameUser(Long chatID) {
+        return nameUser.get(chatID);
+    }
+
+    public String getSurnameUser(Long chatID) {
+        return surnameUser.get(chatID);
+    }
+
+    public String getSchoolClassUser(Long chatID) {
+        return schoolClassUser.get(chatID);
+    }
+
+    public String getMailUser(Long chatID) {
+        return mailUser.get(chatID);
+    }
+
+    public String getUserStateForRegistration(Long chatID) {
+        return userStatesForRegistration.get(chatID);
+    }
 
     public String getuserStatesForRegistration(Long chatID){
         if (userStatesForRegistration.isEmpty()) {
@@ -22,72 +46,23 @@ public class LogicAndDataForRegistrationUsers {
             return (userStatesForRegistration.get(chatID));
         }
     }
-
-    public void insertData(Long userId) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        String dataRequest = "INSERT INTO RegistrationDataTable (id_chat, name, surname, school_сlass, mail) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
-             PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
-
-            stmt.setString(1, userId.toString());
-            stmt.setString(2, nameUser.get(userId));
-            stmt.setString(3, surnameUser.get(userId));
-            stmt.setString(4, schoolClassUser.get(userId));
-            stmt.setString(5, mailUser.get(userId));
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println("Ошибка вставки данных: " + e.getMessage());
-        }
-    }
-
-    public void deleteData(Long userId) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        String dataRequest = "DELETE FROM RegistrationDataTable WHERE id_chat = ?";
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
-             PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
-            stmt.setString(1, userId.toString());
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println("Ошибка удаления данных: " + e.getMessage());
-        }
-    }
-
-    public String takeData(Long userId) {
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        String takeData = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
-             PreparedStatement stmt = conn.prepareStatement(takeData)) {
-            stmt.setString(1, userId.toString());
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String name = rs.getString("name");
-                String surname = rs.getString("surname");
-                String schoolClass = rs.getString("school_сlass");
-                String mail = rs.getString("mail");
-                return "Ваше имя: " + name +
-                        "\nВаша фамилия: " + surname +
-                        "\nВаш класс: " + schoolClass +
-                        "\nВаша почта: " + mail;
-            }
-        } catch (SQLException e) {
-            System.out.println("Ошибка получения данных: " + e.getMessage());
-        }
-        return "Вы не прошли регистрацию";
-    }
-
-
     private String registrationCommandReceived(){
         return CommonMessageConstants.REGISTRATION_COMMAND_RESPONSE;
     }
-    public String worksWithRegistration(Update update, String messageText, Long userId,EmailSender emailSender){
+
+    public String worksWithRegistration(Update update, String messageText, Long userId,EmailSender emailSender
+    ,LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers){
+
 
         String currentState = userStatesForRegistration.get(userId);
         if ("/authorization".equals(messageText)) {
+            databaseConnection.createRegistrationDataTable();
+
+            if(usersData.checkUserIdExistsInRegistrationDataTable(userId
+                    ,logicAndDataForRegistrationUsers.getDatabaseConnection())){
+                return "Вы уже зарегистрированы!!!\nЕсли хотите проверить данные воспользуйтесь /userInfo\n" +
+                        "Если хотите удалить данные воспользуйтесь /userDataDell\n";
+            }
             userStatesForRegistration.put(userId, "awaiting_nameUser");
         }
         else if("awaiting_nameUser".equals(currentState)) {
@@ -126,7 +101,7 @@ public class LogicAndDataForRegistrationUsers {
             if(emailSender.isValidEmail(mail)){
                 mailUser.put(userId, mail);
                 userStatesForRegistration.remove(userId);
-                insertData(userId);
+                usersData.insertData(userId,logicAndDataForRegistrationUsers,databaseConnection);
                 return "Авторизация окончена успешно.\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
                         "\nЕсли хотите удалить данные воспользуйтесь /userDataDell";
 

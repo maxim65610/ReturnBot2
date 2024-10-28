@@ -54,7 +54,6 @@ public class DatabaseConnection {
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-            System.out.println("Подключение к базе данных выполнено успешно!");
         } catch (ClassNotFoundException e) {
             System.out.println("Драйвер PostgreSQL не найден: " + e.getMessage());
         } catch (SQLException e) {
@@ -65,7 +64,7 @@ public class DatabaseConnection {
     /**
      * Метод для создания таблицы AnswersData в базе данных
      */
-    public void createAllTable() {
+    public void createAnswersDataTable() {
         String answersDataTable = """
         CREATE TABLE IF NOT EXISTS AnswersData (
         id_question int PRIMARY KEY, 
@@ -77,12 +76,42 @@ public class DatabaseConnection {
         cash2 text NOT NULL,
         cash3 text NOT NULL
         );""";
+        try {
+            Connection conn = connect();
+            if (conn != null ) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate(answersDataTable);
+                }
+            } else {
+                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка создания таблицы: " + e.getMessage());
+        }
 
+    }
+    public void createDepartsInfoTable() {
         String departsInfoTable = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
         id_depart text PRIMARY KEY, 
         info text NOT NULL  
         );""";
+
+        try {
+            Connection conn = connect();
+            if (conn != null ) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate(departsInfoTable);
+                }
+            } else {
+                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка создания таблицы: " + e.getMessage());
+        }
+
+    }
+    public void createRegistrationDataTable() {
 
         String registrationDataTable = """
         CREATE TABLE IF NOT EXISTS RegistrationDataTable (
@@ -97,11 +126,7 @@ public class DatabaseConnection {
             Connection conn = connect();
             if (conn != null ) {
                 try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(answersDataTable);
-                    stmt.executeUpdate(departsInfoTable);
-                    stmt.executeUpdate(registrationDataTable);
-
-
+                      stmt.executeUpdate(registrationDataTable);
                 }
             } else {
                 System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");

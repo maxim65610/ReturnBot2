@@ -26,7 +26,8 @@ public class Main {
         EmailSender emailSender = new EmailSender(username, password);
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
-        databaseConnection.createAllTable();
+        databaseConnection.createAnswersDataTable();
+
 
         /*
          * Создание объектов классов MessageLogic, EmailLogic, LogicForTestABI, TelegramBot,LogicAndDataForRegistrationUsers.
@@ -39,9 +40,10 @@ public class Main {
         CommonMessageLogic botLogic = new CommonMessageLogic();
         EmailLogic emailLogic = new EmailLogic();
         LogicForTestABI logicForTestABI = new LogicForTestABI();
+        UsersData usersData = new UsersData();
         LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers = new LogicAndDataForRegistrationUsers();
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic, logicForTestABI,
-                logicAndDataForRegistrationUsers);
+                logicAndDataForRegistrationUsers, usersData);
 
 
 

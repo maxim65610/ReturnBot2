@@ -21,6 +21,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final EmailLogic emailLogic;
     private final LogicForTestABI logicForTestABI;
     private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers;
+    private final UsersData usersData;
+    private final DatabaseConnection databaseConnection =new DatabaseConnection();
     /**
      * Конструктор класса TelegramBot.
      *
@@ -33,7 +35,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     public TelegramBot(String name, String token, CommonMessageLogic logic, EmailSender emailSender,
                        EmailLogic emailLogic, LogicForTestABI logicForTestABI,
-                       LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
+                       LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers, UsersData usersData) {
         botName = name;
         botToken = token;
         commonMessageLogic = logic;
@@ -41,6 +43,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.emailLogic = emailLogic;
         this.logicForTestABI = logicForTestABI;
         this.logicAndDataForRegistrationUsers = logicAndDataForRegistrationUsers;
+        this.usersData = usersData;
     }
     /**
      * Проверяет, что делать в зависимости от введенных данных.
@@ -94,18 +97,21 @@ public class TelegramBot extends TelegramLongPollingBot {
             if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
                     getuserStatesForRegistration(userId).equals("0"))){
                 sendMessage(userId, logicAndDataForRegistrationUsers.worksWithRegistration
-                        (update, messageText, userId,emailSender));
+                        (update, messageText, userId,emailSender, logicAndDataForRegistrationUsers));
             }
             else if("/testAbit".equals(messageText)){
+                databaseConnection.createAnswersDataTable();
                 logicForTestABI.worksWithTestAPI(messageText, userId, "100");
                 sendMessage(userId, commonMessageLogic.handleMessage(messageText), messageText);
             }
             else if("/userInfo".equals(messageText)){
                 sendMessage(update.getMessage().getChatId(),
-                        logicAndDataForRegistrationUsers.takeData(update.getMessage().getChatId()));
+                        usersData.takeData(update.getMessage().getChatId(),
+                                logicAndDataForRegistrationUsers.getDatabaseConnection()));
             }
             else if("/userDataDell".equals(messageText)){
-                logicAndDataForRegistrationUsers.deleteData(update.getMessage().getChatId());
+                usersData.deleteData(update.getMessage().getChatId(),
+                        logicAndDataForRegistrationUsers.getDatabaseConnection());
                 sendMessage(update.getMessage().getChatId(),"Ваши данные успешно удаленны");
             }
             else if("/testres".equals(messageText)){
