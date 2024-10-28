@@ -35,6 +35,7 @@ public class Main {
          * EmailLogic отвечает за логику работы с почтой;
          * LogicForTestABI отвечает за логику работы теста
          * LogicAndDataForRegistrationUsers отвечает за логику работы пользователя с регистрацией и хранением данных пользователя
+         * LogicForChangeDataUsers отвечает за логику работы пользователя с изменением данных регистрации
          * а TelegramBot - за взаимодействие с Telegram API.
          */
         CommonMessageLogic botLogic = new CommonMessageLogic();
@@ -42,8 +43,9 @@ public class Main {
         LogicForTestABI logicForTestABI = new LogicForTestABI();
         UsersData usersData = new UsersData();
         LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers = new LogicAndDataForRegistrationUsers();
+        LogicForChangeDataUsers logicForChangeDataUsers = new LogicForChangeDataUsers();
         TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic, logicForTestABI,
-                logicAndDataForRegistrationUsers, usersData);
+                logicAndDataForRegistrationUsers, usersData, logicForChangeDataUsers);
 
 
 
