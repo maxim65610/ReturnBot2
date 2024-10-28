@@ -54,6 +54,7 @@ public class CommonMessageLogic {
     private String resultAfterTestABICommandReceived() {
         return CommonMessageConstants.RESULT_AFTERTRSTABI_COMMAND_RESPONSE;
     }
+
     /**
      * Метод, который реализует основную логику работы бота.
      * Обрабатывает сообщения от пользователя и возвращает соответствующий ответ.

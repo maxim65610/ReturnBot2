@@ -26,19 +26,24 @@ public class Main {
         EmailSender emailSender = new EmailSender(username, password);
 
         DatabaseConnection databaseConnection = new DatabaseConnection();
-        databaseConnection.createAllTable();
+        databaseConnection.createAnswersDataTable();
+
 
         /*
-         * Создание объектов классов MessageLogic, EmailLogic, LogicForTestABI, TelegramBot.
+         * Создание объектов классов MessageLogic, EmailLogic, LogicForTestABI, TelegramBot,LogicAndDataForRegistrationUsers.
          * MessageLogic отвечает за логику работы сообщений бота,
          * EmailLogic отвечает за логику работы с почтой;
          * LogicForTestABI отвечает за логику работы теста
+         * LogicAndDataForRegistrationUsers отвечает за логику работы пользователя с регистрацией и хранением данных пользователя
          * а TelegramBot - за взаимодействие с Telegram API.
          */
         CommonMessageLogic botLogic = new CommonMessageLogic();
         EmailLogic emailLogic = new EmailLogic();
         LogicForTestABI logicForTestABI = new LogicForTestABI();
-        TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic, logicForTestABI);
+        UsersData usersData = new UsersData();
+        LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers = new LogicAndDataForRegistrationUsers();
+        TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic, logicForTestABI,
+                logicAndDataForRegistrationUsers, usersData);
 
 
 
