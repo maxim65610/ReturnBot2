@@ -46,6 +46,27 @@ public class CommonMessageConstants {
     public static final String RESULT_AFTERTRSTABI_COMMAND_RESPONSE = "Проанализировал ваши ответы я пришёл к выводу," +
             " что вам больше всего подходит факультет: default," +
             " для повторно просмотра результата, можете воспользоваться командой /testres";
-    public static final String REGISTRATION_COMMAND_RESPONSE = " Здравствуйте, начинаем.\nВсего будет 4 пункта, которые " +
-            "вы должны указать: имя, фамилию, класс, почту. \nВведите имя:\n";
+    /**
+     * Ответ бота на начало авторизации.
+     */
+    public static final String REGISTRATION_COMMAND_RESPONSE = " Здравствуйте, начинаем." +
+            "\nВсего будет 4 пункта, которые " +
+            "вы должны указать: имя, фамилию, класс, почту. " +
+            "\nВведите имя:\n";
+    /**
+     * Ответ бота на замену даниных.
+     */
+    public static final String CHANGEDATA_COMMAND_RESPONSE = "Выберите данные, которые хотите поменять:" +
+                                    "\n/userDataChangeName - поменять имя" +
+                                    "\n/userDataChangeSurname - поменять фамилию" +
+                                    "\n/userDataChangeClass - поменять класс" +
+                                    "\n/userDataChangeMail - поменять почту";
+    /**
+     * Ответ бота на некорректную авторизацию.
+     */
+    public static final String AUTHORISATION_COMMAND_RESPONSE ="Вы уже зарегистрированы!!!" +
+            "\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
+            "\nЕсли хотите удалить данные воспользуйтесь /userDataDell" +
+            "\nЕсли хотите поменять данные воспользуйтесь /userDataChange";
+
 }

@@ -15,29 +15,26 @@ public class LogicAndDataForRegistrationUsers {
     private Map<Long, String> schoolClassUser  = new HashMap<>();
     private Map<Long, String> mailUser  = new HashMap<>();
     private Map<Long, String> userStatesForRegistration = new HashMap<>();
+    private Map<Long, String> userStatesDataChange= new HashMap<>();
     private UsersData usersData = new UsersData();
     private DatabaseConnection databaseConnection = new DatabaseConnection();
-
     /**
      * Получает объект подключения к базе данных.
      * @return объект DatabaseConnection
      */
     public DatabaseConnection getDatabaseConnection() {return databaseConnection;}
-
     /**
      * Получает имя пользователя по его идентификатору чата.
      * @param chatID идентификатор чата пользователя
      * @return имя пользователя
      */
     public String getNameUser (Long chatID) {return nameUser .get(chatID);}
-
     /**
      * Получает фамилию пользователя по его идентификатору чата.
      * @param chatID идентификатор чата пользователя
      * @return фамилия пользователя
      */
     public String getSurnameUser (Long chatID) {return surnameUser .get(chatID);}
-
     /**
      * Получает класс пользователя по его идентификатору чата.
      *
@@ -45,7 +42,6 @@ public class LogicAndDataForRegistrationUsers {
      * @return класс пользователя
      */
     public String getSchoolClassUser (Long chatID) {return schoolClassUser .get(chatID);}
-
     /**
      * Получает электронную почту пользователя по его идентификатору чата.
      *
@@ -53,14 +49,24 @@ public class LogicAndDataForRegistrationUsers {
      * @return электронная почта пользователя
      */
     public String getMailUser (Long chatID) {return mailUser .get(chatID);}
-
     /**
      * Возвращает сообщение о полученной команде регистрации.
      *
      * @return сообщение о регистрации
      */
     private String registrationCommandReceived() {return CommonMessageConstants.REGISTRATION_COMMAND_RESPONSE;}
-
+    /**
+     * Возвращает сообщение о полученной команде смены данных.
+     *
+     * @return сообщение о регистрации
+     */
+    private String changeDataCommandReceived(){return CommonMessageConstants.CHANGEDATA_COMMAND_RESPONSE;}
+    /**
+     * Возвращает сообщение о полученной команде регистрации.
+     *
+     * @return сообщение о регистрации
+     */
+    private String authorizationCommandReceived() {return CommonMessageConstants.AUTHORISATION_COMMAND_RESPONSE;}
     /**
      * Получает состояние пользователя для регистрации по его идентификатору чата.
      *
@@ -68,7 +74,6 @@ public class LogicAndDataForRegistrationUsers {
      * @return состояние пользователя
      */
     public String getUserStateForRegistration(Long chatID) {return userStatesForRegistration.get(chatID);}
-
     /**
      * Получает состояние пользователя для регистрации.
      * Если состояние пустое, возвращает "0".
@@ -76,14 +81,27 @@ public class LogicAndDataForRegistrationUsers {
      * @param chatID идентификатор чата пользователя
      * @return состояние пользователя или "0"
      */
-    public String getuserStatesForRegistration(Long chatID) {
+    public String getUserStatesForRegistration(Long chatID) {
         if (userStatesForRegistration.isEmpty()) {
             return ("0");
         } else {
             return (userStatesForRegistration.get(chatID));
         }
     }
-
+    /**
+     * Получает состояние пользователя для замены данных.
+     * Если состояние пустое, возвращает "0".
+     *
+     * @param chatID идентификатор чата пользователя
+     * @return состояние пользователя или "0"
+     */
+    public String getUserStatesForChangeData(Long chatID) {
+        if (userStatesDataChange.isEmpty()) {
+            return ("0");
+        } else {
+            return (userStatesDataChange.get(chatID));
+        }
+    }
     /**
      * Обрабатывает логику регистрации пользователя на основе полученного обновления.
      *
@@ -100,11 +118,9 @@ public class LogicAndDataForRegistrationUsers {
         String currentState = userStatesForRegistration.get(userId);
         if ("/authorization".equals(messageText)) {
             databaseConnection.createRegistrationDataTable();
-
             if (usersData.checkUserIdExistsInRegistrationDataTable(userId,
                     logicAndDataForRegistrationUsers.getDatabaseConnection())) {
-                return "Вы уже зарегистрированы!!!\nЕсли хотите проверить данные воспользуйтесь /userInfo\n" +
-                        "Если хотите удалить данные воспользуйтесь /userDataDell\n";
+                return authorizationCommandReceived();
             }
             userStatesForRegistration.put(userId, "awaiting_nameUser ");
         } else if ("awaiting_nameUser ".equals(currentState)) {
@@ -139,7 +155,7 @@ public class LogicAndDataForRegistrationUsers {
             if (emailSender.isValidEmail(mail)) {
                 mailUser .put(userId, mail);
                 userStatesForRegistration.remove(userId);
-                usersData.insertData(userId, logicAndDataForRegistrationUsers, databaseConnection);
+                usersData.insertData(userId, this, databaseConnection);
                 return "Авторизация окончена успешно.\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
                         "\nЕсли хотите удалить данные воспользуйтесь /userDataDell";
             } else {
@@ -147,7 +163,47 @@ public class LogicAndDataForRegistrationUsers {
                 return "Адрес электронной почты был указан неправильно, отправьте его ещё раз";
             }
         }
-
         return registrationCommandReceived();
+    }
+    /**
+     * Обрабатывает логику изменения данных.
+     *
+     * @param update объект Update от Telegram API
+     * @param messageText текст сообщения от пользователя
+     * @param userId идентификатор пользователя
+     * @param emailSender объект для отправки электронной почты
+     * @param logicAndDataForRegistrationUsers объект логики и данных для регистрации
+     * @return ответ пользователю в зависимости от состояния регистрации
+     */
+    public String changeUserData(Update update, String messageText, Long userId, EmailSender emailSender,
+                                        LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
+
+        String currentState = userStatesDataChange.get(userId);
+
+        if ("/userDataChange".equals(messageText) || currentState.equals("userDataChange")) {
+
+            
+        } else if ("/userDataChangeName".equals(messageText)) {
+            System.out.println(1);
+            return "1";
+
+        } else if ("/userDataChangeSurname".equals(messageText)) {
+            System.out.println(2);
+            return "2";
+        }
+         else if ("/userDataChangeMail".equals(messageText)) {
+            System.out.println(3);
+            return "3";
+         }
+        else if ("/userDataChangeClass".equals(messageText)) {
+            System.out.println(4);
+            return "4";
+        }
+        else {
+            userStatesDataChange.put(userId, "userDataChange ");
+            System.out.println(0);
+            return "Некорректные данные";
+        }
+        return changeDataCommandReceived();
     }
 }
