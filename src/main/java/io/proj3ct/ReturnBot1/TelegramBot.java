@@ -23,6 +23,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers;
     private final UsersData usersData;
     private final DatabaseConnection databaseConnection =new DatabaseConnection();
+    private final LogicForChangeDataUsers logicForChangeDataUsers;
     /**
      * Конструктор класса TelegramBot.
      *
@@ -35,7 +36,8 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     public TelegramBot(String name, String token, CommonMessageLogic logic, EmailSender emailSender,
                        EmailLogic emailLogic, LogicForTestABI logicForTestABI,
-                       LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers, UsersData usersData) {
+                       LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers, UsersData usersData,
+                       LogicForChangeDataUsers logicForChangeDataUsers) {
         botName = name;
         botToken = token;
         commonMessageLogic = logic;
@@ -44,6 +46,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.logicForTestABI = logicForTestABI;
         this.logicAndDataForRegistrationUsers = logicAndDataForRegistrationUsers;
         this.usersData = usersData;
+        this.logicForChangeDataUsers = logicForChangeDataUsers;
     }
     /**
      * Проверяет, что делать в зависимости от введенных данных.
@@ -92,21 +95,17 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             Long userId = update.getMessage().getChatId();
             if ("/question".equals(messageText) || (!(emailLogic.getUserStatesForEmail(userId).equals("0")))) {
-                sendMessage(userId, emailLogic.worksWithMail(update, messageText, userId, emailSender));
+                sendMessage(userId, emailLogic.worksWithMail(messageText, userId, emailSender, emailLogic));
             }
-            if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
+            else if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
                     getUserStatesForRegistration(userId).equals("0"))){
                 sendMessage(userId, logicAndDataForRegistrationUsers.worksWithRegistration
                         (update, messageText, userId,emailSender, logicAndDataForRegistrationUsers));
             }
-
-            /*
-            if("/userDataChange".equals(messageText) || (!logicAndDataForRegistrationUsers.
+            else if("/userDataChange".equals(messageText) || (!logicForChangeDataUsers.
                     getUserStatesForChangeData(userId).equals("0"))){
-                sendMessage(userId, logicAndDataForRegistrationUsers.changeUserData
-                        (update, messageText, userId,emailSender, logicAndDataForRegistrationUsers));
-            }*/
-
+                sendMessage(userId, logicForChangeDataUsers.worksWithChangeData(messageText, userId, emailSender));
+            }
             else if("/testAbit".equals(messageText)){
                 databaseConnection.createAnswersDataTable();
                 logicForTestABI.worksWithTestAPI(messageText, userId, "100");
@@ -120,7 +119,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             else if("/userDataDell".equals(messageText)){
                 usersData.deleteData(update.getMessage().getChatId(),
                         logicAndDataForRegistrationUsers.getDatabaseConnection());
-                sendMessage(update.getMessage().getChatId(),"Ваши данные успешно удаленны");
+                sendMessage(update.getMessage().getChatId(),"Ваши данные успешно удалены");
             }
             else if("/testres".equals(messageText)){
                 sendMessage(update.getMessage().getChatId(), logicForTestABI.getResult(update.getMessage().getChatId()));

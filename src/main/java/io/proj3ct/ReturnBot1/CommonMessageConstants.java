@@ -39,7 +39,7 @@ public class CommonMessageConstants {
     /**
      * Ответ бота на запрос почты.
      */
-    public static final String QUESTION_COMMAND_RESPONSE = "Пожалуйста, отправьте свою почту";
+    public static final String QUESTION_COMMAND_RESPONSE = "Напишите свой вопрос";
     /**
      * Ответ бота на завершение тестирования.
      */
@@ -62,7 +62,7 @@ public class CommonMessageConstants {
                                     "\n/userDataChangeClass - поменять класс" +
                                     "\n/userDataChangeMail - поменять почту";
     /**
-     * Ответ бота на некорректную авторизацию.
+     * Ответ бота на то, что пользователь уже прошел регистрацию.
      */
     public static final String AUTHORISATION_COMMAND_RESPONSE ="Вы уже зарегистрированы!!!" +
             "\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
