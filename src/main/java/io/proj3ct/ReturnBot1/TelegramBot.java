@@ -66,7 +66,6 @@ public class TelegramBot extends TelegramLongPollingBot {
      *
      * @param update Обновление, полученное от Telegram.
      */
-    // TODO: Обработать случаи, когда update не содержит callbackQuery или message,
     // чтобы избежать ошибок if((update.hasCallbackQuery() && update.getCallbackQuery() != null)
     @Override
     public void onUpdateReceived(Update update) {
@@ -132,6 +131,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             execute(message);
         } catch (TelegramApiException e) {
             // TODO: Логирование ошибки отправки сообщения
+            System.out.println("Ошибка извлечения данных: " + e.getMessage());
         }
     }
     /**
@@ -159,6 +159,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             execute(message);
         } catch (TelegramApiException e) {
             // TODO: Логирование ошибки отправки сообщения
+            System.out.println("Ошибка извлечения данных: " + e.getMessage());
         }
     }
 
@@ -179,12 +180,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            // Обработка исключения (опционально: логирование)
+            // TODO: Логирование ошибки отправки сообщения
+            System.out.println("Ошибка извлечения данных: " + e.getMessage());
         }
     }
 
-     public String getBotUsername() {return botName;}
-
-     public String getBotToken() {return botToken;}
+    @Override
+    public String getBotUsername() {return botName;}
+    @Override
+    public String getBotToken() {return botToken;}
 }
 

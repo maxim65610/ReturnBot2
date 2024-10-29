@@ -10,9 +10,9 @@ import java.sql.Statement;
  * создания ее по необходимости
  */
 public class DatabaseConnection {
-    private String DB_URL;
-    private String DB_USER;
-    private String DB_PASSWORD;
+    private final String dbUrl;
+    private final String dbUser;
+    private final String dbPassword;
     /**
      * Конструктор для базы данных
      * @ DB_URL URL базы данных
@@ -20,27 +20,9 @@ public class DatabaseConnection {
      * @ DB_PASSWORD пароль пользователя базы данных
      */
     public DatabaseConnection() {
-        DB_URL = System.getenv("bdUrl");
-        DB_USER = System.getenv("bdUser");
-        DB_PASSWORD = System.getenv("bdPassword");
-    }
-    /**
-     * Возвращает @param DB_URL
-     */
-    public String getDB_URL() {
-        return DB_URL;
-    }
-    /**
-     * Возвращает @param DB_USER
-     */
-    public String getDB_USER() {
-        return DB_USER;
-    }
-    /**
-     * Возвращает @param DB_PASSWORD
-     */
-    public  String getDB_PASSWORD() {
-        return DB_PASSWORD;
+        dbUrl = System.getenv("bdUrl");
+        dbUser = System.getenv("bdUser");
+        dbPassword = System.getenv("bdPassword");
     }
     /**
      * Метод для установления соединения с базой данных
@@ -53,8 +35,7 @@ public class DatabaseConnection {
         Connection connection = null;
         try {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-            System.out.println("Подключение к базе данных выполнено успешно!");
+            connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
         } catch (ClassNotFoundException e) {
             System.out.println("Драйвер PostgreSQL не найден: " + e.getMessage());
         } catch (SQLException e) {
@@ -65,8 +46,8 @@ public class DatabaseConnection {
     /**
      * Метод для создания таблицы AnswersData в базе данных
      */
-    public void createAllTable() {
-        String AnswersDataTable = """
+    public void createAnswersDataTableQuery() {
+        String createAnswersDataTableQuery  = """
         CREATE TABLE IF NOT EXISTS AnswersData (
         id_question int PRIMARY KEY, 
         question text NOT NULL,
@@ -78,7 +59,26 @@ public class DatabaseConnection {
         cash3 text NOT NULL
         );""";
 
-        String DepartsInfoTable = """
+        try {
+            Connection conn = connect();
+            if (conn != null ) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate(createAnswersDataTableQuery);
+                }
+            } else {
+                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка создания таблицы: " + e.getMessage());
+        }
+
+    }
+
+    /**
+     * Метод для создания таблицы AnswersData в базе данных
+     */
+    public void createDepartsInfoTableQuery() {
+        String createDepartsInfoTableQuery  = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
         id_depart text PRIMARY KEY, 
         info text NOT NULL  
@@ -88,9 +88,7 @@ public class DatabaseConnection {
             Connection conn = connect();
             if (conn != null ) {
                 try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(AnswersDataTable);
-                    stmt.executeUpdate(DepartsInfoTable);
-
+                    stmt.executeUpdate(createDepartsInfoTableQuery);
                 }
             } else {
                 System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");

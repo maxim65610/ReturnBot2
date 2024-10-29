@@ -17,16 +17,14 @@ public class RetrieveData {
      * @param id идентификатор строки
      */
     public String getDataById(int id, String data) {
-        String AnswersDataTable = "SELECT * FROM AnswersData WHERE id_question = ?";
+        databaseConnection.createAnswersDataTableQuery();
 
+        String selectAnswersFromDataTable = "SELECT * FROM AnswersData WHERE id_question = ?";
 
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
-
-             PreparedStatement pstmt = conn.prepareStatement(AnswersDataTable)) {
-
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(selectAnswersFromDataTable)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 if(data.equals("id_question")){
@@ -65,11 +63,13 @@ public class RetrieveData {
 
             } else {
                 System.out.println("Данные не найдены для id_question: " + id);
+                return "Данные не найдены для id_question: " + id;
             }
         } catch (SQLException e) {
             System.out.println("Ошибка извлечения данных: " + e.getMessage());
+            return "Ошибка извлечения данных: " + e.getMessage();
 
         }
-        return "ERROR";
+        return "";
     }
 }
