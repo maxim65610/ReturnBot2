@@ -47,6 +47,7 @@ public class DatabaseConnection {
      * Метод для создания таблицы AnswersData в базе данных
      */
     public void createAnswersDataTableQuery() {
+
         String createAnswersDataTableQuery  = """
         CREATE TABLE IF NOT EXISTS AnswersData (
         id_question int PRIMARY KEY, 
@@ -71,13 +72,12 @@ public class DatabaseConnection {
         } catch (SQLException e) {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
-
     }
-
     /**
      * Метод для создания таблицы AnswersData в базе данных
      */
     public void createDepartsInfoTableQuery() {
+
         String createDepartsInfoTableQuery  = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
         id_depart text PRIMARY KEY, 
@@ -96,6 +96,5 @@ public class DatabaseConnection {
         } catch (SQLException e) {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
-
     }
 }

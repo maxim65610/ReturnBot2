@@ -31,7 +31,7 @@ public class LogicForTestABI {
 
     private Map<Long, String> userStatesForTest = new HashMap<>();
 
-    public CommonMessageLogic commonMessageLogic = new CommonMessageLogic();
+    public TextForCommonMessage textForCommonMessage = new TextForCommonMessage();
 
     /**
      * Геттер для @param userStatesForTest
@@ -42,13 +42,10 @@ public class LogicForTestABI {
         if (userStatesForTest.isEmpty()) {
             return ("0");
         }
-
         else {
             return (userStatesForTest.get(chatID));
         }
-
     }
-
     /**
      * Очищает состояния пользователей.
      * Этот метод удаляет все состояния из карты userStatesForTest.
@@ -56,7 +53,6 @@ public class LogicForTestABI {
     public void removeUserStatesForTest(Long chatID) {
         userStatesForTest.remove(chatID);
     }
-
     /**
      * Устанавливает результат теста для указанного пользователя.
      *
@@ -66,7 +62,6 @@ public class LogicForTestABI {
 
         resultsTestAbi.put(userId, result);
     }
-
     /**
      * Получает результат теста для указанного идентификатора чата.
      *
@@ -76,7 +71,6 @@ public class LogicForTestABI {
     public String getTestResult(Long chatID) {
         return resultsTestAbi.get(chatID);
     }
-
     /**
      * Получает название факультета из базы данных по заданному идентификатору.
      *
@@ -86,8 +80,6 @@ public class LogicForTestABI {
     private String getNameFacultyFromBD(int id_getfaculty){
         return retrieveData.getDataById(id_getfaculty, "cash3");
     }
-
-
     /**
      * Получает данные для теста по заданному идентификатору.
      *
@@ -104,7 +96,6 @@ public class LogicForTestABI {
         data_BD.add(retrieveData.getDataById(id_testABI, "cash2"));
         return data_BD;
     }
-
     /**
      * Определяет, какой факультет наиболее подходит пользователю на основе его выборов.
      *
@@ -130,7 +121,6 @@ public class LogicForTestABI {
                 }
             }
         }
-
         int maxcountchoiceABI = 0;
         int idforchoiceABI = 0;
         for (Map.Entry<Integer, Integer> entry : countChoiceABI.entrySet()) {
@@ -142,9 +132,7 @@ public class LogicForTestABI {
             }
         }
         return getNameFacultyFromBD(idforchoiceABI);
-
     }
-
     /**
      * Обрабатывает входящие сообщения от пользователей и управляет состоянием теста.
      *
@@ -153,8 +141,6 @@ public class LogicForTestABI {
      * @param data данные, полученные с getCallbackQuery().getData()
      * @return список данных, полученных из базы данных для текущего состояния теста
      */
-
-
     public List<String> worksWithTestAPI(String messageText, Long userId,String data) {
         String currentState = userStatesForTest.get(userId);
         List<String> data_BD = new ArrayList<>();
@@ -167,10 +153,7 @@ public class LogicForTestABI {
         } else if (!data.equals("-")) {
             choiceABI.putIfAbsent(userId, new ArrayList<>());
             choiceABI.get(userId).add(data);
-
         }
-
-
         if (messageText.equals("/testAbit") && userStatesForTest.isEmpty()) {
             userStatesForTest.put(userId, "awaiting_testABI_1");
         } else if ("awaiting_testABI_1".equals(currentState)) {
@@ -197,7 +180,6 @@ public class LogicForTestABI {
         }
         return data_BD;
     }
-
     /**
      * Возвращает результат теста для заданного идентификатора чата.
      *
@@ -207,8 +189,4 @@ public class LogicForTestABI {
     public String getResult(long chatID){
         return "Вам больше всего подходит факультет: " + resultsTestAbi.get(chatID);
     }
-
-
-
-
 }

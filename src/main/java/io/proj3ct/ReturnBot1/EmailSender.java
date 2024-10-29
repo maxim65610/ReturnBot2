@@ -17,7 +17,6 @@ public class EmailSender {
     private String username;
     private String password;
     private Session session;
-
     /**
      * Конструктор класса EmailSender.
      *
@@ -57,7 +56,6 @@ public class EmailSender {
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
-
         // Получение сессии с аутентификацией
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -72,12 +70,8 @@ public class EmailSender {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
             message.setSubject(subject);
             message.setText(body);
-
             // Отправка сообщения
             Transport.send(message);
-
-
-
         } catch (MessagingException e) {
             e.printStackTrace();
         }

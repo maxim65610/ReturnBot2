@@ -22,7 +22,11 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsWorkCommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
+        SendMessage message = SendMessage // Create a message object
+                .builder()
+                .chatId("1234")
+                .text("test")
+                .build();
 
         String data = "/work";
         SendMessage resultMessage = logic.keyboards(message, data);
@@ -38,7 +42,11 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsIENIMCommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
+        SendMessage message = SendMessage // Create a message object
+                .builder()
+                .chatId("1234")
+                .text("test")
+                .build();
 
         String data = "ИЕНИМ";
         SendMessage resultMessage = logic.keyboards(message, data);
@@ -54,7 +62,11 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsRTFCommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
+        SendMessage message = SendMessage // Create a message object
+                .builder()
+                .chatId("1234")
+                .text("test")
+                .build();
 
         String data = "РТФ";
         SendMessage resultMessage = logic.keyboards(message, data);
@@ -70,7 +82,11 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsHTICommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
+        SendMessage message = SendMessage // Create a message object
+                .builder()
+                .chatId("1234")
+                .text("test")
+                .build();
 
         String data = "ХТИ";
         SendMessage resultMessage = logic.keyboards(message, data);
@@ -86,7 +102,11 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsTestAbitCommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
+        SendMessage message = SendMessage // Create a message object
+                .builder()
+                .chatId("1234")
+                .text("test")
+                .build();
 
         String data = "/testAbit";
         SendMessage resultMessage = logic.keyboards(message, data);

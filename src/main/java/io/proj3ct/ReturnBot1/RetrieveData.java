@@ -11,10 +11,10 @@ import java.sql.SQLException;
 public class RetrieveData {
 
     private DatabaseConnection databaseConnection = new DatabaseConnection();
-
     /**
      * Метод для извлечения строки данных из таблицы AnswersData по id_question
      * @param id идентификатор строки
+     * @param data текст необходимый для работы с бд
      */
     public String getDataById(int id, String data) {
         databaseConnection.createAnswersDataTableQuery();
@@ -25,7 +25,6 @@ public class RetrieveData {
              PreparedStatement stmt = conn.prepareStatement(selectAnswersFromDataTable)) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
                 if(data.equals("id_question")){
                     String id_question = rs.getString(data);
@@ -59,8 +58,6 @@ public class RetrieveData {
                     String cash3 = rs.getString(data);
                     return cash3;
                 }
-
-
             } else {
                 System.out.println("Данные не найдены для id_question: " + id);
                 return "Данные не найдены для id_question: " + id;

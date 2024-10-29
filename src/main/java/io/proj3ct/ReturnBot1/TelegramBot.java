@@ -19,7 +19,7 @@ import java.util.Map;
 public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final String botToken;
-    private final CommonMessageLogic botLogic;
+    private final TextForCommonMessage botLogic;
     private final EmailSender emailSender;
     private final EmailLogic emailLogic;
 
@@ -35,7 +35,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
      * @param token Токен бота.
      * @param logic Логика бота для обработки команд.
      */
-    public TelegramBot(String token, CommonMessageLogic logic, EmailSender emailSender, EmailLogic emailLogic) {
+    public TelegramBot(String token, TextForCommonMessage logic, EmailSender emailSender, EmailLogic emailLogic) {
         botToken = token;
         botLogic = logic;
         this.emailSender = emailSender;
@@ -109,7 +109,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
      * @param list_with_dataBD Список данных, используемых для настройки клавиатуры, связанной с сообщением.
      */
     void sendMessage(long chatId, String textToSend, List<String> list_with_dataBD) {
-
         SendMessage message = SendMessage // Create a message object
                 .builder()
                 .chatId(chatId)
@@ -132,8 +131,8 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
      * @param data       Дополнительные данные для обработки клавиатуры.
      */
     void sendMessage(long chatId, String textToSend, String data) {
-        DepartInfoBD DepartInfoBD = new DepartInfoBD();
-        textToSend = DepartInfoBD.takeInfo(data,textToSend);
+        DepartmentsInfo DepartmentsInfo = new DepartmentsInfo();
+        textToSend = DepartmentsInfo.extract(data, textToSend);
 
         SendMessage message = SendMessage // Create a message object
                 .builder()

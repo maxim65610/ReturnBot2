@@ -2,26 +2,23 @@ package io.proj3ct.ReturnBot1;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
+
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 
-class CommonMessageLogicTest {
+class TextForCommonMessageTest {
 
-    private CommonMessageLogic commonMessageLogic;
+    private TextForCommonMessage textForCommonMessage;
     private Map<Long, String> userStates;
     private Map<Long, String> userMails;
     @BeforeEach
     void setUp() {
         // Создаем экземпляр LogicBrain
-        commonMessageLogic = new CommonMessageLogic();
+        textForCommonMessage = new TextForCommonMessage();
         userStates = new HashMap<>();
         userMails = new HashMap<>();
     }
@@ -31,9 +28,9 @@ class CommonMessageLogicTest {
      * Тест для команд start,help,work,test и проверяет их ответы.
      */
     public void testCommands() {
-        String answerCommandDefault = commonMessageLogic.handleMessage("/start");
-        String answerCommandWork = commonMessageLogic.handleMessage("/work");
-        String answerCommandTestAbit = commonMessageLogic.handleMessage("/testAbit");
+        String answerCommandDefault = textForCommonMessage.handleMessage("/start");
+        String answerCommandWork = textForCommonMessage.handleMessage("/work");
+        String answerCommandTestAbit = textForCommonMessage.handleMessage("/testAbit");
 
         String ExpectedMessageDefault = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить, " +
                 "пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
@@ -47,6 +44,7 @@ class CommonMessageLogicTest {
         assertEquals(ExpectedMessageWork, answerCommandWork);
         assertEquals(ExpectedMessageTestAbit, answerCommandTestAbit);
 
+
     }
 
 
@@ -56,9 +54,9 @@ class CommonMessageLogicTest {
 
     @Test
     public void testDepartCommands(){
-        String answerCommandInstIENIM = commonMessageLogic.handleMessage("ИЕНИМ");
-        String answerCommandInstRTF = commonMessageLogic.handleMessage("РТФ");
-        String answerCommandInstHTI = commonMessageLogic.handleMessage("ХТИ");
+        String answerCommandInstIENIM = textForCommonMessage.handleMessage("ИЕНИМ");
+        String answerCommandInstRTF = textForCommonMessage.handleMessage("РТФ");
+        String answerCommandInstHTI = textForCommonMessage.handleMessage("ХТИ");
 
         String ExpectedMessageInstIENIM = "Вот все факультеты, которые есть в институте ИЕНИМ:";
         String ExpectedMessageInstRTF = "Вот все факультеты, которые есть в институте РТФ:";
