@@ -35,7 +35,7 @@ public class EmailLogic {
      * @return строка с ответом на команду вопроса.
      */
     private String questionCommandReceived() {
-        return CommonMessageConstants.QUESTION_COMMAND_RESPONSE;
+        return MessageConstants.QUESTION_COMMAND_RESPONSE;
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием.
@@ -75,4 +75,3 @@ public class EmailLogic {
     }
 
 }
-

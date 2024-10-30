@@ -25,7 +25,11 @@ public class LogicForTestABI {
      * Ключ: Идентификатор пользователя, Значение: Название факультета, связанного с результатами пользователя.
      */
     private Map<Long, String> resultsTestAbi = new HashMap<>();
+
     private Map<Long, String> userStatesForTest = new HashMap<>();
+
+    public TextForCommonMessage textForCommonMessage = new TextForCommonMessage();
+
     /**
      * Геттер для @param userStatesForTest
      * Если userStatesForTest не пустой,
@@ -78,33 +82,35 @@ public class LogicForTestABI {
      * @param choiceABI выборы пользователя
      * @return название подходящего факультета
      */
-    private String gettingResult(Long userID, Map<Long, List<String>> choiceABI){
+    public String gettingResult(Long userID, Map<Long, List<String>> choiceABI){
         List<String> listofABIechoice= choiceABI.get(userID);
+
+
         int sizeListofABIechoice = listofABIechoice.size();
         List<String> listofABIechoiceWithoutGap= new ArrayList<>();
         for (String s : listofABIechoice) {
             listofABIechoiceWithoutGap.add(s.trim());
         }
         Map<Integer, Integer> countChoiceABI = new HashMap<>();
-        final int idFomChoice = 1000;
-        for (int i = idFomChoice; i < 1013; i++) {
+        final int idFromChoice = 1000;
+        for (int i = idFromChoice; i < 1013; i++) {
             for (int j = 0; j < sizeListofABIechoice; j++) {
                 if (listofABIechoiceWithoutGap.get(j).equals(String.valueOf(i))) {
                     countChoiceABI.merge(i, 1, Integer::sum);
                 }
             }
         }
-        int maxCountChoiceABI = 0;
-        int idForChoiceABI = 0;
+        int maxcountchoiceABI = 0;
+        int idforchoiceABI = 0;
         for (Map.Entry<Integer, Integer> entry : countChoiceABI.entrySet()) {
             int key = entry.getKey();
             int value = entry.getValue();
-            if(value > maxCountChoiceABI){
-                idForChoiceABI = key;
-                maxCountChoiceABI = value;
+            if(value > maxcountchoiceABI){
+                idforchoiceABI = key;
+                maxcountchoiceABI = value;
             }
         }
-        return getNameFacultyFromBD(idForChoiceABI);
+        return getNameFacultyFromBD(idforchoiceABI);
     }
     /**
      * Обрабатывает входящие сообщения от пользователей и управляет состоянием теста.
@@ -144,6 +150,7 @@ public class LogicForTestABI {
             if (stepForAwaiting_testABI == 10) {
                 resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
                 userStatesForTest.remove(userId);
+                data_BD.add("Поздравляю, вы прошли тест. Чтобы узнать результат напишите /testres");
                 userStatesForTest.put(userId, "awaiting_testABI_11");
             } else {
                 data_BD = arrayBDforTestABI(idTestABI.get(userId) + stepForAwaiting_testABI - 1);
@@ -160,6 +167,6 @@ public class LogicForTestABI {
      * @return строка с результатом теста
      */
     public String getResult(long chatID){
-        return resultsTestAbi.get(chatID);
+        return "Вам больше всего подходит факультет: " + resultsTestAbi.get(chatID);
     }
 }

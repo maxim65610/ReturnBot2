@@ -1,8 +1,11 @@
 package io.proj3ct.ReturnBot1;
 
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
+import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Главный класс приложения для инициализации и запуска Telegram-бота.
@@ -10,47 +13,27 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
  * экземпляров логики бота и самого бота, а также запуск бота.
  */
 public class Main {
-    public static void main(String[] args) {
-        /*
-         * Инициализация токена, имени бота и данных для базы данных.
-         * Данные извлекаются из переменных окружения.
-         */
-        String BOT_TOKEN = System.getenv("tgToken");
-        String BOT_NAME = System.getenv("tgName");
 
+    public static void main(String[] args) {
+        // Инициализация токена для базы данных из переменных окружения.
+        String BOT_TOKEN = System.getenv("tgToken");
         // Извлечение электронной почты и пароля из переменных окружения
         String username = System.getenv("mail"); // Ваша почта
         String password = System.getenv("passwordForMail"); // Ваш пароль (или App Password)
 
         // Создание объекта EmailSender для отправки электронных писем
+        // Создание объекта Map<Long, LogicСontroller> для работы с логикой при обновлении состояния пользователя
         EmailSender emailSender = new EmailSender(username, password);
-
-        DatabaseConnection databaseConnection = new DatabaseConnection();
-        databaseConnection.createAllTable();
-
-        /*
-         * Создание объектов классов MessageLogic, EmailLogic, LogicForTestABI, TelegramBot.
-         * MessageLogic отвечает за логику работы сообщений бота,
-         * EmailLogic отвечает за логику работы с почтой;
-         * LogicForTestABI отвечает за логику работы теста
-         * а TelegramBot - за взаимодействие с Telegram API.
-         */
-        CommonMessageLogic botLogic = new CommonMessageLogic();
-        EmailLogic emailLogic = new EmailLogic();
-        LogicForTestABI logicForTestABI = new LogicForTestABI();
-        TelegramBot bot = new TelegramBot(BOT_NAME, BOT_TOKEN, botLogic, emailSender, emailLogic, logicForTestABI);
-
-
-
+        Map<Long, LogicСontroller> logicController = new HashMap<>();
         /*
          * Запуск бота.
          * Инициализируется TelegramBotsApi и регистрируется созданный бот.
          */
-        try {
-            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(bot);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+        try  (TelegramBotsLongPollingApplication botsApplication = new TelegramBotsLongPollingApplication()) {
+            botsApplication.registerBot(BOT_TOKEN, new TelegramBot(BOT_TOKEN, emailSender, logicController));
+            Thread.currentThread().join();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

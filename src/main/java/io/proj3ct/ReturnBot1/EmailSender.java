@@ -1,7 +1,10 @@
 package io.proj3ct.ReturnBot1;
 
+import org.telegram.telegrambots.meta.api.objects.Update;
+
 import javax.mail.*;
 import javax.mail.internet.*;
+import java.util.Map;
 import java.util.Properties;
 import javax.mail.internet.InternetAddress;
 /**
@@ -13,6 +16,7 @@ import javax.mail.internet.InternetAddress;
 public class EmailSender {
     private String username;
     private String password;
+    private Session session;
     /**
      * Конструктор класса EmailSender.
      *
@@ -52,7 +56,6 @@ public class EmailSender {
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
-
         // Получение сессии с аутентификацией
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -67,12 +70,8 @@ public class EmailSender {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
             message.setSubject(subject);
             message.setText(body);
-
             // Отправка сообщения
             Transport.send(message);
-
-
-
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -84,5 +83,8 @@ public class EmailSender {
      */
     public String getUsername(){
         return username;
+    }
+    public void setSession(Session session) {
+        this.session = session;
     }
 }
