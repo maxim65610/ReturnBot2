@@ -22,13 +22,9 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final TextForCommonMessage botLogic;
     private final EmailSender emailSender;
     private final EmailLogic emailLogic;
-
-    // Хранит состояния пользователей
-    private Map<Long, String> userStates = new HashMap<>();
-    // Хранит электронные адреса пользователей
-    private  Map<Long, String> userMails = new HashMap<>();
     // Хранит логику для теста
     private LogicForTestABI logicForTestABI = new LogicForTestABI();
+    private LogicСontroller logicСontroller = new LogicСontroller();
     /**
      * Конструктор класса TelegramBot.
      *
@@ -63,91 +59,61 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     // чтобы избежать ошибок if((update.hasCallbackQuery() && update.getCallbackQuery() != null)
     @Override
     public void consume(Update update) {
-        if((update.hasCallbackQuery() && update.getCallbackQuery() != null) &&
-                (!(logicForTestABI.getUserStatesForTest(update.getCallbackQuery().getFrom().getId())).equals("0"))){
-            long chatID = update.getCallbackQuery().getFrom().getId();
-            String data = update.getCallbackQuery().getData();
+        if(update.hasCallbackQuery() && update.getCallbackQuery() != null){
+            logicСontroller.messageHandlerForKeyboard(update , emailSender);
+            sendMessage(update.getCallbackQuery().getFrom().getId(),
+                    logicСontroller.getListForWorkWithKeyboardAndMessage(update.getCallbackQuery().getFrom().getId()));
+        }
+        if (update.hasMessage() && update.getMessage() != null){
+            logicСontroller.messageHandlerForKeyboard(update , emailSender);
+            sendMessage(update.getMessage().getChatId(),
+                    logicСontroller.getListForWorkWithKeyboardAndMessage(update.getMessage().getChatId()));
+        }
 
-            List<String> list_with_dataBD  = logicForTestABI.worksWithTestAPI("",
-                    chatID, data);
-            if(!logicForTestABI.getUserStatesForTest(chatID).equals("awaiting_testABI_11")){
-                sendMessage(chatID, list_with_dataBD.get(0), list_with_dataBD);
-            }
-            else{
-                sendMessage(chatID, "Поздравляю, вы прошли тест. Чтобы узнать результат напишите /testres");
-                logicForTestABI.removeUserStatesForTest(chatID);
-            }
-        }
-        else if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
-            String data = update.getCallbackQuery().getData();
-            sendMessage(update.getCallbackQuery().getFrom().getId(), checkWhatTodo(data), data);
-        }
-        if (update.hasMessage() && update.getMessage() != null) {
-            String messageText = update.getMessage().getText();
-            Long userId = update.getMessage().getChatId();
-            String currentState = userStates.get(userId);
-            if ("/question".equals(messageText) || "awaiting_email".equals(currentState) || "awaiting_question".equals(currentState)) {
-                sendMessage(userId, emailLogic.worksWithMail(update, messageText, userId, currentState, userStates, userMails, emailSender));
-            }
-            else if("/testAbit".equals(messageText)){
-                logicForTestABI.worksWithTestAPI(messageText, userId, "100");
-                sendMessage(userId, botLogic.handleMessage(messageText), messageText);
-            }
-            else if("/testres".equals(messageText)){
-                sendMessage(update.getMessage().getChatId(), logicForTestABI.getResult(update.getMessage().getChatId()));
-            }
-            else {
-                sendMessage(update.getMessage().getChatId(), botLogic.handleMessage(messageText), messageText);
-            }
-        }
     }
     /**
      * Отправляет сообщение в указанный чат с заданным текстом и данными для клавиатуры.
      *
      * @param chatId Идентификатор чата, в который будет отправлено сообщение.
-     * @param textToSend Текст сообщения, которое будет отправлено.
-     * @param list_with_dataBD Список данных, используемых для настройки клавиатуры, связанной с сообщением.
-     */
-    void sendMessage(long chatId, String textToSend, List<String> list_with_dataBD) {
-        SendMessage message = SendMessage // Create a message object
-                .builder()
-                .chatId(chatId)
-                .text(textToSend)
-                .build();
 
-        KeyboardLogic keyboardLogicObj = new KeyboardLogic();
-        keyboardLogicObj.keyboardforTestABI(message, list_with_dataBD);
-        try {
-            telegramClient.execute(message);
-        } catch (TelegramApiException e) {
-            System.out.println("Ошибка извлечения данных: " + e.getMessage());
+     */
+    void sendMessage(long chatId, List<String> listForWorkWithKeyboard) {
+        if(listForWorkWithKeyboard.size() == 1){
+                sendMessage(chatId, listForWorkWithKeyboard.get(0));
+                return;
+        }
+        if(listForWorkWithKeyboard.size() == 2){
+            SendMessage message = SendMessage // Create a message object
+                    .builder()
+                    .chatId(chatId)
+                    .text(listForWorkWithKeyboard.get(0))
+                    .build();
+
+            KeyboardLogic keyboardLogicObj = new KeyboardLogic();
+            keyboardLogicObj.keyboards(message, listForWorkWithKeyboard.get(1));
+            try {
+                telegramClient.execute(message);
+            } catch (TelegramApiException e) {
+                System.out.println("Ошибка извлечения данных: " + e.getMessage());
+            }
+        }
+        else if(!listForWorkWithKeyboard.isEmpty()) {
+            SendMessage message = SendMessage // Create a message object
+                    .builder()
+                    .chatId(chatId)
+                    .text(listForWorkWithKeyboard.get(0))
+                    .build();
+
+            KeyboardLogic keyboardLogicObj = new KeyboardLogic();
+            keyboardLogicObj.keyboardforTestABI(message, listForWorkWithKeyboard);
+            try {
+                telegramClient.execute(message);
+            } catch (TelegramApiException e) {
+                System.out.println("Ошибка извлечения данных: " + e.getMessage());
+            }
         }
     }
-    /**
-     * Отправляет сообщение пользователю с указанным ID и текстом.
-     *
-     * @param chatId     ID чата, куда отправляется сообщение.
-     * @param textToSend Текст сообщения.
-     * @param data       Дополнительные данные для обработки клавиатуры.
-     */
-    void sendMessage(long chatId, String textToSend, String data) {
-        DepartmentsInfo DepartmentsInfo = new DepartmentsInfo();
-        textToSend = DepartmentsInfo.extract(data, textToSend);
 
-        SendMessage message = SendMessage // Create a message object
-                .builder()
-                .chatId(chatId)
-                .text(textToSend)
-                .build();
-
-        KeyboardLogic keyboardLogicObj = new KeyboardLogic();
-        keyboardLogicObj.keyboards(message, data);
-        try {
-            telegramClient.execute(message);
-        } catch (TelegramApiException e) {
-            System.out.println("Ошибка извлечения данных: " + e.getMessage());
-        }
-    }
     /**
      * Отправляет сообщение пользователю без дополнительных параметров.
      *

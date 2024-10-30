@@ -10,19 +10,16 @@ public class LogicForTestABI {
      * Экземпляр класса RetrieveData, используемый для получения данных из базы данных.
      */
     private RetrieveData retrieveData = new RetrieveData();
-
     /**
      * Карта, связывающая идентификаторы пользователей с идентификаторами тестов ABI.
      * Ключ: Идентификатор пользователя, Значение: Идентификатор строки в БД.
      */
     private Map<Long, Integer> idTestABI = new HashMap<>();
-
     /**
      * Карта, хранящая выборы пользователей во время теста ABI.
      * Ключ: Идентификатор пользователя, Значение: Список выбранных ответов.
      */
     private Map<Long, List<String>> choiceABI = new HashMap<>();
-
     /**
      * Карта, хранящая результаты теста ABI для каждого пользователя.
      * Ключ: Идентификатор пользователя, Значение: Название факультета, связанного с результатами пользователя.
@@ -52,24 +49,6 @@ public class LogicForTestABI {
      */
     public void removeUserStatesForTest(Long chatID) {
         userStatesForTest.remove(chatID);
-    }
-    /**
-     * Устанавливает результат теста для указанного пользователя.
-     *
-     * @param userId идентификатор пользователя
-     */
-    public void setTestResult(Long userId, String result) {
-
-        resultsTestAbi.put(userId, result);
-    }
-    /**
-     * Получает результат теста для указанного идентификатора чата.
-     *
-     * @param chatID идентификатор чата
-     * @return строка с результатом теста
-     */
-    public String getTestResult(Long chatID) {
-        return resultsTestAbi.get(chatID);
     }
     /**
      * Получает название факультета из базы данных по заданному идентификатору.
@@ -171,6 +150,7 @@ public class LogicForTestABI {
             if (stepForAwaiting_testABI == 10) {
                 resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
                 userStatesForTest.remove(userId);
+                data_BD.add("Поздравляю, вы прошли тест. Чтобы узнать результат напишите /testres");
                 userStatesForTest.put(userId, "awaiting_testABI_11");
             } else {
                 data_BD = arrayBDforTestABI(idTestABI.get(userId) + stepForAwaiting_testABI - 1);
