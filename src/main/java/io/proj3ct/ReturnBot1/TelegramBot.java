@@ -19,40 +19,26 @@ import java.util.Map;
 public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final String botToken;
-    private final TextForCommonMessage botLogic;
     private final EmailSender emailSender;
-    private Map<Long, LogicСontroller> logicControllers = new HashMap<>();
+    private final Map<Long, LogicСontroller> logicController;
     /**
-     * Конструктор класса TelegramBot.
+     * Конструктор класса TelegramBot, который инициализирует нового бота Telegram.
      *
-     * @param token Токен бота.
-     * @param logic Логика бота для обработки команд.
+     * @param token Токен бота, необходимый для аутентификации.
+     * @param emailSender Объект для отправки электронных писем.
+     * @param logicСontroller Карта, связывающая идентификаторы пользователей с контроллерами логики.
      */
-    public TelegramBot(String token, TextForCommonMessage logic, EmailSender emailSender) {
+    public TelegramBot(String token, EmailSender emailSender, Map<Long, LogicСontroller> logicСontroller) {
         botToken = token;
-        botLogic = logic;
         this.emailSender = emailSender;
+        this.logicController = logicСontroller;
         telegramClient = new OkHttpTelegramClient(botToken);
-    }
-    /**
-     * Проверяет, что делать в зависимости от введенных данных.
-     *
-     * @param data Данные, введенные пользователем.
-     * @return Ответ на введенные данные.
-     */
-    public String checkWhatTodo(String data) {
-        if (data.equals("ИЕНИМ") || data.equals("РТФ") || data.equals("ХТИ")) {
-            return botLogic.handleMessage(data);
-        } else {
-            return data;
-        }
     }
     /**
      * Обрабатывает обновления от Telegram.
      *
      * @param update Обновление, полученное от Telegram.
      */
-    // чтобы избежать ошибок if((update.hasCallbackQuery() && update.getCallbackQuery() != null)
     @Override
     public void consume(Update update) {
         long userId;
@@ -63,7 +49,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         } else {
             return; // Неизвестный тип обновления
         }
-        LogicСontroller logicСontroller = logicControllers.computeIfAbsent(userId, id->new LogicСontroller());
+        LogicСontroller logicСontroller = logicController.computeIfAbsent(userId, id->new LogicСontroller());
         sendMessage(userId, logicСontroller.messageHandlerForKeyboard(update, emailSender, userId));
     }
     /**
@@ -78,9 +64,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         if (!listForWorkWithKeyboard.isEmpty()) {
             textToSend = listForWorkWithKeyboard.get(0);
         }
-
         SendMessage message = createMessage(chatId, textToSend);
-
         KeyboardLogic keyboardLogicObj = new KeyboardLogic();
         if (listForWorkWithKeyboard.size() == 2) {
             keyboardLogicObj.keyboards(message, listForWorkWithKeyboard.get(1));
