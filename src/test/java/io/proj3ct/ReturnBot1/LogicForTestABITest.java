@@ -109,7 +109,6 @@ class LogicForTestABITest {
             logic.worksWithTestAPI("", userID, choice);
         }
 
-
         // Имитация возврата данных о факультете
         when(mockRetrieveData.getDataById(1000, "cash3")).thenReturn("Faculty A");
         when(mockRetrieveData.getDataById(1001, "cash3")).thenReturn("Faculty B");
@@ -124,3 +123,12 @@ class LogicForTestABITest {
         assertEquals("Faculty A", result, "Expected result should match 'Faculty A'");
     }
 }
+
+
+
+
+
+
+
+
+
