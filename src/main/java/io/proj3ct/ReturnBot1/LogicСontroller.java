@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * обрабатывает сообщения и контролирует логику других классов, связанных с логикой
@@ -16,7 +15,6 @@ public class LogicСontroller {
     private TextForCommonMessage textForCommonMessage = new TextForCommonMessage();
     private DepartmentsInfo DepartmentsInfo = new DepartmentsInfo();
     private EmailLogic emailLogic = new EmailLogic();
-    private Map<Long, List<String>> mapForWorkWithKeyboardAndMessage = new ConcurrentHashMap<>();
     private String checkWhatTodo(String data) {
         if (data.equals("ИЕНИМ") || data.equals("РТФ") || data.equals("ХТИ")) {
             return textForCommonMessage.handleMessage(data);
@@ -24,10 +22,8 @@ public class LogicСontroller {
             return data;
         }
     }
-    public void messageHandlerForKeyboard(Update update, EmailSender emailSender) {
-
+    public List<String> messageHandlerForKeyboard(Update update, EmailSender emailSender, long userId) {
         List<String> listForWorkWithKeyboardAndMessage = new ArrayList<>();
-        long userId = 0;
         if ((update.hasCallbackQuery() && update.getCallbackQuery() != null) &&
                 (!(logicForTestABI.getUserStatesForTest(update.getCallbackQuery().getFrom().getId())).equals("0"))) {
             userId= update.getCallbackQuery().getFrom().getId();
@@ -63,15 +59,8 @@ public class LogicСontroller {
                 listForWorkWithKeyboardAndMessage.add(messageText);
             }
         }
-        if(mapForWorkWithKeyboardAndMessage.isEmpty()){
-            mapForWorkWithKeyboardAndMessage.put(userId, listForWorkWithKeyboardAndMessage);
-        }
-        else{
-            mapForWorkWithKeyboardAndMessage.remove(userId);
-            mapForWorkWithKeyboardAndMessage.put(userId, listForWorkWithKeyboardAndMessage);
-        }
+        return listForWorkWithKeyboardAndMessage;
     }
-    public List<String> getListForWorkWithKeyboardAndMessage(Long userId){
-        return mapForWorkWithKeyboardAndMessage.get(userId);
-    }
+
+
 }

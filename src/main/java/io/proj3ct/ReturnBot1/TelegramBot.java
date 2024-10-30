@@ -21,21 +21,17 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final String botToken;
     private final TextForCommonMessage botLogic;
     private final EmailSender emailSender;
-    private final EmailLogic emailLogic;
-    // Хранит логику для теста
-    private LogicForTestABI logicForTestABI = new LogicForTestABI();
-    private LogicСontroller logicСontroller = new LogicСontroller();
+    private Map<Long, LogicСontroller> logicControllers = new HashMap<>();
     /**
      * Конструктор класса TelegramBot.
      *
      * @param token Токен бота.
      * @param logic Логика бота для обработки команд.
      */
-    public TelegramBot(String token, TextForCommonMessage logic, EmailSender emailSender, EmailLogic emailLogic) {
+    public TelegramBot(String token, TextForCommonMessage logic, EmailSender emailSender) {
         botToken = token;
         botLogic = logic;
         this.emailSender = emailSender;
-        this.emailLogic = emailLogic;
         telegramClient = new OkHttpTelegramClient(botToken);
     }
     /**
@@ -59,78 +55,60 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     // чтобы избежать ошибок if((update.hasCallbackQuery() && update.getCallbackQuery() != null)
     @Override
     public void consume(Update update) {
-        if(update.hasCallbackQuery() && update.getCallbackQuery() != null){
-            logicСontroller.messageHandlerForKeyboard(update , emailSender);
-            sendMessage(update.getCallbackQuery().getFrom().getId(),
-                    logicСontroller.getListForWorkWithKeyboardAndMessage(update.getCallbackQuery().getFrom().getId()));
+        long userId;
+        if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
+            userId = update.getCallbackQuery().getFrom().getId();
+        } else if (update.hasMessage() && update.getMessage() != null) {
+            userId = update.getMessage().getChatId();
+        } else {
+            return; // Неизвестный тип обновления
         }
-        if (update.hasMessage() && update.getMessage() != null){
-            logicСontroller.messageHandlerForKeyboard(update , emailSender);
-            sendMessage(update.getMessage().getChatId(),
-                    logicСontroller.getListForWorkWithKeyboardAndMessage(update.getMessage().getChatId()));
-        }
-
+        LogicСontroller logicСontroller = logicControllers.computeIfAbsent(userId, id->new LogicСontroller());
+        sendMessage(userId, logicСontroller.messageHandlerForKeyboard(update, emailSender, userId));
     }
     /**
-     * Отправляет сообщение в указанный чат с заданным текстом и данными для клавиатуры.
+     * Подготавливает и отправляет сообщение в указанный чат.
+     * Если указаны опции клавиатуры, они будут добавлены к сообщению.
      *
-     * @param chatId Идентификатор чата, в который будет отправлено сообщение.
-
+     * @param chatId ID чата, в который будет отправлено сообщение
+     * @param listForWorkWithKeyboard список, содержащий текст сообщения и, возможно, опции клавиатуры
      */
     void sendMessage(long chatId, List<String> listForWorkWithKeyboard) {
-        if(listForWorkWithKeyboard.size() == 1){
-                sendMessage(chatId, listForWorkWithKeyboard.get(0));
-                return;
+        String textToSend = "";
+        if (!listForWorkWithKeyboard.isEmpty()) {
+            textToSend = listForWorkWithKeyboard.get(0);
         }
-        if(listForWorkWithKeyboard.size() == 2){
-            SendMessage message = SendMessage // Create a message object
-                    .builder()
-                    .chatId(chatId)
-                    .text(listForWorkWithKeyboard.get(0))
-                    .build();
 
-            KeyboardLogic keyboardLogicObj = new KeyboardLogic();
+        SendMessage message = createMessage(chatId, textToSend);
+
+        KeyboardLogic keyboardLogicObj = new KeyboardLogic();
+        if (listForWorkWithKeyboard.size() == 2) {
             keyboardLogicObj.keyboards(message, listForWorkWithKeyboard.get(1));
-            try {
-                telegramClient.execute(message);
-            } catch (TelegramApiException e) {
-                System.out.println("Ошибка извлечения данных: " + e.getMessage());
-            }
-        }
-        else if(!listForWorkWithKeyboard.isEmpty()) {
-            SendMessage message = SendMessage // Create a message object
-                    .builder()
-                    .chatId(chatId)
-                    .text(listForWorkWithKeyboard.get(0))
-                    .build();
-
-            KeyboardLogic keyboardLogicObj = new KeyboardLogic();
+        } else if (listForWorkWithKeyboard.size() > 1) {
             keyboardLogicObj.keyboardforTestABI(message, listForWorkWithKeyboard);
-            try {
-                telegramClient.execute(message);
-            } catch (TelegramApiException e) {
-                System.out.println("Ошибка извлечения данных: " + e.getMessage());
-            }
         }
+
+        executeMessage(message);
     }
-
     /**
-     * Отправляет сообщение пользователю без дополнительных параметров.
+     * Создает объект SendMessage.
      *
-     * @param chatId     ID чата, куда отправляется сообщение.
-     * @param textToSend Текст сообщения.
+     * @param chatId ID чата
+     * @param text текст сообщения
+     * @return созданный объект SendMessage
      */
-    void sendMessage(long chatId, String textToSend) {
-
-        if (textToSend == null) {
-            textToSend = "Сообщение не может быть пустым."; // Сообщение по умолчанию
-        }
-
-        SendMessage message = SendMessage // Create a message object
-                .builder()
+    private SendMessage createMessage(long chatId, String text) {
+        return SendMessage.builder()
                 .chatId(chatId)
-                .text(textToSend)
+                .text(text)
                 .build();
+    }
+    /**
+     * Выполняет отправку сообщения.
+     *
+     * @param message объект SendMessage, который нужно отправить
+     */
+    private void executeMessage(SendMessage message) {
         try {
             telegramClient.execute(message);
         } catch (TelegramApiException e) {

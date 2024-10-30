@@ -26,18 +26,15 @@ public class Main {
         /*
          * Создание объектов классов MessageLogic, EmailLogic TelegramBot.
          * MessageLogic отвечает за логику работы сообщений бота,
-         * EmailLogic отвечает за логику работы с почтой;
          * а TelegramBot - за взаимодействие с Telegram API.
          */
         TextForCommonMessage botLogic = new TextForCommonMessage();
-        EmailLogic emailLogic = new EmailLogic();
-
         /*
          * Запуск бота.
          * Инициализируется TelegramBotsApi и регистрируется созданный бот.
          */
         try  (TelegramBotsLongPollingApplication botsApplication = new TelegramBotsLongPollingApplication()) {
-            botsApplication.registerBot(BOT_TOKEN, new TelegramBot(BOT_TOKEN, botLogic, emailSender, emailLogic));
+            botsApplication.registerBot(BOT_TOKEN, new TelegramBot(BOT_TOKEN, botLogic, emailSender));
             // Ensure this prcess wait forever
             Thread.currentThread().join();
         } catch (Exception e) {
