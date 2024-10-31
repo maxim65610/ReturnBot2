@@ -18,10 +18,8 @@ public class LogicСontroller {
     private final String password = System.getenv("passwordForMail");
     private final EmailSender emailSender = new EmailSender(username, password);
 
-
     /**
      * Проверяет, что делать с переданными данными для клавиатуры.
-     *
      * @param data Входные данные для обработки.
      * @return Обработанное сообщение или исходные данные.
      */
@@ -34,7 +32,6 @@ public class LogicСontroller {
     }
     /**
      * Возвращает ответ бота на сообщение от пользователя для работы с /question..
-     *
      * @param update Обновление, полученное от Telegram.
      * @param userId ID пользователя, отправившего сообщение.
      * @return Список строк, представляющих сообщения и опции для клавиатуры.
@@ -44,7 +41,6 @@ public class LogicСontroller {
     }
     /**
      * Обрабатывает обновления и генерирует ответные сообщения.
-     *
      * @param update Обновление, полученное от Telegram.
      * @param userId ID пользователя, отправившего сообщение.
      * @return Список строк, представляющих сообщения и опции для клавиатуры.
