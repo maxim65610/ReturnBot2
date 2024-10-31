@@ -36,5 +36,28 @@ public class MessageConstants {
     /**
      * Ответ бота на запрос почты.
      */
-    public static final String QUESTION_COMMAND_RESPONSE = "Пожалуйста, отправьте свою почту";
+    public static final String QUESTION_COMMAND_RESPONSE = "Пожалуйста, отправьте свою почту:";
+    /**
+     * Ответ бота на корректную потчу
+     */
+    public static final String CORRECT_MAIL_COMMAND_RESPONSE = "Почта указана корректно, напишите ваш вопрос";
+    /**
+     * Ответ бота на некорректную потчу
+     */
+    public static final String NOT_CORRECT_MAIL_COMMAND_RESPONSE = "Адрес электронной почты был указан неправильно " +
+            "отправьте его ещё раз";
+    /**
+     * Ответ бота на то, что вопрос пользователя отправлен на почту
+     */
+    public static final String QUESTION_HAS_BEEN_SEND_COMMAND_RESPONSE = "Ваш вопрос отправлен";
+    /**
+     * Ответ бота на то, что пользователь прошел тест
+     */
+    public static final String END_TEST_ABI_COMMAND_RESPONSE = "Поздравляю, вы прошли тест. " +
+            "Чтобы узнать результат напишите /testres" ;
+    /**
+     * Ответ бота на то, какой результат у пользователя после прождения теста
+     */
+    public static final String RESULT_TEST_ABI_COMMAND_RESPONSE = "Вам больше всего подходит факультет: ";
+
 }

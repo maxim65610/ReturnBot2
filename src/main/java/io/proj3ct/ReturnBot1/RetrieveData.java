@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 /**
- * Класс для извлечения данных из базы данных.
+ * Извлекает данные из базы данных для теста.
  */
 public class RetrieveData {
 

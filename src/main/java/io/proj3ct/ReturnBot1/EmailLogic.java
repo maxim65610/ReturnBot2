@@ -15,9 +15,9 @@ public class EmailLogic {
     private Map<Long, String> userStatesForMail = new HashMap<>();
     // Хранит электронные адреса пользователей
     private Map<Long, String> userMails = new HashMap<>();
+    private final TextForMessage textForMessage = new TextForMessage();
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
-     *
      * @param chatID Идентификатор чата пользователя.
      * @return Строка с состоянием пользователя или "0", если состояний нет.
      */
@@ -30,23 +30,25 @@ public class EmailLogic {
         }
     }
     /**
-     * Возвращает ответ на команду вопроса.
-     *
-     * @return строка с ответом на команду вопроса.
+     * Возвращает ответ бота на сообщение от пользователя для работы с /question.
+     * @param update Объект, содержащий обновления сообщений.
+     * @param messageText Текст сообщения пользователя.
+     * @param userId Идентификатор пользователя.
+     * @param emailSender Объект для отправки электронной почты.
+     * @return Ответ пользователю.
      */
-    private String questionCommandReceived() {
-        return MessageConstants.QUESTION_COMMAND_RESPONSE;
+    public String getReplyForWorkingWithMail(Update update, String messageText, Long userId, EmailSender emailSender){
+        return worksWithMail(update, messageText, userId, emailSender);
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием.
-     *
      * @param update Объект, содержащий обновления сообщений.
      * @param messageText Текст сообщения пользователя.
      * @param userId Идентификатор пользователя.
      * @param emailSender Объект для отправки электронной почты.
      * @return Ответ пользователю в зависимости от текущего состояния.
      */
-    public String worksWithMail(Update update, String messageText, Long userId, EmailSender emailSender) {
+    private String worksWithMail(Update update, String messageText, Long userId, EmailSender emailSender) {
         String currentState = userStatesForMail.get(userId);
         if ("/question".equals(messageText)) {
             userStatesForMail.put(userId, "awaiting_email");
@@ -56,10 +58,10 @@ public class EmailLogic {
             if(emailSender.isValidEmail(mailUser)){
                 userMails.put(userId, mailUser);
                 userStatesForMail.put(userId, "awaiting_question");
-                anwserhandleEmailInput = "Почта указана корректно, напишите ваш вопрос";
+                anwserhandleEmailInput = textForMessage.handleMessage("correctMail");
             } else {
                 userMails.remove(userId, mailUser);
-                anwserhandleEmailInput = "Адрес электронной почты был указан неправильно отправьте его ещё раз";
+                anwserhandleEmailInput = textForMessage.handleMessage("notСorrectMail");
             }
             return anwserhandleEmailInput;
 
@@ -69,9 +71,9 @@ public class EmailLogic {
             emailSender.sendEmail(emailSender.getUsername(), "Вопрос от абитуриента " + mailUser, question);
             userStatesForMail.remove(userId);
             userMails.remove(userId);
-            return "Ваш вопрос отправлен";
+            return textForMessage.handleMessage("questionHasBeenSend");
         }
-        return questionCommandReceived();
+        return textForMessage.handleMessage("/question");
     }
 
 }

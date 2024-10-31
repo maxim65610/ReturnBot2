@@ -6,8 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Класс для подключения к базе данных, и
- * создания ее по необходимости
+ * Класс для подключения к базе данных и создания таблиц
  */
 public class DatabaseConnection {
     private final String dbUrl;
@@ -15,9 +14,9 @@ public class DatabaseConnection {
     private final String dbPassword;
     /**
      * Конструктор для базы данных
-     * @ DB_URL URL базы данных
-     * @ DB_USER имя пользователя базы данных
-     * @ DB_PASSWORD пароль пользователя базы данных
+     * dbUrl URL базы данных
+     * dbUser имя пользователя базы данных
+     * dbPassword пароль пользователя базы данных
      */
     public DatabaseConnection() {
         dbUrl = System.getenv("bdUrl");
@@ -26,12 +25,9 @@ public class DatabaseConnection {
     }
     /**
      * Метод для установления соединения с базой данных
-     * @ DB_URL URL базы данных
-     * @ DB_USER имя пользователя базы данных
-     * @ DB_PASSWORD пароль пользователя базы данных
      * @return объект Connection
      */
-    Connection connect() {
+    public Connection connect() {
         Connection connection = null;
         try {
             Class.forName("org.postgresql.Driver");
@@ -74,7 +70,7 @@ public class DatabaseConnection {
         }
     }
     /**
-     * Метод для создания таблицы AnswersData в базе данных
+     * Метод для создания таблицы DepartsInfoTable в базе данных
      */
     public void createDepartsInfoTableQuery() {
 

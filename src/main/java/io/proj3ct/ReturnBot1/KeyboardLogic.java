@@ -8,11 +8,11 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.List;
 
 /**
- * Класс для контроля над клавиатурами
+ * Контролирует выбор клавиатур
  */
 public class KeyboardLogic {
     /**
-     * Метод, который обрабатывает клавиатуры, отправляющиеся вместе с сообщением
+     * Обрабатывает сообщение и выбирает клавиатуру, отправляющуюся вместе с сообщением
      */
     public SendMessage keyboards(SendMessage message, String data) {
 
@@ -162,9 +162,8 @@ public class KeyboardLogic {
         return message;
     }
     /**
-     * Метод для создания клавиатуры для тестирования ABI.
-     *
-     * @param message         Сообщение, к которому добавляется клавиатура.
+     * Создает клавиатуры для тестирования ABI.
+     * @param message Сообщение, к которому добавляется клавиатура.
      * @param list_with_dataBD Список данных для настройки клавиатуры.
      * @return Изменённое сообщение с установленной клавиатурой.
      */

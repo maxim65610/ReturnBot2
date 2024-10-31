@@ -1,108 +1,93 @@
 package io.proj3ct.ReturnBot1;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 
 /**
- * Тестовый класс для проверки функциональности {@link EmailLogic}.
- * Этот класс содержит модульные тесты, которые проверяют различные аспекты
- * обработки электронных писем и управления состояниями пользователей.
+ * Класс тестов для проверки логики обработки электронной почты в классе EmailLogic.
  */
-public class EmailLogicTest {
+class EmailLogicTest {
 
-    /**
-     * Экземпляр {@link EmailLogic}, который будет тестироваться.
-     */
-    @InjectMocks
     private EmailLogic emailLogic;
+    private EmailSender emailSender;
+    private TextForMessage textForMessage;
+    private Update update;
 
     /**
-     * Мок-объект {@link EmailSender}, используемый для проверки отправки электронных писем.
+     * Конструктор дял LogicControllerTest.
      */
-    @Mock
-    private EmailSender mockEmailSender;
-
+    private void EmailLogicTest(){
+        emailLogic = new EmailLogic();
+        emailSender = Mockito.mock(EmailSender.class);
+        textForMessage = Mockito.mock(TextForMessage.class);
+        update = Mockito.mock(Update.class);
+        MockitoAnnotations.openMocks(this);
+    }
     /**
-     * Метод, который выполняется перед каждым тестом.
-     * Он инициализирует моки и инъекции.
+     * Создание объекта для тестов EmailLogicTest.
      */
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        EmailLogicTest();
     }
-
     /**
-     * Тест для проверки состояния пользователя, когда список состояний пуст.
-     * Ожидается, что метод вернет "0".
+     * Тест для проверки получения состояния пользователя, когда оно отсутствует.
      */
     @Test
-    void testGetUserStatesForEmail_Empty() {
-        String result = emailLogic.getUserStatesForEmail(1L);
-        assertEquals("0", result, "Expected state for empty user states should be '0'");
+    void testGetUserStatesForEmail_NoStates() {
+        Long userId = 123L;
+        String state = emailLogic.getUserStatesForEmail(userId);
+        assertEquals("0", state, "Должно возвращаться '0', если состояния нет.");
     }
-
     /**
-     * Тест для проверки состояния пользователя, когда состояние установлено.
-     * Ожидается, что метод вернет "awaiting_email".
+     * Тест для проверки обработки команды /question.
      */
     @Test
-    void testGetUserStatesForEmail_WithState() {
-        emailLogic.worksWithMail(null, "/question", 1L, mockEmailSender);
-        String result = emailLogic.getUserStatesForEmail(1L);
-        assertEquals("awaiting_email", result, "Expected state should match the one set");
-    }
-
-    /**
-     * Тест для проверки обработки валидного адреса электронной почты.
-     * Ожидается, что метод вернет сообщение о корректности почты.
-     */
-    @Test
-    void testWorksWithMail_ValidEmail() {
+    void testWorksWithMail_QuestionCommand() {
+        Long userId = 123L;
         Update mockUpdate = mock(Update.class);
         Message mockMessage = mock(Message.class);
-
-        // Настройка мока для получения текста сообщения
         when(mockUpdate.getMessage()).thenReturn(mockMessage);
         when(mockMessage.getText()).thenReturn("test@gmail.com");
 
-        // Симуляция отправки команды "/question"
-        emailLogic.worksWithMail(mockUpdate, "/question", 1L, mockEmailSender);
-
-        // Имитация метода проверки валидности электронной почты
-        when(mockEmailSender.isValidEmail("test@gmail.com")).thenReturn(true);
-
-        // Вызов метода с валидным адресом электронной почты
-        String response = emailLogic.worksWithMail(mockUpdate, "test@gmail.com", 1L, mockEmailSender);
-
-        // Проверка ожидаемого ответа
-        assertEquals("Почта указана корректно, напишите ваш вопрос", response);
+        emailLogic.getReplyForWorkingWithMail(mockUpdate, "/question", userId, emailSender);
+        assertEquals("awaiting_email", emailLogic.getUserStatesForEmail(userId),
+                "Состояние должно быть 'awaiting_email'.");
     }
-
     /**
-     * Тест для проверки обработки невалидного адреса электронной почты.
-     * Ожидается, что метод вернет сообщение об ошибке.
+     * Тест для проверки корректного ввода электронной почты.
      */
     @Test
-    void testWorksWithMail_InvalidEmail() {
+    void testWorksWithMail_CorrectEmail() {
+        Long userId = 123L;
         Update mockUpdate = mock(Update.class);
         Message mockMessage = mock(Message.class);
         when(mockUpdate.getMessage()).thenReturn(mockMessage);
-        when(mockMessage.getText()).thenReturn("invalid-email");
+        when(mockMessage.getText()).thenReturn("test@gmail.com");
+        emailLogic.getReplyForWorkingWithMail(mockUpdate, "/question", userId, emailSender);
 
-        emailLogic.worksWithMail(mockUpdate, "/question", 1L, mockEmailSender);
+        String validEmail = "test@gmail.com";
+        when(mockUpdate.getMessage().getText()).thenReturn(validEmail);
+        when(emailSender.isValidEmail(validEmail)).thenReturn(true);
+        when(textForMessage.handleMessage("correctMail")).thenReturn("Электронная почта корректная.");
 
-        when(mockEmailSender.isValidEmail("invalid-email")).thenReturn(false);
-        String response = emailLogic.worksWithMail(mockUpdate, "invalid-email", 1L, mockEmailSender);
-
-        assertEquals("Адрес электронной почты был указан неправильно отправьте его ещё раз", response);
+        String response = emailLogic.getReplyForWorkingWithMail(mockUpdate, validEmail, userId, emailSender);
+        assertEquals("Почта указана корректно, напишите ваш вопрос", response);
+        assertEquals("awaiting_question", emailLogic.getUserStatesForEmail(userId),
+                "Состояние должно быть 'awaiting_question'.");
     }
-}
 
+}

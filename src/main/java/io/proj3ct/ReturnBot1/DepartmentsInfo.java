@@ -6,11 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Класс для вывода информации о факультетах урфу
+ * Выводит информацию о факультетах урфу
  */
 public class DepartmentsInfo {
 
-    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
     /**
      * Извлекает информацию из базы данных по заданному идентификатору.
      * @param data идентификатор для поиска информации.

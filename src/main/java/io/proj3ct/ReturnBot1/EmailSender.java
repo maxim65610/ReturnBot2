@@ -1,25 +1,20 @@
 package io.proj3ct.ReturnBot1;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 import javax.mail.*;
 import javax.mail.internet.*;
-import java.util.Map;
+
 import java.util.Properties;
 import javax.mail.internet.InternetAddress;
 /**
- * Класс для отправки электронных писем с использованием SMTP.
- *
- * <p>Этот класс предоставляет методы для проверки корректности адреса электронной почты
- * и отправки электронных писем с заданными параметрами.</p>
+ * Отправляет электронные письма с использованием SMTP.
+ * Этот класс предоставляет методы для проверки корректности адреса электронной почты
+ * и отправки электронных писем с заданными параметрами.
  */
 public class EmailSender {
     private String username;
     private String password;
-    private Session session;
     /**
      * Конструктор класса EmailSender.
-     *
      * @param username Имя пользователя для аутентификации на SMTP сервере.
      * @param password Пароль для аутентификации на SMTP сервере.
      */
@@ -29,7 +24,6 @@ public class EmailSender {
     }
     /**
      * Проверяет корректность заданного адреса электронной почты.
-     *
      * @param email Адрес электронной почты для проверки.
      * @return true, если адрес корректен, иначе false.
      */
@@ -44,7 +38,6 @@ public class EmailSender {
     }
     /**
      * Отправляет электронное письмо на заданный адрес.
-     *
      * @param recipient Адрес электронной почты получателя.
      * @param subject Тема письма.
      * @param body Текст письма.
@@ -78,13 +71,10 @@ public class EmailSender {
     }
     /**
      * Получает имя пользователя для аутентификации.
-     *
      * @return Имя пользователя.
      */
     public String getUsername(){
         return username;
     }
-    public void setSession(Session session) {
-        this.session = session;
-    }
+
 }
