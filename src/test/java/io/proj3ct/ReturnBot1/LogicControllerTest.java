@@ -25,7 +25,7 @@ public class LogicControllerTest {
     private TelegramBot telegramBot;
     private LogicСontroller mockLogicController;
     /**
-     * Инициализация тестового окружения.
+     * Конструктор дял LogicControllerTest.
      */
     private void LogicControllerTest() {
         mockLogicForTestABI = Mockito.mock(LogicForTestABI.class);
@@ -35,7 +35,6 @@ public class LogicControllerTest {
         telegramBot = new TelegramBot("fakeToken");
     }
     /**
-     * Метод, выполняющийся перед каждым тестом.
      * Устанавливает моки для полей с помощью рефлексии.
      */
     @BeforeEach

@@ -31,19 +31,25 @@ class LogicForTestABITest {
     @BeforeEach
     void setUp() {
         LogicForTestABITest();
-
     }
-/**
- * Тестирует метод getUser StatesForTest, когда состояние пользователя отсутствует.
- * Ожидается, что метод вернет "0".
- */
+    /**
+     * Тестирует метод getUser StatesForTest, когда состояние пользователя отсутствует.
+     * Ожидается, что метод вернет "0".
+     */
     @Test
-    public void testGetUserStatesForTest_NoState() {
+    public void testGetUserStatesForTestNoState() {
         Long userId = 1L;
         assertEquals("0", logicForTestABI.getUserStatesForTest(userId));
     }
-
-
+    /**
+     * Проверяет, что метод возвращает "0", когда состояния пользователей пусты.
+     */
+    @Test
+    void testGetUserStatesForTestEmpty() {
+        Long userId = 1L;
+        String result = logicForTestABI.getUserStatesForTest(userId);
+        assertEquals("0", result, "Expected state for empty user states should be '0'");
+    }
     /**
      * Тестирует метод getDataBd, чтобы убедиться, что он возвращает список данных.
      * Ожидается, что список данных не должен быть null и должен быть пустым.
@@ -57,12 +63,9 @@ class LogicForTestABITest {
         assertNotNull(dataBD);
         assertTrue(dataBD.isEmpty());
     }
-
-
-
     /**
      * Тестирует метод worksWithTestAPI, чтобы убедиться, что он возвращает список данных.
-     * Ожидается, что список данных не должен быть null и должен быть пустым.
+     * Ожидается, что список данных не должен быть null.
      */
     @Test
     void testWorksWithTestAPI() {

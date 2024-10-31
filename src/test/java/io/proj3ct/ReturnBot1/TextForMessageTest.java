@@ -53,22 +53,19 @@ class TextForMessageTest {
         assertEquals(ExpectedMessageTestAbit, answerCommandTestAbit);
         assertEquals(ExpectedMessageQuestion, answerCommandQuestion);
 
-
-
-    }
-    /**
-     Тестирует метод handleMessage, проверяя корректность ответов на различные команды.
-     * Ожидается, что метод вернет правильные сообщения для следующих команд:
-     * ИЕНИМ
-     * РТФ
-     * ХТИ
-     * correctMail
-     * notСorrectMail
-     * questionHasBeenSend
-     * userPassedTest
-     * resultTestABI
-     */
-
+        }
+        /**
+         Тестирует метод handleMessage, проверяя корректность ответов на различные команды.
+         * Ожидается, что метод вернет правильные сообщения для следующих команд:
+         * ИЕНИМ
+         * РТФ
+         * ХТИ
+         * correctMail
+         * notСorrectMail
+         * questionHasBeenSend
+         * userPassedTest
+         * resultTestABI
+         */
         @Test
         public void testDepartCommands(){
             String answerCommandInstIENIM = textForMessage.handleMessage("ИЕНИМ");

@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Класс, представляющий Telegram-бота, который наследует функциональность
- * от TelegramLongPollingBot. Обрабатывает обновления от пользователей, управляет
+ * Telegram-бота, который наследует функциональность
+ * от LongPollingSingleThreadUpdateConsumer. Обрабатывает обновления от пользователей, управляет
  * состояниями пользователей и отправляет сообщения.
  */
 public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
@@ -31,7 +31,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     }
     /**
      * Обрабатывает обновления от Telegram.
-     *
      * @param update Обновление, полученное от Telegram.
      */
     @Override
@@ -50,7 +49,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     /**
      * Подготавливает и отправляет сообщение в указанный чат.
      * Если указаны опции клавиатуры, они будут добавлены к сообщению.
-     *
      * @param chatId ID чата, в который будет отправлено сообщение
      * @param listForWorkWithKeyboard список, содержащий текст сообщения и, возможно, опции клавиатуры
      */
@@ -71,7 +69,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     }
     /**
      * Создает объект SendMessage.
-     *
      * @param chatId ID чата
      * @param text текст сообщения
      * @return созданный объект SendMessage
@@ -84,7 +81,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     }
     /**
      * Выполняет отправку сообщения.
-     *
      * @param message объект SendMessage, который нужно отправить
      */
     private void executeMessage(SendMessage message) {

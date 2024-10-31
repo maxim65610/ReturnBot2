@@ -27,8 +27,7 @@ class EmailLogicTest {
     private Update update;
 
     /**
-     * Метод, который выполняется перед каждым тестом.
-     * Он инициализирует моки и инъекции.
+     * Конструктор дял LogicControllerTest.
      */
     private void EmailLogicTest(){
         emailLogic = new EmailLogic();
