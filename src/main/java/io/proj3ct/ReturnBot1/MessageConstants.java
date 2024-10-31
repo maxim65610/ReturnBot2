@@ -36,7 +36,7 @@ public class MessageConstants {
     /**
      * Ответ бота на запрос почты.
      */
-    public static final String QUESTION_COMMAND_RESPONSE = "Пожалуйста, отправьте свою почту";
+    public static final String QUESTION_COMMAND_RESPONSE = "Пожалуйста, отправьте свою почту:";
     /**
      * Ответ бота на корректную потчу
      */

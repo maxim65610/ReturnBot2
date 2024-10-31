@@ -116,7 +116,6 @@ public class LogicForTestABI {
      */
     private String gettingResult(Long userID, Map<Long, List<String>> choiceABI) {
         List<String> listofABIechoice = choiceABI.get(userID);
-        int sizeListofABIechoice = listofABIechoice.size();
         List<String> listofABIechoiceWithoutGap = new ArrayList<>();
         for (String s : listofABIechoice) {
             listofABIechoiceWithoutGap.add(s.trim());
