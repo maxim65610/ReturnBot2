@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentMap;
 public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final String botToken;
-    private final Map<Long, LogicСontroller> logicController = new HashMap<>();
+    final Map<Long, LogicСontroller> logicController = new HashMap<>();
     /**
      * Конструктор класса TelegramBot, который инициализирует нового бота Telegram.
      * @param token Токен бота, необходимый для аутентификации.
