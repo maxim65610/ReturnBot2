@@ -17,6 +17,8 @@ public class LogicСontroller {
     private final String username = System.getenv("mail"); // Ваша почта
     private final String password = System.getenv("passwordForMail");
     private final EmailSender emailSender = new EmailSender(username, password);
+
+
     /**
      * Проверяет, что делать с переданными данными для клавиатуры.
      *
