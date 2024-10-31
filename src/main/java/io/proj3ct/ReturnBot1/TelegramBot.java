@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Класс, представляющий Telegram-бота, который наследует функциональность
@@ -19,19 +20,13 @@ import java.util.Map;
 public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final String botToken;
-    private final EmailSender emailSender;
-    private final Map<Long, LogicСontroller> logicController;
+    private final Map<Long, LogicСontroller> logicController = new HashMap<>();
     /**
      * Конструктор класса TelegramBot, который инициализирует нового бота Telegram.
-     *
      * @param token Токен бота, необходимый для аутентификации.
-     * @param emailSender Объект для отправки электронных писем.
-     * @param logicСontroller Карта, связывающая идентификаторы пользователей с контроллерами логики.
      */
-    public TelegramBot(String token, EmailSender emailSender, Map<Long, LogicСontroller> logicСontroller) {
+    public TelegramBot(String token) {
         botToken = token;
-        this.emailSender = emailSender;
-        this.logicController = logicСontroller;
         telegramClient = new OkHttpTelegramClient(botToken);
     }
     /**
@@ -50,7 +45,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
             return; // Неизвестный тип обновления
         }
         LogicСontroller logicСontroller = logicController.computeIfAbsent(userId, id->new LogicСontroller());
-        sendMessage(userId, logicСontroller.messageHandlerForKeyboard(update, emailSender, userId));
+        sendMessage(userId, logicСontroller.getListStringWithTextToSendAndOptionForKeyboard(update, userId));
     }
     /**
      * Подготавливает и отправляет сообщение в указанный чат.

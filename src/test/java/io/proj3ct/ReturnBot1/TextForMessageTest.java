@@ -10,17 +10,14 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-class TextForCommonMessageTest {
+class TextForMessageTest {
 
-    private TextForCommonMessage textForCommonMessage;
-    private Map<Long, String> userStates;
-    private Map<Long, String> userMails;
+    private TextForMessage textForMessage;
+
     @BeforeEach
     void setUp() {
         // Создаем экземпляр LogicBrain
-        textForCommonMessage = new TextForCommonMessage();
-        userStates = new HashMap<>();
-        userMails = new HashMap<>();
+        textForMessage = new TextForMessage();
     }
 
     @Test
@@ -28,9 +25,9 @@ class TextForCommonMessageTest {
      * Тест для команд start,help,work,test и проверяет их ответы.
      */
     public void testCommands() {
-        String answerCommandDefault = textForCommonMessage.handleMessage("/start");
-        String answerCommandWork = textForCommonMessage.handleMessage("/work");
-        String answerCommandTestAbit = textForCommonMessage.handleMessage("/testAbit");
+        String answerCommandDefault = textForMessage.handleMessage("/start");
+        String answerCommandWork = textForMessage.handleMessage("/work");
+        String answerCommandTestAbit = textForMessage.handleMessage("/testAbit");
 
         String ExpectedMessageDefault = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить, " +
                 "пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
@@ -54,9 +51,9 @@ class TextForCommonMessageTest {
 
     @Test
     public void testDepartCommands(){
-        String answerCommandInstIENIM = textForCommonMessage.handleMessage("ИЕНИМ");
-        String answerCommandInstRTF = textForCommonMessage.handleMessage("РТФ");
-        String answerCommandInstHTI = textForCommonMessage.handleMessage("ХТИ");
+        String answerCommandInstIENIM = textForMessage.handleMessage("ИЕНИМ");
+        String answerCommandInstRTF = textForMessage.handleMessage("РТФ");
+        String answerCommandInstHTI = textForMessage.handleMessage("ХТИ");
 
         String ExpectedMessageInstIENIM = "Вот все факультеты, которые есть в институте ИЕНИМ:";
         String ExpectedMessageInstRTF = "Вот все факультеты, которые есть в институте РТФ:";

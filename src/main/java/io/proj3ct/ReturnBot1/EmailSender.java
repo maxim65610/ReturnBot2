@@ -16,7 +16,6 @@ import javax.mail.internet.InternetAddress;
 public class EmailSender {
     private String username;
     private String password;
-    private Session session;
     /**
      * Конструктор класса EmailSender.
      *
@@ -84,7 +83,5 @@ public class EmailSender {
     public String getUsername(){
         return username;
     }
-    public void setSession(Session session) {
-        this.session = session;
-    }
+
 }

@@ -10,7 +10,7 @@ import java.sql.SQLException;
  */
 public class DepartmentsInfo {
 
-    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
     /**
      * Извлекает информацию из базы данных по заданному идентификатору.
      * @param data идентификатор для поиска информации.
