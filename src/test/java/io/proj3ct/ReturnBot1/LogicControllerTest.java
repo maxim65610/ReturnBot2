@@ -27,7 +27,7 @@ public class LogicControllerTest {
     /**
      * Конструктор дял LogicControllerTest.
      */
-    private void LogicControllerTest() {
+    private LogicControllerTest() {
         mockLogicForTestABI = Mockito.mock(LogicForTestABI.class);
         mockTextForMessage = Mockito.mock(TextForMessage.class);
         logicController = new LogicСontroller();
@@ -39,7 +39,6 @@ public class LogicControllerTest {
      */
     @BeforeEach
     public void setUp() throws NoSuchFieldException, IllegalAccessException {;
-        LogicControllerTest();
         // Заменяем логику контроллера на мок
         telegramBot.logicController.put(123L, mockLogicController);
         Field logicForTestABIField = LogicСontroller.class.getDeclaredField("logicForTestABI");

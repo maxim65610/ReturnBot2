@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
+
 
 /**
  * Telegram-бота, который наследует функциональность
