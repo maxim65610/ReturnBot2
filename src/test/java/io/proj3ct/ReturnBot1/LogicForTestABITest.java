@@ -15,22 +15,14 @@ class LogicForTestABITest {
      Map<Long, String> resultsTestAbi;
      Map<Long, String> userStatesForTest;
      Map<Long, List<String>> choiceABI;
-
     /**
      * Конструктор дял LogicForTestABITest.
      */
-    private void LogicForTestABITest(){
+    private LogicForTestABITest(){
         logicForTestABI = new LogicForTestABI();
         resultsTestAbi = new HashMap<>();
         userStatesForTest = new HashMap<>();
         choiceABI = new HashMap<>();
-    }
-    /**
-     * Создание объекта для тестов logicForTestABI, resultsTestAbi, userStatesForTest, choiceABI.
-     */
-    @BeforeEach
-    void setUp() {
-        LogicForTestABITest();
     }
     /**
      * Тестирует метод getUser StatesForTest, когда состояние пользователя отсутствует.

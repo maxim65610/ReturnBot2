@@ -1,16 +1,10 @@
 package io.proj3ct.ReturnBot1;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,21 +21,14 @@ class EmailLogicTest {
     private Update update;
 
     /**
-     * Конструктор дял LogicControllerTest.
+     * Конструктор дял EmailLogicTest.
      */
-    private void EmailLogicTest(){
+    private EmailLogicTest(){
         emailLogic = new EmailLogic();
         emailSender = Mockito.mock(EmailSender.class);
         textForMessage = Mockito.mock(TextForMessage.class);
         update = Mockito.mock(Update.class);
         MockitoAnnotations.openMocks(this);
-    }
-    /**
-     * Создание объекта для тестов EmailLogicTest.
-     */
-    @BeforeEach
-    void setUp() {
-        EmailLogicTest();
     }
     /**
      * Тест для проверки получения состояния пользователя, когда оно отсутствует.

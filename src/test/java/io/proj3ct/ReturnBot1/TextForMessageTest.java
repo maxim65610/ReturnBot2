@@ -17,22 +17,14 @@ class TextForMessageTest {
     /**
      * Конструктор дял TextForMessageTest.
      */
-    private void TextForMessageTest(){
+    private TextForMessageTest(){
         textForMessage = new TextForMessage();
     }
-    /**
-     * Создание объекта для тестов textForMessage.
-     */
-    @BeforeEach
-    void setUp() {
-        TextForMessageTest();
-    }
-
-    @Test
     /**
      * Тест для команд /start, /work, /testAbit и /question.
      * Проверяет, что метод handleMessage возвращает ожидаемые ответы для каждой из указанных команд.
      */
+    @Test
     public void testCommands() {
         String answerCommandDefault = textForMessage.handleMessage("/start");
         String answerCommandWork = textForMessage.handleMessage("/work");
