@@ -10,6 +10,7 @@ import java.sql.SQLException;
  */
 public class DepartmentsInfo {
 
+    private final DatebaseTables datebaseTables = new DatebaseTables();
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     /**
      * Извлекает информацию из базы данных по заданному идентификатору.
@@ -18,7 +19,7 @@ public class DepartmentsInfo {
      * Нужен для того, чтобы из бд вытащить информацию про нужный факультет.
      */
     public String extract(String data, String textToSend) {
-        databaseConnection.createDepartsInfoTableQuery();
+        datebaseTables.createDepartsInfoTableQuery();
         String extractInfoFromDepartsInfo = "SELECT * FROM DepartsInfo WHERE id_depart = ?";
 
         try (Connection conn = databaseConnection.connect();

@@ -11,13 +11,14 @@ import java.sql.SQLException;
 public class RetrieveData {
 
     private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private DatebaseTables datebaseTables = new DatebaseTables();
     /**
      * Метод для извлечения строки данных из таблицы AnswersData по id_question
      * @param id идентификатор строки
      * @param data текст необходимый для работы с бд
      */
     public String getDataById(int id, String data) {
-        databaseConnection.createAnswersDataTableQuery();
+        datebaseTables.createAnswersDataTableQuery();
 
         String selectAnswersFromDataTable = "SELECT * FROM AnswersData WHERE id_question = ?";
 
