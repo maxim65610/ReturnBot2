@@ -6,12 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Выводит информацию о факультетах урфу.
  * Извлекает информацию из базы данных по заданному идентификатору.
  * Нужен для того, чтобы из бд вытащить информацию про нужный факультет.
  */
 public class DepartmentsInfo {
-
 
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);

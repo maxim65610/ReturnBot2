@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ import java.util.Map;
 public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final String botToken;
-    final Map<Long, LogicController> logicController = new HashMap<>();
+    private final Map<Long, LogicController> logicController = new HashMap<>();
     /**
      * Конструктор класса TelegramBot, который инициализирует нового бота Telegram.
      * @param token Токен бота, необходимый для аутентификации.
