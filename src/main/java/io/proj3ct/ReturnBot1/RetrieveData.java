@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class RetrieveData {
 
     private DatabaseConnection databaseConnection = new DatabaseConnection();
-    private DatebaseTables datebaseTables = new DatebaseTables();
+    private DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     /**
      * Метод для извлечения строки данных из таблицы AnswersData по id_question
      * @param id идентификатор строки
@@ -61,12 +61,9 @@ public class RetrieveData {
                 }
             } else {
                 System.out.println("Данные не найдены для id_question: " + id);
-                return "Данные не найдены для id_question: " + id;
             }
         } catch (SQLException e) {
             System.out.println("Ошибка извлечения данных: " + e.getMessage());
-            return "Ошибка извлечения данных: " + e.getMessage();
-
         }
         return "";
     }
