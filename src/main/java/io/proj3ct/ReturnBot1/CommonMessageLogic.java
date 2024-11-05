@@ -5,6 +5,7 @@ package io.proj3ct.ReturnBot1;
  * Включает методы для обработки команд пользователя.
  */
 public class CommonMessageLogic {
+    CommonMessageConstants commonMessageConstants = new CommonMessageConstants();
     /**
      * Метод, который возвращает стандартный ответ бота на нераспознанные команды.
      * @return сообщение с информацией о функционале бота.
@@ -75,6 +76,12 @@ public class CommonMessageLogic {
                 return instCHTICommandReceived();
             case "resultAfterTestABI":
                 return resultAfterTestABICommandReceived();
+            case "/authorization":
+                return commonMessageConstants.REGISTRATION_COMMAND_RESPONSE;
+            case "/userDataDell":
+                return commonMessageConstants.DEL_DATA_COMMAND_RESPONSE;
+            case "/userDataChange":
+                return commonMessageConstants.CHANGEDATA_COMMAND_RESPONSE;
             default:
                 return defaultCommandReceived();
         }

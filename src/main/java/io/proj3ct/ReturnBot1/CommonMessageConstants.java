@@ -49,7 +49,7 @@ public class CommonMessageConstants {
     /**
      * Ответ бота на начало авторизации.
      */
-    public static final String REGISTRATION_COMMAND_RESPONSE = " Здравствуйте, начинаем." +
+    public static final String REGISTRATION_COMMAND_RESPONSE = "Здравствуйте, начинаем." +
             "\nВсего будет 4 пункта, которые " +
             "вы должны указать: имя, фамилию, класс, почту. " +
             "\nВведите имя:\n";
@@ -68,5 +68,7 @@ public class CommonMessageConstants {
             "\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
             "\nЕсли хотите удалить данные воспользуйтесь /userDataDell" +
             "\nЕсли хотите поменять данные воспользуйтесь /userDataChange";
+
+    public static final  String DEL_DATA_COMMAND_RESPONSE = "Ваши данные успешно удалены";
 
 }

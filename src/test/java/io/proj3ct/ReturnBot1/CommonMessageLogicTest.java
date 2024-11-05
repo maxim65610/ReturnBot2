@@ -34,18 +34,36 @@ class CommonMessageLogicTest {
         String answerCommandDefault = commonMessageLogic.handleMessage("/start");
         String answerCommandWork = commonMessageLogic.handleMessage("/work");
         String answerCommandTestAbit = commonMessageLogic.handleMessage("/testAbit");
+        String answerCommandAuthorization = commonMessageLogic.handleMessage("/authorization");
+        String answerCommandUserDataDell = commonMessageLogic.handleMessage("/userDataDell");
+        String answerCommandUserDataChange = commonMessageLogic.handleMessage("/userDataChange");
 
-        String ExpectedMessageDefault = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить, " +
-                "пожалуйста пользуйся кнопками. Если у тебя остались вопросы, можешь воспользоваться " +
-                "командой /question. Если хотите начать работу, напишите /work. Также у тебя есть " +
-                "возможность пройти тест на то, какое направление вам больше подходит, просто напиши /testAbit";
+        String ExpectedMessageDefault = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
+                " пожалуйста пользуйся кнопками.\n" +
+                "Если у тебя остались вопросы, можешь воспользоваться командой /question.\n" +
+                "Если хотите начать работу, напишите /work.\n" +
+                "Также у тебя есть возможность пройти тест на то, какое направление вам больше подходит," +
+                " просто напиши /testAbit.\n" +
+                "Если вы хотите получить больший функционал бота воспользуйтесь /authorization";
         String ExpectedMessageWork = "Вот все институты, у которых ты можешь посмотреть факультеты:";
         String ExpectedMessageTestAbit = "Вы начали проходить тестирование по выбору факультета, " +
                 "выберите один предмет из этих трех:";
+        String ExpectedMessageAuthorization = "Здравствуйте, начинаем.\n" +
+                "Всего будет 4 пункта, которые вы должны указать: имя, фамилию, класс, почту. \n" +
+                "Введите имя:\n";
+        String ExpectedMessageDataDell = "Ваши данные успешно удалены";
+        String ExpectedMessageDataChange = "Выберите данные, которые хотите поменять:\n" +
+                "/userDataChangeName - поменять имя\n" +
+                "/userDataChangeSurname - поменять фамилию\n" +
+                "/userDataChangeClass - поменять класс\n" +
+                "/userDataChangeMail - поменять почту";
 
         assertEquals(ExpectedMessageDefault, answerCommandDefault);
         assertEquals(ExpectedMessageWork, answerCommandWork);
         assertEquals(ExpectedMessageTestAbit, answerCommandTestAbit);
+        assertEquals(ExpectedMessageAuthorization, answerCommandAuthorization);
+        assertEquals(ExpectedMessageDataDell, answerCommandUserDataDell);
+        assertEquals(ExpectedMessageDataChange, answerCommandUserDataChange);
 
     }
 
