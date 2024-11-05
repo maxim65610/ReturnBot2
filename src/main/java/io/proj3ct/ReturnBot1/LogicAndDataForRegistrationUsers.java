@@ -10,14 +10,13 @@ import java.util.Map;
  * Класс для обработки логики и данных регистрации пользователей.
  */
 public class LogicAndDataForRegistrationUsers {
-    private Map<Long, String> nameUser  = new HashMap<>();
-    private Map<Long, String> surnameUser  = new HashMap<>();
-    private Map<Long, String> schoolClassUser  = new HashMap<>();
-    private Map<Long, String> mailUser  = new HashMap<>();
-    private Map<Long, String> userStatesForRegistration = new HashMap<>();
-    private Map<Long, String> userStatesDataChange= new HashMap<>();
-    private UsersData usersData = new UsersData();
-    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final Map<Long, String> nameUser  = new HashMap<>();
+    private final Map<Long, String> surnameUser  = new HashMap<>();
+    private final Map<Long, String> schoolClassUser  = new HashMap<>();
+    private final Map<Long, String> mailUser  = new HashMap<>();
+    private final Map<Long, String> userStatesForRegistration = new HashMap<>();
+    private final UsersData usersData = new UsersData();
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
     /**
      * Получает объект подключения к базе данных.
      * @return объект DatabaseConnection
