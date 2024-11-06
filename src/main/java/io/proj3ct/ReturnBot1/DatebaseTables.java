@@ -14,6 +14,11 @@ public class DatebaseTables {
     /**
      * Метод для создания таблицы AnswersData в базе данных
      */
+
+    public DatebaseTables(DatabaseConnection databaseConnection){
+        this.databaseConnection = databaseConnection;
+    }
+
     public void createAnswersDataTableQuery() {
 
         String createAnswersDataTableQuery  = """

@@ -20,7 +20,7 @@ import java.util.Map;
 public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final String botToken;
-    final Map<Long, LogicСontroller> logicController = new HashMap<>();
+    private final LogicController logicController = new LogicController();
     /**
      * Конструктор класса TelegramBot, который инициализирует нового бота Telegram.
      * @param token Токен бота, необходимый для аутентификации.
@@ -43,8 +43,8 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         } else {
             return; // Неизвестный тип обновления
         }
-        LogicСontroller logicСontroller = logicController.computeIfAbsent(userId, id->new LogicСontroller());
-        sendMessage(userId, logicСontroller.getListStringWithTextToSendAndOptionForKeyboard(update, userId));
+
+        sendMessage(userId, logicController.getListStringWithTextToSendAndOptionForKeyboard(update, userId));
     }
     /**
      * Подготавливает и отправляет сообщение в указанный чат.

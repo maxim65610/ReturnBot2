@@ -9,7 +9,7 @@ import java.util.List;
  * Контроллер логики обработки сообщений и взаимодействия с пользователями.
  * Обрабатывает различные типы входящих обновлений и управляет состояниями пользователей.
  */
-public class LogicСontroller {
+public class LogicController {
     private final LogicForTestABI logicForTestABI = new LogicForTestABI();
     private final TextForMessage textForMessage = new TextForMessage();
     private final DepartmentsInfo departmentsInfo = new DepartmentsInfo();
@@ -58,8 +58,14 @@ public class LogicСontroller {
         }
         else if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
             String data = update.getCallbackQuery().getData();
-            listForWorkWithKeyboardAndMessage.add(departmentsInfo.extract(data, checkWhatTodo(data)));
-            listForWorkWithKeyboardAndMessage.add(data);
+            if (departmentsInfo.extract(data) == null){
+                listForWorkWithKeyboardAndMessage.add(checkWhatTodo(data));
+                listForWorkWithKeyboardAndMessage.add(data);
+            }
+            else {
+                listForWorkWithKeyboardAndMessage.add(departmentsInfo.extract(data));
+                listForWorkWithKeyboardAndMessage.add(data);
+            }
         }
         else if(update.hasMessage() && update.getMessage() != null) {
             String messageText = update.getMessage().getText();

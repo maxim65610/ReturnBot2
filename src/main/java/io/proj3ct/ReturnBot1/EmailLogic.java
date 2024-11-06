@@ -22,12 +22,7 @@ public class EmailLogic {
      * @return Строка с состоянием пользователя или "0", если состояний нет.
      */
     public String getUserStatesForEmail(Long chatID){
-        if (userStatesForMail.isEmpty()) {
-            return ("0");
-        }
-        else {
-            return (userStatesForMail.get(chatID));
-        }
+        return userStatesForMail.getOrDefault(chatID, "0");
     }
     /**
      * Возвращает ответ бота на сообщение от пользователя для работы с /question.

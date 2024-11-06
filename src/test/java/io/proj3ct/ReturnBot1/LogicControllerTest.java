@@ -19,19 +19,19 @@ import static org.mockito.Mockito.*;
  */
 public class LogicControllerTest {
 
-    private LogicСontroller logicController;
+    private LogicController logicController;
     private LogicForTestABI mockLogicForTestABI;
     private TextForMessage mockTextForMessage;
     private TelegramBot telegramBot;
-    private LogicСontroller mockLogicController;
+    private LogicController mockLogicController;
     /**
      * Конструктор дял LogicControllerTest.
      */
     private LogicControllerTest() {
         mockLogicForTestABI = Mockito.mock(LogicForTestABI.class);
         mockTextForMessage = Mockito.mock(TextForMessage.class);
-        logicController = new LogicСontroller();
-        mockLogicController = mock(LogicСontroller.class);
+        logicController = new LogicController();
+        mockLogicController = mock(LogicController.class);
         telegramBot = new TelegramBot("fakeToken");
     }
     /**
@@ -41,11 +41,11 @@ public class LogicControllerTest {
     public void setUp() throws NoSuchFieldException, IllegalAccessException {;
         // Заменяем логику контроллера на мок
         telegramBot.logicController.put(123L, mockLogicController);
-        Field logicForTestABIField = LogicСontroller.class.getDeclaredField("logicForTestABI");
+        Field logicForTestABIField = LogicController.class.getDeclaredField("logicForTestABI");
         logicForTestABIField.setAccessible(true);
         logicForTestABIField.set(logicController, mockLogicForTestABI);
 
-        Field textForMessageField = LogicСontroller.class.getDeclaredField("textForMessage");
+        Field textForMessageField = LogicController.class.getDeclaredField("textForMessage");
         textForMessageField.setAccessible(true);
         textForMessageField.set(logicController, mockTextForMessage);
     }

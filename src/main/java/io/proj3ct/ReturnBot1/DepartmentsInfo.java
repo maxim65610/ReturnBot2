@@ -6,19 +6,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Выводит информацию о факультетах урфу
+ * Выводит информацию о факультетах урфу.
+ * Извлекает информацию из базы данных по заданному идентификатору.
+ * Нужен для того, чтобы из бд вытащить информацию про нужный факультет.
  */
 public class DepartmentsInfo {
 
-    private final DatebaseTables datebaseTables = new DatebaseTables();
+
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
+
     /**
-     * Извлекает информацию из базы данных по заданному идентификатору.
-     * @param data идентификатор для поиска информации.
-     * @param textToSend текст, возвращаемый при отсутствии информации.
-     * Нужен для того, чтобы из бд вытащить информацию про нужный факультет.
+     * Выводит информацию о факультете урфу
      */
-    public String extract(String data, String textToSend) {
+    public String extract(String data) {
         datebaseTables.createDepartsInfoTableQuery();
         String extractInfoFromDepartsInfo = "SELECT * FROM DepartsInfo WHERE id_depart = ?";
 
@@ -32,6 +33,6 @@ public class DepartmentsInfo {
         } catch (SQLException e) {
             System.out.println("Ошибка извлечения данных: " + e.getMessage());
         }
-        return textToSend;
+        return null;
     }
 }
