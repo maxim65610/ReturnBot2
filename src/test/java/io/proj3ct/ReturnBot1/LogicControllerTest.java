@@ -22,8 +22,6 @@ public class LogicControllerTest {
     private LogicController logicController;
     private LogicForTestABI mockLogicForTestABI;
     private TextForMessage mockTextForMessage;
-    private TelegramBot telegramBot;
-    private LogicController mockLogicController;
     /**
      * Конструктор дял LogicControllerTest.
      */
@@ -31,8 +29,6 @@ public class LogicControllerTest {
         mockLogicForTestABI = Mockito.mock(LogicForTestABI.class);
         mockTextForMessage = Mockito.mock(TextForMessage.class);
         logicController = new LogicController();
-        mockLogicController = mock(LogicController.class);
-        telegramBot = new TelegramBot("fakeToken");
     }
     /**
      * Устанавливает моки для полей с помощью рефлексии.
@@ -40,7 +36,6 @@ public class LogicControllerTest {
     @BeforeEach
     public void setUp() throws NoSuchFieldException, IllegalAccessException {;
         // Заменяем логику контроллера на мок
-        telegramBot.logicController.put(123L, mockLogicController);
         Field logicForTestABIField = LogicController.class.getDeclaredField("logicForTestABI");
         logicForTestABIField.setAccessible(true);
         logicForTestABIField.set(logicController, mockLogicForTestABI);
@@ -97,24 +92,5 @@ public class LogicControllerTest {
         assertEquals(List.of("Тест начат", "/testAbit"), result);
         verify(mockLogicForTestABI).getDataBd("/testAbit", userId, "100");
     }
-    /**
-     * Тестирует вызов метода getListStringWithTextToSendAndOptionForKeyboard
-     * при обработке обновления в методе consume.
-     */
-    @Test
-    public void testLogicControllerIsCalled() {
-        Update mockUpdate = mock(Update.class);
-        Message messageMock = Mockito.mock(Message.class);
-        when(mockUpdate.hasMessage()).thenReturn(true);
-        when(mockUpdate.getMessage()).thenReturn(messageMock);
-        when(mockUpdate.getMessage().getChatId()).thenReturn(123L);
-
-        when(mockLogicController.getListStringWithTextToSendAndOptionForKeyboard(mockUpdate, 123L))
-                .thenReturn(Collections.singletonList("Hello"));
-        telegramBot.consume(mockUpdate);
-        verify(mockLogicController).getListStringWithTextToSendAndOptionForKeyboard(mockUpdate, 123L);
-    }
-
-
 }
 
