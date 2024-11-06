@@ -45,7 +45,7 @@ public class LogicForTestABI {
      * @return состояние пользователя, или "0", если состояние отсутствует
      */
     public String getUserStatesForTest(Long chatID) {
-        return userStatesForTest.isEmpty() ? "0" : userStatesForTest.get(chatID);
+        return userStatesForTest.getOrDefault(chatID, "0");
     }
 
     /**
@@ -114,9 +114,10 @@ public class LogicForTestABI {
             listofABIechoiceWithoutGap.add(s.trim());
         }
         Map<Integer, Integer> countChoiceABI = new HashMap<>();
-        final int idFromChoice = 1000;
-
-        for (int i = idFromChoice; i < 1013; i++) {
+        final int idFromChoice = 1000; //в базе данных начиная с этого id лежат названия факультетов
+        final int idEndChoice = 1013; // в базе данных это после последний id, по которому лежит навание факультета
+        //  то есть этот цикл пробегается по всем id , по которым лежат названия факультетов
+        for (int i = idFromChoice; i < idEndChoice; i++) {
             for (String choice : listofABIechoiceWithoutGap) {
                 if (choice.equals(String.valueOf(i))) {
                     countChoiceABI.merge(i, 1, Integer::sum);
@@ -160,7 +161,7 @@ public class LogicForTestABI {
         }
 
         // Обрабатываем переходы состояний теста
-        if (messageText.equals("/testAbit") && userStatesForTest.isEmpty()) {
+        if (messageText.equals("/testAbit") && (!userStatesForTest.containsKey(userId))) {
             userStatesForTest.put(userId, "awaiting_testABI_1");
         } else if ("awaiting_testABI_1".equals(currentState)) {
             dataBD = arrayBdForTestABI(idTestABI.get(userId));
