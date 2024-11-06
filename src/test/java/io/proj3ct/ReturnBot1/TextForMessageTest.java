@@ -45,50 +45,50 @@ class TextForMessageTest {
         assertEquals(ExpectedMessageTestAbit, answerCommandTestAbit);
         assertEquals(ExpectedMessageQuestion, answerCommandQuestion);
 
-        }
-        /**
-         Тестирует метод handleMessage, проверяя корректность ответов на различные команды.
-         * Ожидается, что метод вернет правильные сообщения для следующих команд:
-         * ИЕНИМ
-         * РТФ
-         * ХТИ
-         * correctMail
-         * notСorrectMail
-         * questionHasBeenSend
-         * userPassedTest
-         * resultTestABI
-         */
-        @Test
-        public void testDepartCommands(){
-            String answerCommandInstIENIM = textForMessage.handleMessage("ИЕНИМ");
-            String answerCommandInstRTF = textForMessage.handleMessage("РТФ");
-            String answerCommandInstHTI = textForMessage.handleMessage("ХТИ");
-            String answerCommandCorrectMail = textForMessage.handleMessage("correctMail");
-            String answerCommandNotСorrectMail = textForMessage.handleMessage("notСorrectMail");
-            String answerCommandQuestionHasBeenSend = textForMessage.handleMessage("questionHasBeenSend");
-            String answerCommandUserPassedTest = textForMessage.handleMessage("userPassedTest");
-            String answerCommandResultTestABI = textForMessage.handleMessage("resultTestABI");
+    }
+    /**
+     Тестирует метод handleMessage, проверяя корректность ответов на различные команды.
+     * Ожидается, что метод вернет правильные сообщения для следующих команд:
+     * ИЕНИМ
+     * РТФ
+     * ХТИ
+     * correctMail
+     * notСorrectMail
+     * questionHasBeenSend
+     * userPassedTest
+     * resultTestABI
+     */
+    @Test
+    public void testDepartCommands(){
+        String answerCommandInstIENIM = textForMessage.handleMessage("ИЕНИМ");
+        String answerCommandInstRTF = textForMessage.handleMessage("РТФ");
+        String answerCommandInstHTI = textForMessage.handleMessage("ХТИ");
+        String answerCommandCorrectMail = textForMessage.handleMessage("correctMail");
+        String answerCommandNotСorrectMail = textForMessage.handleMessage("notСorrectMail");
+        String answerCommandQuestionHasBeenSend = textForMessage.handleMessage("questionHasBeenSend");
+        String answerCommandUserPassedTest = textForMessage.handleMessage("userPassedTest");
+        String answerCommandResultTestABI = textForMessage.handleMessage("resultTestABI");
 
-            String ExpectedMessageInstIENIM = "Вот все факультеты, которые есть в институте ИЕНИМ:";
-            String ExpectedMessageInstRTF = "Вот все факультеты, которые есть в институте РТФ:";
-            String ExpectedMessageInstHTI = "Вот все факультеты, которые есть в институте ХТИ:";
-            String ExpectedMessageCorrectMail = "Почта указана корректно, напишите ваш вопрос";
-            String ExpectedMessageNotСorrectMail = "Адрес электронной почты был указан неправильно " +
-                    "отправьте его ещё раз";
-            String ExpectedMessageQuestionHasBeenSend = "Ваш вопрос отправлен";
-            String ExpectedMessageUserPassedTest = "Поздравляю, вы прошли тест." +
-                    " Чтобы узнать результат напишите /testres";
-            String ExpectedMessageResultTestABI = "Вам больше всего подходит факультет: ";
+        String ExpectedMessageInstIENIM = "Вот все факультеты, которые есть в институте ИЕНИМ:";
+        String ExpectedMessageInstRTF = "Вот все факультеты, которые есть в институте РТФ:";
+        String ExpectedMessageInstHTI = "Вот все факультеты, которые есть в институте ХТИ:";
+        String ExpectedMessageCorrectMail = "Почта указана корректно, напишите ваш вопрос";
+        String ExpectedMessageNotСorrectMail = "Адрес электронной почты был указан неправильно " +
+                "отправьте его ещё раз";
+        String ExpectedMessageQuestionHasBeenSend = "Ваш вопрос отправлен";
+        String ExpectedMessageUserPassedTest = "Поздравляю, вы прошли тест." +
+                " Чтобы узнать результат напишите /testres";
+        String ExpectedMessageResultTestABI = "Вам больше всего подходит факультет: ";
 
-            assertEquals(ExpectedMessageInstIENIM, answerCommandInstIENIM);
-            assertEquals(ExpectedMessageInstRTF, answerCommandInstRTF);
-            assertEquals(ExpectedMessageInstHTI, answerCommandInstHTI);
-            assertEquals(ExpectedMessageCorrectMail, answerCommandCorrectMail);
-            assertEquals(ExpectedMessageNotСorrectMail, answerCommandNotСorrectMail);
-            assertEquals(ExpectedMessageQuestionHasBeenSend, answerCommandQuestionHasBeenSend);
-            assertEquals(ExpectedMessageUserPassedTest, answerCommandUserPassedTest);
-            assertEquals(ExpectedMessageResultTestABI, answerCommandResultTestABI);
-        }
+        assertEquals(ExpectedMessageInstIENIM, answerCommandInstIENIM);
+        assertEquals(ExpectedMessageInstRTF, answerCommandInstRTF);
+        assertEquals(ExpectedMessageInstHTI, answerCommandInstHTI);
+        assertEquals(ExpectedMessageCorrectMail, answerCommandCorrectMail);
+        assertEquals(ExpectedMessageNotСorrectMail, answerCommandNotСorrectMail);
+        assertEquals(ExpectedMessageQuestionHasBeenSend, answerCommandQuestionHasBeenSend);
+        assertEquals(ExpectedMessageUserPassedTest, answerCommandUserPassedTest);
+        assertEquals(ExpectedMessageResultTestABI, answerCommandResultTestABI);
+    }
 
 }
 
