@@ -20,7 +20,7 @@ public class KeyboardLogicTest {
     /**
      * Конструктор дял TextForMessageTest.
      */
-    private void KeyboardLogicTest(){
+    private void KeyboardLogicTest() {
         message = SendMessage // Create a message object
                 .builder()
                 .chatId("1234")

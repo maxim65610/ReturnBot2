@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Контролирует выбор клавиатур
  */
-public class keyboardLogic {
+public class KeyboardLogic {
     /**
      * Обрабатывает сообщение и выбирает клавиатуру, отправляющуюся вместе с сообщением
      */

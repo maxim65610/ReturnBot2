@@ -23,13 +23,14 @@ class EmailLogicTest {
     /**
      * Конструктор дял EmailLogicTest.
      */
-    private EmailLogicTest(){
+    private EmailLogicTest() {
         emailLogic = new EmailLogic();
         emailSender = Mockito.mock(EmailSender.class);
         textForMessage = Mockito.mock(TextForMessage.class);
         update = Mockito.mock(Update.class);
         MockitoAnnotations.openMocks(this);
     }
+
     /**
      * Тест для проверки получения состояния пользователя, когда оно отсутствует.
      */
@@ -39,6 +40,7 @@ class EmailLogicTest {
         String state = emailLogic.getUserStatesForEmail(userId);
         assertEquals("0", state, "Должно возвращаться '0', если состояния нет.");
     }
+
     /**
      * Тест для проверки обработки команды /question.
      */
@@ -54,6 +56,7 @@ class EmailLogicTest {
         assertEquals("awaiting_email", emailLogic.getUserStatesForEmail(userId),
                 "Состояние должно быть 'awaiting_email'.");
     }
+
     /**
      * Тест для проверки корректного ввода электронной почты.
      */
