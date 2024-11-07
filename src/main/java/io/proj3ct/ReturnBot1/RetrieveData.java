@@ -6,25 +6,26 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 /**
- * Класс для извлечения данных из базы данных.
+ * Извлекает данные из базы данных для теста.
  */
 public class RetrieveData {
 
     private DatabaseConnection databaseConnection = new DatabaseConnection();
-
+    private DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     /**
      * Метод для извлечения строки данных из таблицы AnswersData по id_question
      * @param id идентификатор строки
-     * @param data сообщение для отправки
+     * @param data текст необходимый для работы с бд
      */
     public String getDataById(int id, String data) {
-        String AnswersDataTable = "SELECT * FROM AnswersData WHERE id_question = ?";
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
-             PreparedStatement pstmt = conn.prepareStatement(AnswersDataTable)) {
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
+        datebaseTables.createAnswersDataTableQuery();
 
+        String selectAnswersFromDataTable = "SELECT * FROM AnswersData WHERE id_question = ?";
+
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(selectAnswersFromDataTable)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 if(data.equals("id_question")){
                     String id_question = rs.getString(data);
@@ -64,6 +65,6 @@ public class RetrieveData {
         } catch (SQLException e) {
             System.out.println("Ошибка извлечения данных: " + e.getMessage());
         }
-        return "ERROR";
+        return "";
     }
 }

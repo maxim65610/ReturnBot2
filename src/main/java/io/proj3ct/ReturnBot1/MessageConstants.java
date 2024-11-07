@@ -1,13 +1,10 @@
 package io.proj3ct.ReturnBot1;
 
 /**
- * Класс, содержащий константы для сообщений, используемых ботом.
- * <p>
- * Данный класс используется для хранения текстовых ответов бота,
- * чтобы улучшить читаемость и управляемость кода.
- * </p>
+ * Константы для сообщений, используемых ботом.
+ * Данный класс используется для хранения текстовых ответов бота
  */
-public class CommonMessageConstants {
+public class MessageConstants {
     /**
      * Ответ бота по умолчанию на нераспознанные команды.
      */
@@ -15,7 +12,7 @@ public class CommonMessageConstants {
             "пожалуйста пользуйся кнопками.\nЕсли у тебя остались вопросы, можешь воспользоваться " +
             "командой /question.\nЕсли хотите начать работу, напишите /work.\nТакже у тебя есть возможность " +
             "пройти тест на то, какое направление вам больше подходит, просто напиши /testAbit." +
-            "\nЕсли вы хотите получить больший функционал бота воспользуйтесь /authorization";
+            "\nЕсли вы хотите получить больший функционал бота воспользуйтесь /authorization";;
     /**
      * Ответ бота на команду, запрашивающую список институтов.
      */
@@ -35,14 +32,36 @@ public class CommonMessageConstants {
     /**
      * Ответ бота для начала работы с тестированием по выбору факультета.
      */
-    public static final String TEST_ABIT_COMMAND_RESPONSE = "Вы начали проходить тестирование по выбору факультета, выберите один предмет из этих трех:";
+    public static final String TEST_ABIT_COMMAND_RESPONSE = "Вы начали проходить тестирование по выбору факультета," +
+            " выберите один предмет из этих трех:";
     /**
      * Ответ бота на запрос почты.
      */
-    public static final String QUESTION_COMMAND_RESPONSE = "Напишите свой вопрос";
+    public static final String QUESTION_COMMAND_RESPONSE = "Пожалуйста, отправьте свою почту:";
     /**
-     * Ответ бота на завершение тестирования.
+     * Ответ бота на корректную потчу
      */
+    public static final String CORRECT_MAIL_COMMAND_RESPONSE = "Почта указана корректно, напишите ваш вопрос";
+    /**
+     * Ответ бота на некорректную потчу
+     */
+    public static final String NOT_CORRECT_MAIL_COMMAND_RESPONSE = "Адрес электронной почты был указан неправильно " +
+            "отправьте его ещё раз";
+    /**
+     * Ответ бота на то, что вопрос пользователя отправлен на почту
+     */
+    public static final String QUESTION_HAS_BEEN_SEND_COMMAND_RESPONSE = "Ваш вопрос отправлен";
+    /**
+     * Ответ бота на то, что пользователь прошел тест
+     */
+    public static final String END_TEST_ABI_COMMAND_RESPONSE = "Поздравляю, вы прошли тест. " +
+            "Чтобы узнать результат напишите /testres" ;
+    /**
+     * Ответ бота на то, какой результат у пользователя после прождения теста
+     */
+    public static final String RESULT_TEST_ABI_COMMAND_RESPONSE = "Вам больше всего подходит факультет: ";
+
+
     public static final String RESULT_AFTERTRSTABI_COMMAND_RESPONSE = "Проанализировал ваши ответы я пришёл к выводу," +
             " что вам больше всего подходит факультет: default," +
             " для повторно просмотра результата, можете воспользоваться командой /testres";
@@ -53,14 +72,21 @@ public class CommonMessageConstants {
             "\nВсего будет 4 пункта, которые " +
             "вы должны указать: имя, фамилию, класс, почту. " +
             "\nВведите имя:\n";
+
+    public static final String SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE ="Авторизация окончена успешно." +
+            "\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
+            "\nЕсли хотите удалить данные воспользуйтесь /userDataDell"+
+            "\nЕсли хотите поменять данные воспользуйтесь /userDataChange";
+
+    public static final String UN_SUCCESSFUL_CLASS = "Вы ввели некорректный класс, введите класс заново";
     /**
      * Ответ бота на замену даниных.
      */
     public static final String CHANGEDATA_COMMAND_RESPONSE = "Выберите данные, которые хотите поменять:" +
-                                    "\n/userDataChangeName - поменять имя" +
-                                    "\n/userDataChangeSurname - поменять фамилию" +
-                                    "\n/userDataChangeClass - поменять класс" +
-                                    "\n/userDataChangeMail - поменять почту";
+            "\n/userDataChangeName - поменять имя" +
+            "\n/userDataChangeSurname - поменять фамилию" +
+            "\n/userDataChangeClass - поменять класс" +
+            "\n/userDataChangeMail - поменять почту";
     /**
      * Ответ бота на то, что пользователь уже прошел регистрацию.
      */

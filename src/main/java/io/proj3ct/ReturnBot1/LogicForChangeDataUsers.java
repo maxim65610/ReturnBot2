@@ -11,9 +11,9 @@ import java.util.Map;
  */
 public class LogicForChangeDataUsers {
     // Хранит состояния пользователей для изменения данных
-    private Map<Long, String> userStatesForChangeData = new HashMap<>();
-    private UsersData usersData = new UsersData();
-    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final Map<Long, String> userStatesForChangeData = new HashMap<>();
+    private final UsersData usersData = new UsersData();
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
      *
@@ -26,14 +26,6 @@ public class LogicForChangeDataUsers {
         } else {
             return (userStatesForChangeData.get(chatID));
         }
-    }
-    /**
-     * Возвращает ответ на команду изменения данных.
-     *
-     * @return строка с ответом на команду изменения данных.
-     */
-    private String changeDataCommandReceived() {
-        return CommonMessageConstants.CHANGEDATA_COMMAND_RESPONSE;
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием изменения данных.
@@ -82,10 +74,10 @@ public class LogicForChangeDataUsers {
                     userStatesForChangeData.remove(userId);
                     return "Класс успешно изменен";
                 } else {
-                    return "Вы ввели некорректный класс, введите класс заново";
+                    return MessageConstants.UN_SUCCESSFUL_CLASS;
                 }
             } catch (NumberFormatException e) {
-                return "Вы ввели некорректный класс, введите класс заново";
+                return MessageConstants.UN_SUCCESSFUL_CLASS;
             }
         } else if ("awaiting_mail".equals(currentState)) {
             String mail = messageText;
@@ -94,9 +86,9 @@ public class LogicForChangeDataUsers {
                 userStatesForChangeData.remove(userId);
                 return "Почта успешно изменена";
             } else {
-                return "Адрес электронной почты был указан неправильно, отправьте его ещё раз";
+                return MessageConstants.NOT_CORRECT_MAIL_COMMAND_RESPONSE;
             }
         }
-        return changeDataCommandReceived();
+        return MessageConstants.CHANGEDATA_COMMAND_RESPONSE;
     }
 }

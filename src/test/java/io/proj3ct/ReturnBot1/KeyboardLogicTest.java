@@ -1,6 +1,7 @@
 package io.proj3ct.ReturnBot1;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
@@ -14,6 +15,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * введенных пользователем.
  */
 public class KeyboardLogicTest {
+    SendMessage message;
+
+    /**
+     * Конструктор дял TextForMessageTest.
+     */
+    private void KeyboardLogicTest() {
+        message = SendMessage // Create a message object
+                .builder()
+                .chatId("1234")
+                .text("test")
+                .build();
+    }
+
+    /**
+     * Создание объекта для тестов KeyboardLogicTest.
+     */
+    @BeforeEach
+    void setUp() {
+        KeyboardLogicTest();
+    }
 
     /**
      * Тест для проверки работы клавиатуры при вводе команды /work.
@@ -22,7 +43,6 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsWorkCommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
 
         String data = "/work";
         SendMessage resultMessage = logic.keyboards(message, data);
@@ -38,7 +58,6 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsIENIMCommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
 
         String data = "ИЕНИМ";
         SendMessage resultMessage = logic.keyboards(message, data);
@@ -54,7 +73,7 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsRTFCommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
+
 
         String data = "РТФ";
         SendMessage resultMessage = logic.keyboards(message, data);
@@ -70,7 +89,6 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsHTICommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
 
         String data = "ХТИ";
         SendMessage resultMessage = logic.keyboards(message, data);
@@ -86,7 +104,6 @@ public class KeyboardLogicTest {
     @Test
     public void testKeyboardsTestAbitCommand() {
         KeyboardLogic logic = new KeyboardLogic();
-        SendMessage message = new SendMessage();
 
         String data = "/testAbit";
         SendMessage resultMessage = logic.keyboards(message, data);

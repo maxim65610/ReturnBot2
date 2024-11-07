@@ -2,7 +2,6 @@ package io.proj3ct.ReturnBot1;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +16,7 @@ public class LogicAndDataForRegistrationUsers {
     private final Map<Long, String> userStatesForRegistration = new HashMap<>();
     private final UsersData usersData = new UsersData();
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     /**
      * Получает объект подключения к базе данных.
      * @return объект DatabaseConnection
@@ -48,18 +48,7 @@ public class LogicAndDataForRegistrationUsers {
      * @return электронная почта пользователя
      */
     public String getMailUser (Long chatID) {return mailUser .get(chatID);}
-    /**
-     * Возвращает сообщение о полученной команде регистрации.
-     *
-     * @return сообщение о регистрации
-     */
-    private String registrationCommandReceived() {return CommonMessageConstants.REGISTRATION_COMMAND_RESPONSE;}
-    /**
-     * Возвращает сообщение о полученной команде регистрации.
-     *
-     * @return сообщение о регистрации
-     */
-    private String authorizationCommandReceived() {return CommonMessageConstants.AUTHORISATION_COMMAND_RESPONSE;}
+
     /**
      * Получает состояние пользователя для регистрации по его идентификатору чата.
      *
@@ -87,10 +76,10 @@ public class LogicAndDataForRegistrationUsers {
                                         LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
         String currentState = userStatesForRegistration.get(userId);
         if ("/authorization".equals(messageText)) {
-            databaseConnection.createRegistrationDataTable();
+            datebaseTables.createRegistrationDataTable();
             if (usersData.checkUserIdExistsInRegistrationDataTable(userId,
                     logicAndDataForRegistrationUsers.getDatabaseConnection())) {
-                return authorizationCommandReceived();
+                return MessageConstants.AUTHORISATION_COMMAND_RESPONSE;
             }
             userStatesForRegistration.put(userId, "awaiting_nameUser ");
         } else if ("awaiting_nameUser ".equals(currentState)) {
@@ -116,10 +105,10 @@ public class LogicAndDataForRegistrationUsers {
                     userStatesForRegistration.put(userId, "awaiting_mailUser ");
                     return "Введите почту:";
                 } else {
-                    return "Вы ввели некорректный класс, введите класс заново";
+                    return MessageConstants.UN_SUCCESSFUL_CLASS;
                 }
             } catch (NumberFormatException e) {
-                return "Вы ввели некорректный класс, введите класс заново";
+                return MessageConstants.UN_SUCCESSFUL_CLASS;
             }
         } else if ("awaiting_mailUser ".equals(currentState)) {
             String mail = update.getMessage().getText();
@@ -127,13 +116,12 @@ public class LogicAndDataForRegistrationUsers {
                 mailUser .put(userId, mail);
                 userStatesForRegistration.remove(userId);
                 usersData.insertData(userId, this, databaseConnection);
-                return "Авторизация окончена успешно.\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
-                        "\nЕсли хотите удалить данные воспользуйтесь /userDataDell";
+                return MessageConstants.SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE;
             } else {
                 mailUser .remove(userId, mail);
-                return "Адрес электронной почты был указан неправильно, отправьте его ещё раз";
+                return MessageConstants.NOT_CORRECT_MAIL_COMMAND_RESPONSE;
             }
         }
-        return registrationCommandReceived();
+        return MessageConstants.REGISTRATION_COMMAND_RESPONSE;
     }
 }
