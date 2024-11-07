@@ -1,146 +1,94 @@
 package io.proj3ct.ReturnBot1;
 
-
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
+import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+
 /**
- * Класс, представляющий Telegram-бота, который наследует функциональность
- * от TelegramLongPollingBot. Обрабатывает обновления от пользователей, управляет
+ * Telegram-бота, который наследует функциональность
+ * от LongPollingSingleThreadUpdateConsumer. Обрабатывает обновления от пользователей, управляет
  * состояниями пользователей и отправляет сообщения.
  */
-public class TelegramBot extends TelegramLongPollingBot {
-    private final String botName;
+public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
+    private final TelegramClient telegramClient;
     private final String botToken;
-    private final LogicBrain botLogic;
-
-    // Хранит состояния пользователей
-    private Map<Long, String> userStates = new HashMap<>();
-
-    // Хранит электронные адреса пользователей
-    private  Map<Long, String> userMails = new HashMap<>();
-
+    private final LogicController logicController = new LogicController();
     /**
-     * Конструктор класса TelegramBot.
-     *
-     * @param name  Имя бота.
-     * @param token Токен бота.
-     * @param logic Логика бота для обработки команд.
+     * Конструктор класса TelegramBot, который инициализирует нового бота Telegram.
+     * @param token Токен бота, необходимый для аутентификации.
      */
-    public TelegramBot(String name, String token, LogicBrain logic) {
-        botName = name;
+    public TelegramBot(String token) {
         botToken = token;
-        botLogic = logic;
+        telegramClient = new OkHttpTelegramClient(botToken);
     }
-
-
-    /**
-     * Проверяет, что делать в зависимости от введенных данных.
-     *
-     * @param data Данные, введенные пользователем.
-     * @return Ответ на введенные данные.
-     */
-    public String checkWhatTodo(String data) {
-        if (data.equals("ИЕНИМ") || data.equals("РТФ") || data.equals("ХТИ")) {
-            return botLogic.slogic(data);
-        } else {
-            return data;
-        }
-    }
-
     /**
      * Обрабатывает обновления от Telegram.
-     *
      * @param update Обновление, полученное от Telegram.
      */
     @Override
-    public void onUpdateReceived(Update update) {
+    public void consume(Update update) {
+        long userId;
         if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
-            String data = update.getCallbackQuery().getData();
-            sendMessage(update.getCallbackQuery().getFrom().getId(), checkWhatTodo(data), data);
+            userId = update.getCallbackQuery().getFrom().getId();
+        } else if (update.hasMessage() && update.getMessage() != null) {
+            userId = update.getMessage().getChatId();
+        } else {
+            return; // Неизвестный тип обновления
         }
-        if (update.hasMessage() && update.getMessage() != null) {
-            String messageText = update.getMessage().getText();
-            Long userId = update.getMessage().getChatId();
-            String currentState = userStates.get(userId);
-            if ("/question".equals(messageText) || "awaiting_email".equals(currentState) || "awaiting_question".equals(currentState)) {
-                String answer = botLogic.worksWithMail(update, messageText, userId, currentState, userStates, userMails);
-                sendMessage(userId, answer);
-            } else {
-                sendMessage(update.getMessage().getChatId(), botLogic.slogic(messageText), messageText);
-            }
-        }
+
+        sendMessage(userId, logicController.getListStringWithTextToSendAndOptionForKeyboard(update, userId));
     }
-
     /**
-     * Отправляет сообщение пользователю с указанным ID и текстом.
-     *
-     * @param chatId     ID чата, куда отправляется сообщение.
-     * @param textToSend Текст сообщения.
-     * @param data       Дополнительные данные для обработки клавиатуры.
+     * Подготавливает и отправляет сообщение в указанный чат.
+     * Если указаны опции клавиатуры, они будут добавлены к сообщению.
+     * @param chatId ID чата, в который будет отправлено сообщение
+     * @param listForWorkWithKeyboard список, содержащий текст сообщения и, возможно, опции клавиатуры
      */
-    void sendMessage(long chatId, String textToSend, String data) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
+    void sendMessage(long chatId, List<String> listForWorkWithKeyboard) {
+        String textToSend = "";
+        if (!listForWorkWithKeyboard.isEmpty()) {
+            textToSend = listForWorkWithKeyboard.get(0);
+        }
+        SendMessage message = createMessage(chatId, textToSend);
+        KeyboardLogic keyboardLogicObj = new KeyboardLogic();
+        if (listForWorkWithKeyboard.size() == 2) {
+            keyboardLogicObj.keyboards(message, listForWorkWithKeyboard.get(1));
+        } else if (listForWorkWithKeyboard.size() > 1) {
+            keyboardLogicObj.keyboardforTestABI(message, listForWorkWithKeyboard);
+        }
 
-        dataInfoTo infoObj = new dataInfoTo();
-        textToSend = infoObj.takeInfo(textToSend);
-        message.setText(textToSend);
-
-        keyboardLogic keyboardLogicObj = new keyboardLogic();
-        keyboardLogicObj.keyboards(message, data);
-
+        executeMessage(message);
+    }
+    /**
+     * Создает объект SendMessage.
+     * @param chatId ID чата
+     * @param text текст сообщения
+     * @return созданный объект SendMessage
+     */
+    private SendMessage createMessage(long chatId, String text) {
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(text)
+                .build();
+    }
+    /**
+     * Выполняет отправку сообщения.
+     * @param message объект SendMessage, который нужно отправить
+     */
+    private void executeMessage(SendMessage message) {
         try {
-            execute(message);
+            telegramClient.execute(message);
         } catch (TelegramApiException e) {
-            // Обработка исключения (опционально: логирование)
+            System.out.println("Ошибка извлечения данных: " + e.getMessage());
         }
-    }
-
-    /**
-     * Отправляет сообщение пользователю без дополнительных параметров.
-     *
-     * @param chatId     ID чата, куда отправляется сообщение.
-     * @param textToSend Текст сообщения.
-     */
-    void sendMessage(long chatId, String textToSend) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        if (textToSend == null) {
-            textToSend = "Сообщение не может быть пустым."; // Сообщение по умолчанию
-        }
-        message.setText(textToSend);
-
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            // Обработка исключения (опционально: логирование)
-        }
-    }
-
-    /**
-     * Возвращает имя бота.
-     *
-     * @return Имя бота.
-     */
-    @Override
-    public String getBotUsername() {
-        return botName;
-    }
-
-    /**
-     * Возвращает токен бота.
-     *
-     * @return Токен бота.
-     */
-    @Override
-    public String getBotToken() {
-        return botToken;
     }
 }
 
