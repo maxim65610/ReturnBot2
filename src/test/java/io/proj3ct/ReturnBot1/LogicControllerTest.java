@@ -1,4 +1,5 @@
 package io.proj3ct.ReturnBot1;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+
 /**
  * Тестовый класс для проверки функциональности LogicСontroller.
  */
@@ -22,6 +24,7 @@ public class LogicControllerTest {
     private LogicController logicController;
     private LogicForTestABI mockLogicForTestABI;
     private TextForMessage mockTextForMessage;
+
     /**
      * Конструктор дял LogicControllerTest.
      */
@@ -30,11 +33,13 @@ public class LogicControllerTest {
         mockTextForMessage = Mockito.mock(TextForMessage.class);
         logicController = new LogicController();
     }
+
     /**
      * Устанавливает моки для полей с помощью рефлексии.
      */
     @BeforeEach
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {;
+    public void setUp() throws NoSuchFieldException, IllegalAccessException {
+        ;
         // Заменяем логику контроллера на мок
         Field logicForTestABIField = LogicController.class.getDeclaredField("logicForTestABI");
         logicForTestABIField.setAccessible(true);
@@ -44,6 +49,7 @@ public class LogicControllerTest {
         textForMessageField.setAccessible(true);
         textForMessageField.set(logicController, mockTextForMessage);
     }
+
     /**
      * Проверяет, что метод возвращает ожидаемый список строк
      * на основании данных, полученных из мока.
@@ -68,6 +74,7 @@ public class LogicControllerTest {
         assertEquals(List.of("response"), result);
         verify(mockLogicForTestABI).getDataBd("", 12345L, "someData");
     }
+
     /**
      * Проверяет, что метод возвращает ожидаемый список строк
      * на основании данных, полученных из мока.
