@@ -19,6 +19,12 @@ public class TextForMessage {
                 return MessageConstants.WORK_COMMAND_RESPONSE;
             case "/question":
                 return MessageConstants.QUESTION_COMMAND_RESPONSE;
+            case "/authorization":
+                return MessageConstants.REGISTRATION_COMMAND_RESPONSE;
+            case "/userDataDell":
+                return MessageConstants.DEL_DATA_COMMAND_RESPONSE;
+            case "/userDataChange":
+                return MessageConstants.CHANGEDATA_COMMAND_RESPONSE;
             case "correctMail":
                 return MessageConstants.CORRECT_MAIL_COMMAND_RESPONSE;
             case "notСorrectMail":

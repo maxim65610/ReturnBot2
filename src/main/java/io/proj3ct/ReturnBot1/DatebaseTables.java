@@ -70,5 +70,35 @@ public class DatebaseTables {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
     }
+
+    /**
+     * Метод для создания таблицы RegistrationDataTable в базе данных
+     */
+    public void createRegistrationDataTable() {
+
+        String registrationDataTable = """
+        CREATE TABLE IF NOT EXISTS RegistrationDataTable (
+        id_chat text PRIMARY KEY, 
+        name text NOT NULL,
+        surname text NOT NULL, 
+        school_сlass text NOT NULL,  
+        mail text NOT NULL
+        );""";
+
+        try {
+            Connection conn = databaseConnection.connect();
+            if (conn != null ) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate(registrationDataTable);
+                }
+            } else {
+                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка создания таблицы: " + e.getMessage());
+        }
+
+    }
+
 }
 

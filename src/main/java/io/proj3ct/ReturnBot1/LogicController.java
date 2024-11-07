@@ -17,7 +17,10 @@ public class LogicController {
     private final String username = System.getenv("mail"); // Ваша почта
     private final String password = System.getenv("passwordForMail");
     private final EmailSender emailSender = new EmailSender(username, password);
-
+    private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
+            = new LogicAndDataForRegistrationUsers();
+    private final LogicForChangeDataUsers logicForChangeDataUsers = new LogicForChangeDataUsers();
+    private final UsersData usersData = new UsersData();
     /**
      * Проверяет, что делать с переданными данными для клавиатуры.
      * @param data Входные данные для обработки.
@@ -73,6 +76,24 @@ public class LogicController {
             if ("/question".equals(messageText) || (!(emailLogic.getUserStatesForEmail(userId).equals("0")))) {
                 listForWorkWithKeyboardAndMessage.add(emailLogic.getReplyForWorkingWithMail
                         (update, messageText, userId, emailSender));
+            }
+            else if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
+                    getUserStatesForRegistration(userId).equals("0"))){
+                listForWorkWithKeyboardAndMessage.add(logicAndDataForRegistrationUsers.worksWithRegistration
+                        (update, messageText, userId,emailSender, logicAndDataForRegistrationUsers));
+            }
+            else if("/userDataChange".equals(messageText) || (!logicForChangeDataUsers.
+                    getUserStatesForChangeData(userId).equals("0"))){
+                listForWorkWithKeyboardAndMessage.add(logicForChangeDataUsers.worksWithChangeData(messageText, userId, emailSender));
+            }
+            else if("/userInfo".equals(messageText)){
+                listForWorkWithKeyboardAndMessage.add(usersData.takeData(update.getMessage().getChatId(),
+                                logicAndDataForRegistrationUsers.getDatabaseConnection()));
+            }
+            else if("/userDataDell".equals(messageText)){
+                usersData.deleteData(update.getMessage().getChatId(),
+                        logicAndDataForRegistrationUsers.getDatabaseConnection());
+                listForWorkWithKeyboardAndMessage.add("Ваши данные успешно удалены");
             }
             else if("/testAbit".equals(messageText)){
                 logicForTestABI.getDataBd(messageText, userId, "100");
