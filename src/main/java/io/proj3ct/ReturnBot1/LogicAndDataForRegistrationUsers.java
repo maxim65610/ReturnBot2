@@ -17,6 +17,7 @@ public class LogicAndDataForRegistrationUsers {
     private final UsersData usersData = new UsersData();
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
+    private final TextForMessage textForMessage = new TextForMessage();
     /**
      * Получает объект подключения к базе данных.
      * @return объект DatabaseConnection
@@ -72,14 +73,14 @@ public class LogicAndDataForRegistrationUsers {
      * @param logicAndDataForRegistrationUsers объект логики и данных для регистрации
      * @return ответ пользователю в зависимости от состояния регистрации
      */
-    public String worksWithRegistration(Update update, String messageText, Long userId, EmailSender emailSender,
+    private String worksWithRegistration(Update update, String messageText, Long userId, EmailSender emailSender,
                                         LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
         String currentState = userStatesForRegistration.get(userId);
         if ("/authorization".equals(messageText)) {
             datebaseTables.createRegistrationDataTable();
             if (usersData.checkUserIdExistsInRegistrationDataTable(userId,
                     logicAndDataForRegistrationUsers.getDatabaseConnection())) {
-                return MessageConstants.AUTHORISATION_COMMAND_RESPONSE;
+                return textForMessage.handleMessage("registration");
             }
             userStatesForRegistration.put(userId, "awaiting_nameUser ");
         } else if ("awaiting_nameUser ".equals(currentState)) {
@@ -88,13 +89,13 @@ public class LogicAndDataForRegistrationUsers {
             nameUser .put(userId, name);
             userStatesForRegistration.remove(userId);
             userStatesForRegistration.put(userId, "awaiting_surnameUser ");
-            return "Введите фамилию:";
+            return textForMessage.handleMessage("name");
         } else if ("awaiting_surnameUser ".equals(currentState)) {
             String surname = update.getMessage().getText();
             surnameUser .put(userId, surname);
             userStatesForRegistration.remove(userId);
             userStatesForRegistration.put(userId, "awaiting_schoolClassUser ");
-            return "Введите класс:";
+            return textForMessage.handleMessage("class");
         } else if ("awaiting_schoolClassUser ".equals(currentState)) {
             String schoolClass = update.getMessage().getText();
             try {
@@ -103,12 +104,12 @@ public class LogicAndDataForRegistrationUsers {
                     schoolClassUser.put(userId, schoolClass);
                     userStatesForRegistration.remove(userId);
                     userStatesForRegistration.put(userId, "awaiting_mailUser ");
-                    return "Введите почту:";
+                    return textForMessage.handleMessage("mail");
                 } else {
-                    return MessageConstants.UN_SUCCESSFUL_CLASS;
+                    return textForMessage.handleMessage("clas_bad");
                 }
             } catch (NumberFormatException e) {
-                return MessageConstants.UN_SUCCESSFUL_CLASS;
+                return textForMessage.handleMessage("clas_bad");
             }
         } else if ("awaiting_mailUser ".equals(currentState)) {
             String mail = update.getMessage().getText();
@@ -116,12 +117,19 @@ public class LogicAndDataForRegistrationUsers {
                 mailUser .put(userId, mail);
                 userStatesForRegistration.remove(userId);
                 usersData.insertData(userId, this, databaseConnection);
-                return MessageConstants.SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE;
+                return textForMessage.handleMessage("successfulReg");
             } else {
                 mailUser .remove(userId, mail);
-                return MessageConstants.NOT_CORRECT_MAIL_COMMAND_RESPONSE;
+                return textForMessage.handleMessage("notСorrectMail");
             }
         }
-        return MessageConstants.REGISTRATION_COMMAND_RESPONSE;
+        return textForMessage.handleMessage("authorization");
+    }
+    /**
+     *  Вызывает worksWithRegistration
+     */
+    public String getWorksWithRegistration(Update update, String messageText, Long userId, EmailSender emailSender,
+                                       LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
+        return worksWithRegistration(update,messageText,userId,emailSender,logicAndDataForRegistrationUsers);
     }
 }

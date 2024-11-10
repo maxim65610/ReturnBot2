@@ -81,12 +81,13 @@ public class LogicController {
             }
             else if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
                     getUserStatesForRegistration(userId).equals("0"))){
-                listForWorkWithKeyboardAndMessage.add(logicAndDataForRegistrationUsers.worksWithRegistration
+                listForWorkWithKeyboardAndMessage.add(logicAndDataForRegistrationUsers.getWorksWithRegistration
                         (update, messageText, userId,emailSender, logicAndDataForRegistrationUsers));
             }
             else if("/userDataChange".equals(messageText) || (!logicForChangeDataUsers.
                     getUserStatesForChangeData(userId).equals("0"))){
-                listForWorkWithKeyboardAndMessage.add(logicForChangeDataUsers.worksWithChangeData(messageText, userId, emailSender));
+                listForWorkWithKeyboardAndMessage.add(logicForChangeDataUsers.getWorksWithChangeData
+                        (messageText, userId, emailSender));
             }
             else if("/userInfo".equals(messageText)){
                 listForWorkWithKeyboardAndMessage.add(usersData.takeData(update.getMessage().getChatId(),

@@ -82,30 +82,61 @@ class TextForMessageTest {
         String answerCommandInstRTF = textForMessage.handleMessage("РТФ");
         String answerCommandInstHTI = textForMessage.handleMessage("ХТИ");
         String answerCommandCorrectMail = textForMessage.handleMessage("correctMail");
-        String answerCommandNotСorrectMail = textForMessage.handleMessage("notСorrectMail");
+        String answerCommandUnCorrectMail = textForMessage.handleMessage("notСorrectMail");
         String answerCommandQuestionHasBeenSend = textForMessage.handleMessage("questionHasBeenSend");
         String answerCommandUserPassedTest = textForMessage.handleMessage("userPassedTest");
         String answerCommandResultTestABI = textForMessage.handleMessage("resultTestABI");
+        String answerCommandSuccessfulReg = textForMessage.handleMessage("successfulReg");
+        String answerCommandEnterName = textForMessage.handleMessage("name");
+        String answerCommandEnterSurname = textForMessage.handleMessage("surname");
+        String answerCommandEnterMail = textForMessage.handleMessage("mail");
+        String answerCommandEnterClass = textForMessage.handleMessage("class");
+        String answerCommandSuccessfulName = textForMessage.handleMessage("successful_name");
+        String answerCommandSuccessfulSurname = textForMessage.handleMessage("successful_surname");
+        String answerCommandSuccessfulMail = textForMessage.handleMessage("successful_mail");
+        String answerCommandSuccessfulClass = textForMessage.handleMessage("successful_class");
+
 
         String ExpectedMessageInstIENIM = "Вот все факультеты, которые есть в институте ИЕНИМ:";
         String ExpectedMessageInstRTF = "Вот все факультеты, которые есть в институте РТФ:";
         String ExpectedMessageInstHTI = "Вот все факультеты, которые есть в институте ХТИ:";
         String ExpectedMessageCorrectMail = "Почта указана корректно, напишите ваш вопрос";
-        String ExpectedMessageNotСorrectMail = "Адрес электронной почты был указан неправильно " +
+        String ExpectedMessageUnCorrectMail = "Адрес электронной почты был указан неправильно " +
                 "отправьте его ещё раз";
         String ExpectedMessageQuestionHasBeenSend = "Ваш вопрос отправлен";
         String ExpectedMessageUserPassedTest = "Поздравляю, вы прошли тест." +
                 " Чтобы узнать результат напишите /testres";
         String ExpectedMessageResultTestABI = "Вам больше всего подходит факультет: ";
+        String ExpectedMessageSuccessfulReg ="Авторизация окончена успешно.\n" +
+                "Если хотите проверить данные воспользуйтесь /userInfo\n" +
+                "Если хотите удалить данные воспользуйтесь /userDataDell\n" +
+                "Если хотите поменять данные воспользуйтесь /userDataChange";
+        String ExpectedMessageEnterName = "Введите имя:";
+        String ExpectedMessageEnterSurname = "Введите фамилию:";
+        String ExpectedMessageEnterMail = "Введите почту:";
+        String ExpectedMessageEnterClass = "Введите класс:";
+        String ExpectedMessageSuccessfulName = "Имя успешно изменено";
+        String ExpectedMessageSuccessfulSurname = "Фамилия успешно изменена";
+        String ExpectedMessageSuccessfulMail = "Почта успешно изменена";
+        String ExpectedMessageSuccessfulClass = "Класс успешно изменен";
 
         assertEquals(ExpectedMessageInstIENIM, answerCommandInstIENIM);
         assertEquals(ExpectedMessageInstRTF, answerCommandInstRTF);
         assertEquals(ExpectedMessageInstHTI, answerCommandInstHTI);
         assertEquals(ExpectedMessageCorrectMail, answerCommandCorrectMail);
-        assertEquals(ExpectedMessageNotСorrectMail, answerCommandNotСorrectMail);
+        assertEquals(ExpectedMessageUnCorrectMail, answerCommandUnCorrectMail);
         assertEquals(ExpectedMessageQuestionHasBeenSend, answerCommandQuestionHasBeenSend);
         assertEquals(ExpectedMessageUserPassedTest, answerCommandUserPassedTest);
         assertEquals(ExpectedMessageResultTestABI, answerCommandResultTestABI);
+        assertEquals(ExpectedMessageSuccessfulReg, answerCommandSuccessfulReg);
+        assertEquals(ExpectedMessageEnterName, answerCommandEnterName);
+        assertEquals(ExpectedMessageEnterSurname, answerCommandEnterSurname);
+        assertEquals(ExpectedMessageEnterMail, answerCommandEnterMail);
+        assertEquals(ExpectedMessageEnterClass, answerCommandEnterClass);
+        assertEquals(ExpectedMessageSuccessfulName, answerCommandSuccessfulName);
+        assertEquals(ExpectedMessageSuccessfulSurname, answerCommandSuccessfulSurname);
+        assertEquals(ExpectedMessageSuccessfulMail, answerCommandSuccessfulMail);
+        assertEquals(ExpectedMessageSuccessfulClass, answerCommandSuccessfulClass);
     }
 
 }

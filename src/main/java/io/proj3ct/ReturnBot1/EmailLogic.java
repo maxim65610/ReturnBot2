@@ -9,7 +9,7 @@ import java.util.Map;
  * получения вопросов от пользователей.
  */
 public class EmailLogic {
-
+    private final TextForMessage textForMessage = new TextForMessage();
     private final Map<Long, String> userStatesForMail = new HashMap<>();
     private final Map<Long, String> userMails = new HashMap<>();
     private UsersData usersData = new UsersData();
@@ -22,14 +22,7 @@ public class EmailLogic {
     public String getUserStatesForEmail(Long chatID){
         return userStatesForMail.getOrDefault(chatID, "0");
     }
-    /**
-     * Возвращает ответ на команду вопроса.
-     *
-     * @return строка с ответом на команду вопроса.
-     */
-    private String questionCommandReceived() {
-        return MessageConstants.QUESTION_COMMAND_RESPONSE;
-    }
+
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием.
      *
@@ -54,14 +47,19 @@ public class EmailLogic {
             userMails.remove(userId);
             return "Ваш вопрос отправлен";
         }
-        return questionCommandReceived();
+        return textForMessage.handleMessage(messageText);
     }
-
+    /**
+     * Вызывает worksWithMail
+     */
     public String getWorksWithMail(String messageText, Long userId, EmailSender emailSender,
                                    EmailLogic emailLogic,DatabaseConnection databaseConnection){
        return worksWithMail(messageText,userId,emailSender,emailLogic, databaseConnection);
     }
-
+    /**
+     * Устанавливает объект UsersData, который будет использоваться для работы с данными пользователей.
+     * @param usersData экземпляр класса UsersData, содержащий информацию о пользователях.
+     */
     public void setUsersData(UsersData usersData) {
         this.usersData = usersData;
     }

@@ -60,11 +60,6 @@ public class MessageConstants {
      * Ответ бота на то, какой результат у пользователя после прождения теста
      */
     public static final String RESULT_TEST_ABI_COMMAND_RESPONSE = "Вам больше всего подходит факультет: ";
-
-
-    public static final String RESULT_AFTERTRSTABI_COMMAND_RESPONSE = "Проанализировал ваши ответы я пришёл к выводу," +
-            " что вам больше всего подходит факультет: default," +
-            " для повторно просмотра результата, можете воспользоваться командой /testres";
     /**
      * Ответ бота на начало авторизации.
      */
@@ -72,7 +67,9 @@ public class MessageConstants {
             "\nВсего будет 4 пункта, которые " +
             "вы должны указать: имя, фамилию, класс, почту. " +
             "\nВведите имя:\n";
-
+    /**
+     * Ответ бота на успешную авторизации.
+     */
     public static final String SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE ="Авторизация окончена успешно." +
             "\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
             "\nЕсли хотите удалить данные воспользуйтесь /userDataDell"+
@@ -94,7 +91,47 @@ public class MessageConstants {
             "\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
             "\nЕсли хотите удалить данные воспользуйтесь /userDataDell" +
             "\nЕсли хотите поменять данные воспользуйтесь /userDataChange";
+    /**
+     * Сообщение, информирующее пользователя о том, что его данные успешно удалены.
+     */
+    public static final String DEL_DATA_COMMAND_RESPONSE = "Ваши данные успешно удалены";
+    /**
+     * Сообщение с просьбой ввести фамилию.
+     */
+    public static final String ENTER_SURNAME = "Введите фамилию:";
+    /**
+     * Сообщение с просьбой ввести имя.
+     */
+    public static final String ENTER_NAME = "Введите имя:";
+    /**
+     * Сообщение с просьбой ввести класс.
+     */
+    public static final String ENTER_CLASS = "Введите класс:";
+    /**
+     * Сообщение с просьбой ввести адрес электронной почты.
+     */
+    public static final String ENTER_MAIL = "Введите почту:";
 
-    public static final  String DEL_DATA_COMMAND_RESPONSE = "Ваши данные успешно удалены";
+    /**
+     * Сообщение, информирующее пользователя о том, что имя успешно изменено.
+     */
+    public static final String SUCCESSFUL_NAME = "Имя успешно изменено";
 
+    /**
+     * Сообщение, информирующее пользователя о том, что фамилия успешно изменена.
+     */
+    public static final String SUCCESSFUL_SURNAME = "Фамилия успешно изменена";
+
+    /**
+     * Сообщение, информирующее пользователя о том, что почта успешно изменена.
+     */
+    public static final String SUCCESSFUL_MAIL = "Почта успешно изменена";
+
+    /**
+     * Сообщение, информирующее пользователя о том, что класс успешно изменен.
+     */
+    public static final String SUCCESSFUL_CLASS = "Класс успешно изменен";
 }
+
+
+

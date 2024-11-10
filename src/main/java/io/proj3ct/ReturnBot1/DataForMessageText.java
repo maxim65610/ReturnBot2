@@ -1,0 +1,52 @@
+package io.proj3ct.ReturnBot1;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class DataForMessageText {
+    private Map<String, String> messageMap;
+
+    /**
+     * Конструктор, который инициализирует словарь сообщений.
+     */
+    public DataForMessageText() {
+        messageMap = new HashMap<>();
+        initializeMessageMap();
+    }
+
+    public String getMessageMap(String messageText){
+        return messageMap.get(messageText);
+    }
+    /**
+     * Инициализация словаря сообщений.
+     */
+    private void initializeMessageMap() {
+        messageMap.put("/testAbit", MessageConstants.TEST_ABIT_COMMAND_RESPONSE);
+        messageMap.put("/work", MessageConstants.WORK_COMMAND_RESPONSE);
+        messageMap.put("/question", MessageConstants.QUESTION_COMMAND_RESPONSE);
+        messageMap.put("/authorization", MessageConstants.REGISTRATION_COMMAND_RESPONSE);
+        messageMap.put("authorization", MessageConstants.REGISTRATION_COMMAND_RESPONSE);
+        messageMap.put("/userDataDell", MessageConstants.DEL_DATA_COMMAND_RESPONSE);
+        messageMap.put("/userDataChange", MessageConstants.CHANGEDATA_COMMAND_RESPONSE);
+        messageMap.put("userDataChange", MessageConstants.CHANGEDATA_COMMAND_RESPONSE);
+        messageMap.put("correctMail", MessageConstants.CORRECT_MAIL_COMMAND_RESPONSE);
+        messageMap.put("notСorrectMail", MessageConstants.NOT_CORRECT_MAIL_COMMAND_RESPONSE);
+        messageMap.put("questionHasBeenSend", MessageConstants.QUESTION_HAS_BEEN_SEND_COMMAND_RESPONSE);
+        messageMap.put("userPassedTest", MessageConstants.END_TEST_ABI_COMMAND_RESPONSE);
+        messageMap.put("resultTestABI", MessageConstants.RESULT_TEST_ABI_COMMAND_RESPONSE);
+        messageMap.put("registration", MessageConstants.AUTHORISATION_COMMAND_RESPONSE);
+        messageMap.put("successful_name", MessageConstants.SUCCESSFUL_NAME);
+        messageMap.put("successful_surname", MessageConstants.SUCCESSFUL_SURNAME);
+        messageMap.put("successful_mail", MessageConstants.SUCCESSFUL_MAIL);
+        messageMap.put("successful_class", MessageConstants.SUCCESSFUL_CLASS);
+        messageMap.put("mail", MessageConstants.ENTER_MAIL);
+        messageMap.put("surname", MessageConstants.ENTER_SURNAME);
+        messageMap.put("name", MessageConstants.ENTER_NAME);
+        messageMap.put("class", MessageConstants.ENTER_CLASS);
+        messageMap.put("clas_bad", MessageConstants.UN_SUCCESSFUL_CLASS);
+        messageMap.put("successfulReg", MessageConstants.SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE);
+        messageMap.put("ИЕНИМ", MessageConstants.INST_IENIM_COMMAND_RESPONSE);
+        messageMap.put("РТФ", MessageConstants.INST_RTF_COMMAND_RESPONSE);
+        messageMap.put("ХТИ", MessageConstants.INST_CHTI_COMMAND_RESPONSE);
+    }
+}
