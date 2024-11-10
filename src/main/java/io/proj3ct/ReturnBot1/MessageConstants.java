@@ -35,9 +35,9 @@ public class MessageConstants {
     public static final String TEST_ABIT_COMMAND_RESPONSE = "Вы начали проходить тестирование по выбору факультета," +
             " выберите один предмет из этих трех:";
     /**
-     * Ответ бота на запрос почты.
+     * Ответ бота на запрос вопроса.
      */
-    public static final String QUESTION_COMMAND_RESPONSE = "Пожалуйста, отправьте свою почту:";
+    public static final String QUESTION_COMMAND_RESPONSE = "Пожалуйста, отправьте свой вопрос:";
     /**
      * Ответ бота на корректную потчу
      */

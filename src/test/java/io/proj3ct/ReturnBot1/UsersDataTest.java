@@ -10,6 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Класс тестов для проверки логики работы с данными пользователей в классе UsersData.
+ */
 public class UsersDataTest {
     private final UsersData usersData;
     private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers;
@@ -18,7 +21,10 @@ public class UsersDataTest {
     private final PreparedStatement preparedStatement;
     private final ResultSet resultSet;
 
-    public  UsersDataTest(){
+    /**
+     * Конструктор для инициализации зависимостей.
+     */
+    public UsersDataTest() {
         usersData = new UsersData();
         logicAndDataForRegistrationUsers = mock(LogicAndDataForRegistrationUsers.class);
         databaseConnection = mock(DatabaseConnection.class);
@@ -26,6 +32,11 @@ public class UsersDataTest {
         preparedStatement = mock(PreparedStatement.class);
         resultSet = mock(ResultSet.class);
     }
+
+    /**
+     * Метод, который выполняется перед каждым тестом.
+     * Настраивает заглушки для подключения к базе данных и данных пользователя.
+     */
     @Before
     public void setUp() throws SQLException {
         when(databaseConnection.connect()).thenReturn(connection);
@@ -35,6 +46,11 @@ public class UsersDataTest {
         when(logicAndDataForRegistrationUsers.getSchoolClassUser (anyLong())).thenReturn("10");
         when(logicAndDataForRegistrationUsers.getMailUser (anyLong())).thenReturn("test@example.com");
     }
+
+    /**
+     * Тест для проверки вставки данных пользователя в таблицу.
+     * Проверяет, что все параметры установлены корректно и запрос выполнен.
+     */
     @Test
     public void testInsertData() throws SQLException {
         Long userId = 1L;
@@ -46,6 +62,11 @@ public class UsersDataTest {
         verify(preparedStatement).setString(5, "test@example.com");
         verify(preparedStatement).executeUpdate();
     }
+
+    /**
+     * Тест для проверки изменения имени пользователя.
+     * Проверяет, что имя установлено корректно и запрос выполнен.
+     */
     @Test
     public void testChangeName() throws SQLException {
         Long userId = 1L;
@@ -55,6 +76,11 @@ public class UsersDataTest {
         verify(preparedStatement).setString(2, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
+
+    /**
+     * Тест для проверки изменения фамилии пользователя.
+     * Проверяет, что фамилия установлена корректно и запрос выполнен.
+     */
     @Test
     public void testChangeSurname() throws SQLException {
         Long userId = 1L;
@@ -64,6 +90,11 @@ public class UsersDataTest {
         verify(preparedStatement).setString(2, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
+
+    /**
+     * Тест для проверки изменения класса пользователя.
+     * Проверяет, что класс установлен корректно и запрос выполнен.
+     */
     @Test
     public void testChangeClass() throws SQLException {
         Long userId = 1L;
@@ -73,6 +104,11 @@ public class UsersDataTest {
         verify(preparedStatement).setString(2, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
+
+    /**
+     * Тест для проверки изменения почты пользователя.
+     * Проверяет, что почта установлена корректно и запрос выполнен.
+     */
     @Test
     public void testChangeMail() throws SQLException {
         Long userId = 1L;
@@ -82,6 +118,11 @@ public class UsersDataTest {
         verify(preparedStatement).setString(2, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
+
+    /**
+     * Тест для проверки существования пользователя в таблице регистрации.
+     * Проверяет, что метод возвращает true, если пользователь существует.
+     */
     @Test
     public void testCheckUserIdExistsInRegistrationDataTable() throws SQLException {
         Long userId = 1L;
@@ -91,6 +132,11 @@ public class UsersDataTest {
         verify(preparedStatement).setString(1, userId.toString());
         assertTrue(exists);
     }
+
+    /**
+     * Тест для проверки удаления данных пользователя из таблицы.
+     * Проверяет, что запрос на удаление выполнен корректно.
+     */
     @Test
     public void testDeleteData() throws SQLException {
         Long userId = 1L;
@@ -98,6 +144,11 @@ public class UsersDataTest {
         verify(preparedStatement).setString(1, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
+
+    /**
+     * Тест для получения данных пользователя из таблицы.
+     * Проверяет, что данные пользователя возвращаются корректно.
+     */
     @Test
     public void testTakeData() throws SQLException {
         Long userId = 1L;
@@ -110,6 +161,11 @@ public class UsersDataTest {
         String data = usersData.takeData(userId, databaseConnection);
         assertEquals("Ваше имя: qqqq\nВаша фамилия: wwww\nВаш класс: 10\nВаша почта: test@example.com", data);
     }
+
+    /**
+     * Тест для получения почты пользователя из таблицы.
+     * Проверяет, что почта возвращается корректно.
+     */
     @Test
     public void testGetUserMail() throws SQLException {
         Long userId = 1L;

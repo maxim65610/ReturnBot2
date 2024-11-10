@@ -44,7 +44,7 @@ class TextForMessageTest {
         String ExpectedMessageWork = "Вот все институты, у которых ты можешь посмотреть факультеты:";
         String ExpectedMessageTestAbit = "Вы начали проходить тестирование по выбору факультета, " +
                 "выберите один предмет из этих трех:";
-        String ExpectedMessageQuestion = "Пожалуйста, отправьте свою почту:";
+        String ExpectedMessageQuestion = "Пожалуйста, отправьте свой вопрос:";
         String ExpectedMessageAuthorization = "Здравствуйте, начинаем.\n" +
                 "Всего будет 4 пункта, которые вы должны указать: имя, фамилию, класс, почту. \n" +
                 "Введите имя:\n";

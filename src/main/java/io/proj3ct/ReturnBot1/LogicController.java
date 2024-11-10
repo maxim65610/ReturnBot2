@@ -21,6 +21,7 @@ public class LogicController {
             = new LogicAndDataForRegistrationUsers();
     private final LogicForChangeDataUsers logicForChangeDataUsers = new LogicForChangeDataUsers();
     private final UsersData usersData = new UsersData();
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
     /**
      * Проверяет, что делать с переданными данными для клавиатуры.
      * @param data Входные данные для обработки.
@@ -74,8 +75,9 @@ public class LogicController {
             String messageText = update.getMessage().getText();
             userId = update.getMessage().getChatId();
             if ("/question".equals(messageText) || (!(emailLogic.getUserStatesForEmail(userId).equals("0")))) {
-                listForWorkWithKeyboardAndMessage.add(emailLogic.getReplyForWorkingWithMail
-                        (update, messageText, userId, emailSender));
+                listForWorkWithKeyboardAndMessage.add(emailLogic.getWorksWithMail
+                        (update.getMessage().getText(), update.getMessage().getChatId(), emailSender,
+                                emailLogic,databaseConnection));
             }
             else if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
                     getUserStatesForRegistration(userId).equals("0"))){

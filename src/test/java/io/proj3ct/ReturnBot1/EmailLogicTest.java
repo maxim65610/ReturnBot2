@@ -1,83 +1,76 @@
 package io.proj3ct.ReturnBot1;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.message.Message;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import org.junit.Before;
+import org.junit.Test;
 
 /**
- * Класс тестов для проверки логики обработки электронной почты в классе EmailLogic.
+ * Тестовый класс для проверки логики отправки электронных писем в классе EmailLogic.
  */
-class EmailLogicTest {
-
+public class EmailLogicTest {
     private EmailLogic emailLogic;
-    private EmailSender emailSender;
-    private TextForMessage textForMessage;
-    private Update update;
-
+    private UsersData usersDataMock;
+    private EmailSender emailSenderMock;
+    private DatabaseConnection databaseConnectionMock;
     /**
-     * Конструктор дял EmailLogicTest.
+     * Метод, выполняемый перед каждым тестом, для настройки моков и других зависимостей.
      */
-    private EmailLogicTest() {
+    @Before
+    public void setUp() {
         emailLogic = new EmailLogic();
-        emailSender = Mockito.mock(EmailSender.class);
-        textForMessage = Mockito.mock(TextForMessage.class);
-        update = Mockito.mock(Update.class);
-        MockitoAnnotations.openMocks(this);
+        usersDataMock = mock(UsersData.class);
+        emailSenderMock = mock(EmailSender.class);
+        databaseConnectionMock = mock(DatabaseConnection.class);
+        emailLogic.setUsersData(usersDataMock);
     }
 
     /**
-     * Тест для проверки получения состояния пользователя, когда оно отсутствует.
+     Тест для проверки получения состояния пользователя, когда оно отсутствует.
      */
     @Test
-    void testGetUserStatesForEmail_NoStates() {
+    public void testGetUserStatesForEmailNoStates() {
         Long userId = 123L;
         String state = emailLogic.getUserStatesForEmail(userId);
         assertEquals("0", state, "Должно возвращаться '0', если состояния нет.");
     }
-
     /**
-     * Тест для проверки обработки команды /question.
+     * Тест для проверки получения состояния пользователя, когда оно отсутствует.
+     * Ожидается, что метод вернет "0", если состояния нет.
      */
     @Test
-    void testWorksWithMail_QuestionCommand() {
-        Long userId = 123L;
-        Update mockUpdate = mock(Update.class);
-        Message mockMessage = mock(Message.class);
-        when(mockUpdate.getMessage()).thenReturn(mockMessage);
-        when(mockMessage.getText()).thenReturn("test@gmail.com");
+    public void testWorksWithMail_UserNotRegistered() {
+        Long userId = 1L;
+        String messageText = "/question";
 
-        emailLogic.getReplyForWorkingWithMail(mockUpdate, "/question", userId, emailSender);
-        assertEquals("awaiting_email", emailLogic.getUserStatesForEmail(userId),
-                "Состояние должно быть 'awaiting_email'.");
+        when(usersDataMock.checkUserIdExistsInRegistrationDataTable(userId, databaseConnectionMock))
+                .thenReturn(false);
+        String response = emailLogic.getWorksWithMail(messageText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
+
+        assertEquals("Эта функция недоступна, пока вы не зарегистрируетесь", response);
     }
-
     /**
-     * Тест для проверки корректного ввода электронной почты.
+     * Тест для проверки получения состояния пользователя, когда оно отсутствует.
+     * Ожидается, что метод вернет "0", если состояния нет.
      */
     @Test
-    void testWorksWithMail_CorrectEmail() {
-        Long userId = 123L;
-        Update mockUpdate = mock(Update.class);
-        Message mockMessage = mock(Message.class);
-        when(mockUpdate.getMessage()).thenReturn(mockMessage);
-        when(mockMessage.getText()).thenReturn("test@gmail.com");
-        emailLogic.getReplyForWorkingWithMail(mockUpdate, "/question", userId, emailSender);
+    public void testWorksWithMail_UserRegistered_AwaitingQuestion() {
+        Long userId = 1L;
+        String messageText = "/question";
 
-        String validEmail = "test@gmail.com";
-        when(mockUpdate.getMessage().getText()).thenReturn(validEmail);
-        when(emailSender.isValidEmail(validEmail)).thenReturn(true);
-        when(textForMessage.handleMessage("correctMail")).thenReturn("Электронная почта корректная.");
+        when(usersDataMock.checkUserIdExistsInRegistrationDataTable(userId, databaseConnectionMock))
+                .thenReturn(true);
+        emailLogic.getUserStatesForEmail(userId); // Это нужно для инициализации состояния
+        emailLogic.getWorksWithMail(messageText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
 
-        String response = emailLogic.getReplyForWorkingWithMail(mockUpdate, validEmail, userId, emailSender);
-        assertEquals("Почта указана корректно, напишите ваш вопрос", response);
-        assertEquals("awaiting_question", emailLogic.getUserStatesForEmail(userId),
-                "Состояние должно быть 'awaiting_question'.");
+        String questionText = "Как зарегистрироваться?";
+        String mailUser  = "test@example.com";
+
+        when(usersDataMock.getUserMail(userId, databaseConnectionMock)).thenReturn(mailUser );
+        when(emailSenderMock.getUsername()).thenReturn("testUser ");
+        String response = emailLogic.getWorksWithMail(questionText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
+        verify(emailSenderMock).sendEmail(eq("testUser "), eq("Вопрос от абитуриента " + mailUser ), eq(questionText));
+        assertEquals("Ваш вопрос отправлен", response);
     }
-
 }

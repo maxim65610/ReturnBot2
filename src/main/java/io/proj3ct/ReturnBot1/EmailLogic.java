@@ -1,7 +1,5 @@
 package io.proj3ct.ReturnBot1;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,11 +9,11 @@ import java.util.Map;
  * получения вопросов от пользователей.
  */
 public class EmailLogic {
-    // Хранит состояния пользователей
-    private Map<Long, String> userStatesForMail = new HashMap<>();
-    // Хранит электронные адреса пользователей
-    private Map<Long, String> userMails = new HashMap<>();
-    private final TextForMessage textForMessage = new TextForMessage();
+
+    private final Map<Long, String> userStatesForMail = new HashMap<>();
+    private final Map<Long, String> userMails = new HashMap<>();
+    private UsersData usersData = new UsersData();
+
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
      * @param chatID Идентификатор чата пользователя.
@@ -25,50 +23,46 @@ public class EmailLogic {
         return userStatesForMail.getOrDefault(chatID, "0");
     }
     /**
-     * Возвращает ответ бота на сообщение от пользователя для работы с /question.
-     * @param update Объект, содержащий обновления сообщений.
-     * @param messageText Текст сообщения пользователя.
-     * @param userId Идентификатор пользователя.
-     * @param emailSender Объект для отправки электронной почты.
-     * @return Ответ пользователю.
+     * Возвращает ответ на команду вопроса.
+     *
+     * @return строка с ответом на команду вопроса.
      */
-    public String getReplyForWorkingWithMail(Update update, String messageText, Long userId, EmailSender emailSender){
-        return worksWithMail(update, messageText, userId, emailSender);
+    private String questionCommandReceived() {
+        return MessageConstants.QUESTION_COMMAND_RESPONSE;
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием.
-     * @param update Объект, содержащий обновления сообщений.
-     * @param messageText Текст сообщения пользователя.
-     * @param userId Идентификатор пользователя.
-     * @param emailSender Объект для отправки электронной почты.
+     *
+     * @param messageText  Текст сообщения пользователя.
+     * @param userId      Идентификатор пользователя.
+     * @param emailSender  Объект для отправки электронной почты.
+     * @param emailLogic   Объект EmailLogic, используемый для управления состоянием.
      * @return Ответ пользователю в зависимости от текущего состояния.
      */
-    private String worksWithMail(Update update, String messageText, Long userId, EmailSender emailSender) {
+    private String worksWithMail(String messageText, Long userId, EmailSender emailSender, EmailLogic emailLogic,
+                                 DatabaseConnection databaseConnection) {
         String currentState = userStatesForMail.get(userId);
         if ("/question".equals(messageText)) {
-            userStatesForMail.put(userId, "awaiting_email");
-        } else if ("awaiting_email".equals(currentState)) {
-            String anwserhandleEmailInput;
-            String mailUser = update.getMessage().getText();
-            if(emailSender.isValidEmail(mailUser)){
-                userMails.put(userId, mailUser);
-                userStatesForMail.put(userId, "awaiting_question");
-                anwserhandleEmailInput = textForMessage.handleMessage("correctMail");
-            } else {
-                userMails.remove(userId, mailUser);
-                anwserhandleEmailInput = textForMessage.handleMessage("notСorrectMail");
+            if (!usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)) {
+                return "Эта функция недоступна, пока вы не зарегистрируетесь";
             }
-            return anwserhandleEmailInput;
-
+            userStatesForMail.put(userId, "awaiting_question");
         } else if ("awaiting_question".equals(currentState)) {
-            String question = update.getMessage().getText();
-            String mailUser = userMails.get(userId);
-            emailSender.sendEmail(emailSender.getUsername(), "Вопрос от абитуриента " + mailUser, question);
+            String mailUser = usersData.getUserMail(userId, databaseConnection);
+            emailSender.sendEmail(emailSender.getUsername(), "Вопрос от абитуриента " + mailUser, messageText);
             userStatesForMail.remove(userId);
             userMails.remove(userId);
-            return textForMessage.handleMessage("questionHasBeenSend");
+            return "Ваш вопрос отправлен";
         }
-        return textForMessage.handleMessage("/question");
+        return questionCommandReceived();
     }
 
+    public String getWorksWithMail(String messageText, Long userId, EmailSender emailSender,
+                                   EmailLogic emailLogic,DatabaseConnection databaseConnection){
+       return worksWithMail(messageText,userId,emailSender,emailLogic, databaseConnection);
+    }
+
+    public void setUsersData(UsersData usersData) {
+        this.usersData = usersData;
+    }
 }
