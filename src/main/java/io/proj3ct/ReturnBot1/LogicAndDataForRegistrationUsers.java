@@ -14,10 +14,10 @@ public class LogicAndDataForRegistrationUsers {
     private final Map<Long, String> schoolClassUser  = new HashMap<>();
     private final Map<Long, String> mailUser  = new HashMap<>();
     private final Map<Long, String> userStatesForRegistration = new HashMap<>();
-    private final UsersData usersData = new UsersData();
-    private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    private UsersData usersData = new UsersData();
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private TextForMessage textForMessage = new TextForMessage();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
-    private final TextForMessage textForMessage = new TextForMessage();
     /**
      * Получает объект подключения к базе данных.
      * @return объект DatabaseConnection
@@ -49,7 +49,36 @@ public class LogicAndDataForRegistrationUsers {
      * @return электронная почта пользователя
      */
     public String getMailUser (Long chatID) {return mailUser .get(chatID);}
-
+    /**
+     * Устанавливает объект UsersData для работы с данными пользователей.
+     *
+     * @param usersData объект, отвечающий за управление данными пользователей.
+     */
+    public void setUsersData(UsersData usersData) {
+        this.usersData = usersData;
+    }
+    /**
+     * Устанавливает объект DatabaseConnection для работы с базой данных.
+     *
+     * @param databaseConnection объект, представляющий соединение с базой данных.
+     */
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
+    }
+    /**
+     * Устанавливает объект TextForMessage для обработки текстовых сообщений.
+     *
+     * @param textForMessage объект, отвечающий за формирование текстовых сообщений для пользователя.
+     */
+    public void setTextForMessage(TextForMessage textForMessage) {
+        this.textForMessage = textForMessage;
+    }
+    /**
+     * Устанавливает объект setUserStateForRegistration для обработки текстовых сообщений.
+     */
+    public void setUserStateForRegistration(Long userId, String state) {
+        userStatesForRegistration.put(userId, state);
+    }
     /**
      * Получает состояние пользователя для регистрации по его идентификатору чата.
      *
@@ -57,11 +86,7 @@ public class LogicAndDataForRegistrationUsers {
      * @return состояние пользователя
      */
     public String getUserStatesForRegistration(Long chatID) {
-        if (userStatesForRegistration.isEmpty()) {
-            return ("0");
-        } else {
-            return (userStatesForRegistration.get(chatID));
-        }
+        return userStatesForRegistration.getOrDefault(chatID, "0");
     }
     /**
      * Обрабатывает логику регистрации пользователя на основе полученного обновления.

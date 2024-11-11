@@ -17,11 +17,11 @@ public class LogicController {
     private final String username = System.getenv("mail"); // Ваша почта
     private final String password = System.getenv("passwordForMail");
     private final EmailSender emailSender = new EmailSender(username, password);
-    private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
-            = new LogicAndDataForRegistrationUsers();
     private final LogicForChangeDataUsers logicForChangeDataUsers = new LogicForChangeDataUsers();
     private final UsersData usersData = new UsersData();
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
+            = new LogicAndDataForRegistrationUsers();
     /**
      * Проверяет, что делать с переданными данными для клавиатуры.
      * @param data Входные данные для обработки.

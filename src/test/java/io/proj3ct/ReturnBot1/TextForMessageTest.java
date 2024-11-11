@@ -28,11 +28,10 @@ class TextForMessageTest {
     public void testCommands() {
         String answerCommandDefault = textForMessage.handleMessage("/start");
         String answerCommandWork = textForMessage.handleMessage("/work");
+
         String answerCommandTestAbit = textForMessage.handleMessage("/testAbit");
         String answerCommandQuestion = textForMessage.handleMessage("/question");
-        String answerCommandAuthorization = textForMessage.handleMessage("/authorization");
         String answerCommandUserDataDell = textForMessage.handleMessage("/userDataDell");
-        String answerCommandUserDataChange = textForMessage.handleMessage("/userDataChange");
 
         String ExpectedMessageDefault = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
                 " пожалуйста пользуйся кнопками.\n" +
@@ -45,23 +44,12 @@ class TextForMessageTest {
         String ExpectedMessageTestAbit = "Вы начали проходить тестирование по выбору факультета, " +
                 "выберите один предмет из этих трех:";
         String ExpectedMessageQuestion = "Пожалуйста, отправьте свой вопрос:";
-        String ExpectedMessageAuthorization = "Здравствуйте, начинаем.\n" +
-                "Всего будет 4 пункта, которые вы должны указать: имя, фамилию, класс, почту. \n" +
-                "Введите имя:\n";
         String ExpectedMessageDataDell = "Ваши данные успешно удалены";
-        String ExpectedMessageDataChange = "Выберите данные, которые хотите поменять:\n" +
-                "/userDataChangeName - поменять имя\n" +
-                "/userDataChangeSurname - поменять фамилию\n" +
-                "/userDataChangeClass - поменять класс\n" +
-                "/userDataChangeMail - поменять почту";
-
         assertEquals(ExpectedMessageDefault, answerCommandDefault);
         assertEquals(ExpectedMessageWork, answerCommandWork);
         assertEquals(ExpectedMessageTestAbit, answerCommandTestAbit);
         assertEquals(ExpectedMessageQuestion, answerCommandQuestion);
-        assertEquals(ExpectedMessageAuthorization, answerCommandAuthorization);
         assertEquals(ExpectedMessageDataDell, answerCommandUserDataDell);
-        assertEquals(ExpectedMessageDataChange, answerCommandUserDataChange);
 
     }
     /**

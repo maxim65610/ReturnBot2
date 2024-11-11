@@ -12,9 +12,10 @@ import java.util.Map;
 public class LogicForChangeDataUsers {
     // Хранит состояния пользователей для изменения данных
     private final Map<Long, String> userStatesForChangeData = new HashMap<>();
-    private final UsersData usersData = new UsersData();
-    private final DatabaseConnection databaseConnection = new DatabaseConnection();
-    private final TextForMessage textForMessage = new TextForMessage();
+    private UsersData usersData = new UsersData();
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private TextForMessage textForMessage = new TextForMessage();
+
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
      *
@@ -23,6 +24,30 @@ public class LogicForChangeDataUsers {
      */
     public String getUserStatesForChangeData(Long chatID) {
         return userStatesForChangeData.getOrDefault(chatID, "0");
+    }
+    /**
+     * Устанавливает объект UsersData для работы с данными пользователей.
+     *
+     * @param usersData объект, отвечающий за управление данными пользователей.
+     */
+    public void setUsersData(UsersData usersData) {
+        this.usersData = usersData;
+    }
+    /**
+     * Устанавливает объект DatabaseConnection для работы с базой данных.
+     *
+     * @param databaseConnection объект, представляющий соединение с базой данных.
+     */
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
+    }
+    /**
+     * Устанавливает объект TextForMessage для обработки текстовых сообщений.
+     *
+     * @param textForMessage объект, отвечающий за формирование текстовых сообщений для пользователя.
+     */
+    public void setTextForMessage(TextForMessage textForMessage) {
+        this.textForMessage = textForMessage;
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием изменения данных.
