@@ -1,67 +1,63 @@
 package io.proj3ct.ReturnBot1;
 
 import java.util.*;
+
 /**
- * Класс LogicForTestABI реализует логику обработки теста ABI для пользователей.
- * Он управляет состояниями пользователей, выбирает данные для теста и определяет подходящий факультет на основе выборов.
+ * LogicForTestABI реализует логику обработки теста для абитуриентов (ABI).
+ * Он управляет состояниями пользователей, выбирает данные для теста
+ * и определяет подходящий факультет на основе выборов пользователя.
  */
 public class LogicForTestABI {
-    /**
-     * Экземпляр класса RetrieveData, используемый для получения данных из базы данных.
-     */
-    private RetrieveData retrieveData = new RetrieveData();
-    /**
-     * Карта, связывающая идентификаторы пользователей с идентификаторами тестов ABI.
-     * Ключ: Идентификатор пользователя, Значение: Идентификатор строки в БД.
-     */
+    private final RetrieveData retrieveData = new RetrieveData();
+    private final TextForMessage textForMessage = new TextForMessage();
     private Map<Long, Integer> idTestABI = new HashMap<>();
-    /**
-     * Карта, хранящая выборы пользователей во время теста ABI.
-     * Ключ: Идентификатор пользователя, Значение: Список выбранных ответов.
-     */
     private Map<Long, List<String>> choiceABI = new HashMap<>();
-    /**
-     * Карта, хранящая результаты теста ABI для каждого пользователя.
-     * Ключ: Идентификатор пользователя, Значение: Название факультета, связанного с результатами пользователя.
-     */
     private Map<Long, String> resultsTestAbi = new HashMap<>();
     private Map<Long, String> userStatesForTest = new HashMap<>();
     /**
-     * Геттер для @param userStatesForTest
-     * Если userStatesForTest не пустой,
-     * возвращает его значение по ID.
+     * Получает текущее состояние теста для указанного пользователя.
+     * @param chatID идентификатор пользователя
+     * @return состояние пользователя, или "0", если состояние отсутствует
      */
-    public String getUserStatesForTest(Long chatID){
-        if (userStatesForTest.isEmpty()) {
-            return ("0");
-        }
-        else {
-            return (userStatesForTest.get(chatID));
-        }
+    public String getUserStatesForTest(Long chatID) {
+        return userStatesForTest.getOrDefault(chatID, "0");
     }
     /**
-     * Очищает состояния пользователей.
-     * Этот метод удаляет все состояния из карты userStatesForTest.
+     * Очищает состояние указанного пользователя.
+     * @param chatID идентификатор пользователя
      */
     public void removeUserStatesForTest(Long chatID) {
         userStatesForTest.remove(chatID);
     }
+
     /**
      * Получает название факультета из базы данных по заданному идентификатору.
-     *
      * @param id_getfaculty идентификатор факультета
      * @return название факультета
      */
-    private String getNameFacultyFromBD(int id_getfaculty){
+    private String getNameFacultyFromBD(int id_getfaculty) {
         return retrieveData.getDataById(id_getfaculty, "cash3");
     }
     /**
-     * Получает данные для теста по заданному идентификатору.
-     *
-     * @param id_testABI идентификатор строки в базе данных
-     * @return список данных, включая вопрос,ответы и значения, для формирования ответа
+     * Вызывает worksWithTestABI
      */
-    private List<String> arrayBDforTestABI(int id_testABI){
+    public List<String> getDataBd(String messageText, Long userId, String data) {
+        return worksWithTestABI(messageText, userId, data);
+    }
+    /**
+     * Возвращает результат теста для указанного идентификатора чата.
+     * @param chatID идентификатор чата
+     * @return строка с результатом теста
+     */
+    public String getResult(long chatID) {
+        return textForMessage.handleMessage("resultTestABI") + resultsTestAbi.get(chatID);
+    }
+    /**
+     * Получает данные для теста по заданному идентификатору.
+     * @param id_testABI идентификатор строки в базе данных
+     * @return список данных, включая вопрос, ответы и связанные значения
+     */
+    private List<String> arrayBdForTestABI(int id_testABI) {
         List<String> data_BD = new ArrayList<>();
         data_BD.add(retrieveData.getDataById(id_testABI, "question"));
         data_BD.add(retrieveData.getDataById(id_testABI, "answer1"));
@@ -73,50 +69,50 @@ public class LogicForTestABI {
     }
     /**
      * Определяет, какой факультет наиболее подходит пользователю на основе его выборов.
-     *
      * @param userID идентификатор пользователя
      * @param choiceABI выборы пользователя
      * @return название подходящего факультета
      */
-    private String gettingResult(Long userID, Map<Long, List<String>> choiceABI){
-        List<String> listofABIechoice= choiceABI.get(userID);
-        int sizeListofABIechoice = listofABIechoice.size();
-        List<String> listofABIechoiceWithoutGap= new ArrayList<>();
+    private String gettingResult(Long userID, Map<Long, List<String>> choiceABI) {
+        List<String> listofABIechoice = choiceABI.get(userID);
+        List<String> listofABIechoiceWithoutGap = new ArrayList<>();
         for (String s : listofABIechoice) {
             listofABIechoiceWithoutGap.add(s.trim());
         }
         Map<Integer, Integer> countChoiceABI = new HashMap<>();
-        final int idFomChoice = 1000;
-        for (int i = idFomChoice; i < 1013; i++) {
-            for (int j = 0; j < sizeListofABIechoice; j++) {
-                if (listofABIechoiceWithoutGap.get(j).equals(String.valueOf(i))) {
+        final int idFromChoice = 1000; //в базе данных начиная с этого id лежат названия факультетов
+        final int idEndChoice = 1013; // в базе данных это после последний id, по которому лежит навание факультета
+        //  то есть этот цикл пробегается по всем id , по которым лежат названия факультетов
+        for (int i = idFromChoice; i < idEndChoice; i++) {
+            for (String choice : listofABIechoiceWithoutGap) {
+                if (choice.equals(String.valueOf(i))) {
                     countChoiceABI.merge(i, 1, Integer::sum);
                 }
             }
         }
-        int maxCountChoiceABI = 0;
-        int idForChoiceABI = 0;
+        int maxcountchoiceABI = 0;
+        int idforchoiceABI = 0;
+
         for (Map.Entry<Integer, Integer> entry : countChoiceABI.entrySet()) {
-            int key = entry.getKey();
-            int value = entry.getValue();
-            if(value > maxCountChoiceABI){
-                idForChoiceABI = key;
-                maxCountChoiceABI = value;
+            if (entry.getValue() > maxcountchoiceABI) {
+                idforchoiceABI = entry.getKey();
+                maxcountchoiceABI = entry.getValue();
             }
         }
-        return getNameFacultyFromBD(idForChoiceABI);
+        return getNameFacultyFromBD(idforchoiceABI);
     }
     /**
      * Обрабатывает входящие сообщения от пользователей и управляет состоянием теста.
-     *
      * @param messageText текст сообщения от пользователя
      * @param userId идентификатор пользователя
      * @param data данные, полученные с getCallbackQuery().getData()
      * @return список данных, полученных из базы данных для текущего состояния теста
      */
-    public List<String> worksWithTestAPI(String messageText, Long userId,String data) {
+    private List<String> worksWithTestABI(String messageText, Long userId, String data) {
         String currentState = userStatesForTest.get(userId);
-        List<String> data_BD = new ArrayList<>();
+        List<String> dataBD = new ArrayList<>();
+
+        // Устанавливаем идентификатор теста в зависимости от выбора пользователя
         if (data.equals("100")) {
             idTestABI.put(userId, 101);
         } else if (data.equals("200")) {
@@ -127,16 +123,11 @@ public class LogicForTestABI {
             choiceABI.putIfAbsent(userId, new ArrayList<>());
             choiceABI.get(userId).add(data);
         }
-        if (messageText.equals("/testAbit") && userStatesForTest.isEmpty()) {
+        // Обрабатываем переходы состояний теста
+        if (messageText.equals("/testAbit") && (!userStatesForTest.containsKey(userId))) {
             userStatesForTest.put(userId, "awaiting_testABI_1");
         } else if ("awaiting_testABI_1".equals(currentState)) {
-            if (data.equals("100")) {
-                data_BD = arrayBDforTestABI(idTestABI.get(userId));
-            } else if (data.equals("200")) {
-                data_BD = arrayBDforTestABI(idTestABI.get(userId));
-            } else if (data.equals("300")) {
-                data_BD = arrayBDforTestABI(idTestABI.get(userId));
-            }
+            dataBD = arrayBdForTestABI(idTestABI.get(userId));
             userStatesForTest.remove(userId);
             userStatesForTest.put(userId, "awaiting_testABI_2");
         } else if (currentState != null && currentState.startsWith("awaiting_testABI")) {
@@ -144,22 +135,14 @@ public class LogicForTestABI {
             if (stepForAwaiting_testABI == 10) {
                 resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
                 userStatesForTest.remove(userId);
+                dataBD.add(textForMessage.handleMessage("userPassedTest"));
                 userStatesForTest.put(userId, "awaiting_testABI_11");
             } else {
-                data_BD = arrayBDforTestABI(idTestABI.get(userId) + stepForAwaiting_testABI - 1);
+                dataBD = arrayBdForTestABI(idTestABI.get(userId) + stepForAwaiting_testABI - 1);
                 userStatesForTest.remove(userId);
                 userStatesForTest.put(userId, "awaiting_testABI_" + (stepForAwaiting_testABI + 1));
             }
         }
-        return data_BD;
-    }
-    /**
-     * Возвращает результат теста для заданного идентификатора чата.
-     *
-     * @param chatID идентификатор чата
-     * @return строка с результатом теста
-     */
-    public String getResult(long chatID){
-        return resultsTestAbi.get(chatID);
+        return dataBD;
     }
 }

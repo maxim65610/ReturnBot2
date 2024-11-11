@@ -10,10 +10,10 @@ import java.util.Map;
  * фамилия, класс и адрес электронной почты.
  */
 public class LogicForChangeDataUsers {
-    // Хранит состояния пользователей для изменения данных
-    private Map<Long, String> userStatesForChangeData = new HashMap<>();
+    private final Map<Long, String> userStatesForChangeData = new HashMap<>();
     private UsersData usersData = new UsersData();
     private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private TextForMessage textForMessage = new TextForMessage();
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
      *
@@ -21,19 +21,33 @@ public class LogicForChangeDataUsers {
      * @return Строка с состоянием пользователя или "0", если состояний нет.
      */
     public String getUserStatesForChangeData(Long chatID) {
-        if (userStatesForChangeData.isEmpty()) {
-            return ("0");
-        } else {
-            return (userStatesForChangeData.get(chatID));
-        }
+        return userStatesForChangeData.getOrDefault(chatID, "0");
     }
     /**
-     * Возвращает ответ на команду изменения данных.
+     * Устанавливает объект UsersData(для тестов).
      *
-     * @return строка с ответом на команду изменения данных.
+     * @param usersData объект, отвечающий за управление данными пользователей.
      */
-    private String changeDataCommandReceived() {
-        return CommonMessageConstants.CHANGEDATA_COMMAND_RESPONSE;
+    public void setUsersData(UsersData usersData) {this.usersData = usersData;}
+    /**
+     * Устанавливает объект DatabaseConnection(для тестов).
+     *
+     * @param databaseConnection объект, представляющий соединение с базой данных.
+     */
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {this.databaseConnection = databaseConnection;}
+    /**
+     * Устанавливает объект TextForMessage(для тестов).
+     *
+     * @param textForMessage объект, отвечающий за формирование текстовых сообщений для пользователя.
+     */
+    public void setTextForMessage(TextForMessage textForMessage) {
+        this.textForMessage = textForMessage;
+    }
+    /**
+     *  Вызывает worksWithChangeData
+     */
+    public String getWorksWithChangeData(String messageText, Long userId, EmailSender emailSender){
+        return worksWithChangeData( messageText,  userId,  emailSender);
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием изменения данных.
@@ -43,7 +57,7 @@ public class LogicForChangeDataUsers {
      * @param emailSender  Объект для отправки электронной почты.
      * @return Ответ пользователю в зависимости от текущего состояния.
      */
-    public String worksWithChangeData(String messageText, Long userId, EmailSender emailSender) {
+    private String worksWithChangeData(String messageText, Long userId, EmailSender emailSender) {
         String currentState = userStatesForChangeData.get(userId);
         if ("/userDataChange".equals(messageText)) {
             userStatesForChangeData.put(userId, "awaiting_response");
@@ -51,28 +65,28 @@ public class LogicForChangeDataUsers {
             if (messageText.equals("/userDataChangeName")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_name");
-                return "Пожалуйста, отправьте свое имя";
+                return textForMessage.handleMessage("name");
             } else if (messageText.equals("/userDataChangeSurname")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_surname");
-                return "Пожалуйста, отправьте свою фамилию";
+                return textForMessage.handleMessage("surname");
             } else if (messageText.equals("/userDataChangeClass")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_class");
-                return "Пожалуйста, отправьте свой класс";
+                return textForMessage.handleMessage("class");
             } else if (messageText.equals("/userDataChangeMail")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_mail");
-                return "Пожалуйста, отправьте свою почту";
+                return textForMessage.handleMessage("mail");
             }
         } else if ("awaiting_name".equals(currentState)) {
             usersData.changeName(userId, databaseConnection, messageText);
             userStatesForChangeData.remove(userId);
-            return "Имя успешно изменено";
+            return textForMessage.handleMessage("successful_name");
         } else if ("awaiting_surname".equals(currentState)) {
             usersData.changeSurname(userId, databaseConnection, messageText);
             userStatesForChangeData.remove(userId);
-            return "Фамилия успешно изменена";
+            return textForMessage.handleMessage("successful_surname");
         } else if ("awaiting_class".equals(currentState)) {
             String schoolClass = messageText;
             try {
@@ -80,23 +94,23 @@ public class LogicForChangeDataUsers {
                 if (classNumber <= 11 && classNumber >= 1) {
                     usersData.changeClass(userId, databaseConnection, messageText);
                     userStatesForChangeData.remove(userId);
-                    return "Класс успешно изменен";
+                    return textForMessage.handleMessage("successful_class");
                 } else {
-                    return "Вы ввели некорректный класс, введите класс заново";
+                    return textForMessage.handleMessage("clas_bad");
                 }
             } catch (NumberFormatException e) {
-                return "Вы ввели некорректный класс, введите класс заново";
+                return textForMessage.handleMessage("clas_bad");
             }
         } else if ("awaiting_mail".equals(currentState)) {
             String mail = messageText;
             if (emailSender.isValidEmail(mail)) {
                 usersData.changeMail(userId, databaseConnection, messageText);
                 userStatesForChangeData.remove(userId);
-                return "Почта успешно изменена";
+                return textForMessage.handleMessage("successful_mail");
             } else {
-                return "Адрес электронной почты был указан неправильно, отправьте его ещё раз";
+                return textForMessage.handleMessage("notСorrectMail");
             }
         }
-        return changeDataCommandReceived();
+        return textForMessage.handleMessage("userDataChange");
     }
 }

@@ -17,8 +17,7 @@ public class UsersData {
 
         String dataRequest = "INSERT INTO RegistrationDataTable " +
                 "(id_chat, name, surname, school_сlass, mail) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+        try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             stmt.setString(1, userId.toString());
@@ -45,8 +44,7 @@ public class UsersData {
         // SQL-запрос для обновления имени в таблице RegistrationDataTable по userId
         String dataRequest = "UPDATE RegistrationDataTable SET name = ? WHERE id_chat = ?";
 
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+        try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             // Установка значений для параметров запроса
@@ -79,8 +77,7 @@ public class UsersData {
         // SQL-запрос для обновления имени в таблице RegistrationDataTable по userId
         String dataRequest = "UPDATE RegistrationDataTable SET surname = ? WHERE id_chat = ?";
 
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+        try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             // Установка значений для параметров запроса
@@ -113,8 +110,7 @@ public class UsersData {
         // SQL-запрос для обновления имени в таблице RegistrationDataTable по userId
         String dataRequest = "UPDATE RegistrationDataTable SET school_сlass = ? WHERE id_chat = ?";
 
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+        try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             // Установка значений для параметров запроса
@@ -147,8 +143,7 @@ public class UsersData {
         // SQL-запрос для обновления имени в таблице RegistrationDataTable по userId
         String dataRequest = "UPDATE RegistrationDataTable SET mail = ? WHERE id_chat = ?";
 
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+        try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             // Установка значений для параметров запроса
@@ -176,13 +171,11 @@ public class UsersData {
      @return true, если пользователь существует, false в противном случае
      */
     public boolean checkUserIdExistsInRegistrationDataTable(Long userId,DatabaseConnection databaseConnection ) {
-        try {
+        String dataRequest = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
 
-            // Подключение к базе данных
-            Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                    databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
-            String sql = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
-            PreparedStatement statement = conn.prepareStatement(sql);
+          try (Connection conn = databaseConnection.connect();
+                  PreparedStatement statement = conn.prepareStatement(dataRequest)) {
+
             statement.setString(1,userId.toString());
 
             // Выполнение запроса
@@ -210,8 +203,7 @@ public class UsersData {
         String dataRequest = "DELETE FROM RegistrationDataTable WHERE id_chat = ?";
         // Подключение к базе данных
 
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+        try (Connection conn = databaseConnection.connect();
              // Выполнение запроса
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
              stmt.setString(1, userId.toString());
@@ -230,8 +222,7 @@ public class UsersData {
     public String takeData(Long userId,DatabaseConnection databaseConnection ) {
 
         String takeData = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+        try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(takeData)) {
             stmt.setString(1, userId.toString());
             ResultSet rs = stmt.executeQuery();
@@ -259,8 +250,8 @@ public class UsersData {
     public String getUserMail(Long userId,DatabaseConnection databaseConnection ) {
 
         String takeData = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
-        try (Connection conn = DriverManager.getConnection(databaseConnection.getDB_URL(),
-                databaseConnection.getDB_USER(), databaseConnection.getDB_PASSWORD());
+
+        try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(takeData)) {
             stmt.setString(1, userId.toString());
             ResultSet rs = stmt.executeQuery();

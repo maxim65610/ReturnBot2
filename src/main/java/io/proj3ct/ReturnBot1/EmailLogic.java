@@ -1,50 +1,40 @@
 package io.proj3ct.ReturnBot1;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Класс EmailLogic обрабатывает логику взаимодействия с пользователями по электронной почте.
+ * Обрабатывает логику взаимодействия с пользователями при работе с /question(функция отправки сообщения
+ * от пользователя на почту).
  * Хранит состояния пользователей и их электронные адреса, а также управляет процессом
  * получения вопросов от пользователей.
  */
 public class EmailLogic {
-    // Хранит состояния пользователей
-    private Map<Long, String> userStatesForMail = new HashMap<>();
-    // Хранит электронные адреса пользователей
-    private Map<Long, String> userMails = new HashMap<>();
-    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final TextForMessage textForMessage = new TextForMessage();
+    private final Map<Long, String> userStatesForMail = new HashMap<>();
+    private final Map<Long, String> userMails = new HashMap<>();
     private UsersData usersData = new UsersData();
     /**
-     * Возвращает объект подключения к базе данных.
-     *
-     * @return Объект DatabaseConnection, используемый для взаимодействия с базой данных.
-     */
-    public DatabaseConnection getDatabaseConnection() {
-        return databaseConnection;
-    }
-    /**
      * Возвращает текущее состояние пользователя по идентификатору.
-     *
      * @param chatID Идентификатор чата пользователя.
      * @return Строка с состоянием пользователя или "0", если состояний нет.
      */
-    public String getUserStatesForEmail(Long chatID) {
-        if (userStatesForMail.isEmpty()) {
-            return ("0");
-        } else {
-            return (userStatesForMail.get(chatID));
-        }
+    public String getUserStatesForEmail(Long chatID){
+        return userStatesForMail.getOrDefault(chatID, "0");
     }
     /**
-     * Возвращает ответ на команду вопроса.
-     *
-     * @return строка с ответом на команду вопроса.
+     * Устанавливает объект UsersData, который будет использоваться для работы с данными пользователей(используется для тестов).
+     * @param usersData экземпляр класса UsersData, содержащий информацию о пользователях.
      */
-    private String questionCommandReceived() {
-        return CommonMessageConstants.QUESTION_COMMAND_RESPONSE;
+    public void setUsersData(UsersData usersData) {
+        this.usersData = usersData;
+    }
+    /**
+     * Вызывает worksWithMail
+     */
+    public String getWorksWithMail(String messageText, Long userId, EmailSender emailSender,
+                                   EmailLogic emailLogic,DatabaseConnection databaseConnection){
+        return worksWithMail(messageText,userId,emailSender,emailLogic, databaseConnection);
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием.
@@ -55,11 +45,11 @@ public class EmailLogic {
      * @param emailLogic   Объект EmailLogic, используемый для управления состоянием.
      * @return Ответ пользователю в зависимости от текущего состояния.
      */
-    public String worksWithMail(String messageText, Long userId, EmailSender emailSender, EmailLogic emailLogic) {
+    private String worksWithMail(String messageText, Long userId, EmailSender emailSender, EmailLogic emailLogic,
+                                 DatabaseConnection databaseConnection) {
         String currentState = userStatesForMail.get(userId);
         if ("/question".equals(messageText)) {
-            if (!usersData.checkUserIdExistsInRegistrationDataTable(userId,
-                    emailLogic.getDatabaseConnection())) {
+            if (!usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)) {
                 return "Эта функция недоступна, пока вы не зарегистрируетесь";
             }
             userStatesForMail.put(userId, "awaiting_question");
@@ -70,6 +60,6 @@ public class EmailLogic {
             userMails.remove(userId);
             return "Ваш вопрос отправлен";
         }
-        return questionCommandReceived();
+        return textForMessage.handleMessage(messageText);
     }
 }
