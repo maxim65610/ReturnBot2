@@ -2,23 +2,37 @@ package io.proj3ct.ReturnBot1;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Класс для хранения и обработки текстовых сообщений,
+ * которые могут быть использованы ботом для ответа пользователю.
+ * Сообщения сохраняются в виде пары "команда - текст ответа".
+ */
 public class DataForMessageText {
+    /**
+     * Словарь, который хранит соответствие команд и текстовых сообщений.
+     */
     private Map<String, String> messageMap;
-
     /**
      * Конструктор, который инициализирует словарь сообщений.
+     * Внутри вызывает метод для заполнения словаря данными.
      */
     public DataForMessageText() {
         messageMap = new HashMap<>();
         initializeMessageMap();
     }
-
+    /**
+     * Метод для получения текста сообщения по ключу (команде).
+     *
+     * @param messageText Ключ (команда), по которому нужно найти соответствующий ответ.
+     * @return Соответствующий текст сообщения или null, если команда не найдена.
+     */
     public String getMessageMap(String messageText){
         return messageMap.get(messageText);
     }
     /**
-     * Инициализация словаря сообщений.
+     * Инициализация словаря сообщений с заранее определенными значениями.
+     * Заполняет поле {@link #messageMap} соответствующими парами ключ-значение,
+     * где ключ — это команда, а значение — текст сообщения для ответа.
      */
     private void initializeMessageMap() {
         messageMap.put("/testAbit", MessageConstants.TEST_ABIT_COMMAND_RESPONSE);

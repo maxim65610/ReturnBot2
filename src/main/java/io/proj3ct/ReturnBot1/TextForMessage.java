@@ -7,7 +7,7 @@ package io.proj3ct.ReturnBot1;
 public class TextForMessage {
     private final DataForMessageText dataForMessageText = new DataForMessageText();
     /**
-     * Обрабатывает некоторых сообщения от пользователя и возвращает соответствующий ответ.
+     * Обрабатывает сообщения и возвращает соответствующий ответ.
      * @param messageText сообщение от пользователя.
      * @return ответ бота на введенное сообщение.
      */

@@ -35,10 +35,7 @@ public class LogicController {
         }
     }
     /**
-     * Возвращает ответ бота на сообщение от пользователя для работы с /question..
-     * @param update Обновление, полученное от Telegram.
-     * @param userId ID пользователя, отправившего сообщение.
-     * @return Список строк, представляющих сообщения и опции для клавиатуры.
+     * Вызывает messageHandlerForKeyboard
      */
     public List<String> getListStringWithTextToSendAndOptionForKeyboard(Update update, long userId){
         return messageHandlerForKeyboard(update, userId);

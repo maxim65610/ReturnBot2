@@ -43,7 +43,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         } else {
             return; // Неизвестный тип обновления
         }
-
         sendMessage(userId, logicController.getListStringWithTextToSendAndOptionForKeyboard(update, userId));
     }
     /**

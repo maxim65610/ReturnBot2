@@ -171,7 +171,6 @@ public class UsersData {
      @return true, если пользователь существует, false в противном случае
      */
     public boolean checkUserIdExistsInRegistrationDataTable(Long userId,DatabaseConnection databaseConnection ) {
-
         String dataRequest = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
 
           try (Connection conn = databaseConnection.connect();
@@ -223,7 +222,6 @@ public class UsersData {
     public String takeData(Long userId,DatabaseConnection databaseConnection ) {
 
         String takeData = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
-
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(takeData)) {
             stmt.setString(1, userId.toString());

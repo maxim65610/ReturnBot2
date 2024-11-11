@@ -20,7 +20,6 @@ import static org.mockito.Mockito.*;
  * Тестовый класс для проверки функциональности LogicСontroller.
  */
 public class LogicControllerTest {
-
     private LogicController logicController;
     private LogicForTestABI mockLogicForTestABI;
     private TextForMessage mockTextForMessage;
@@ -33,13 +32,11 @@ public class LogicControllerTest {
         mockTextForMessage = Mockito.mock(TextForMessage.class);
         logicController = new LogicController();
     }
-
     /**
      * Устанавливает моки для полей с помощью рефлексии.
      */
     @BeforeEach
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        ;
         // Заменяем логику контроллера на мок
         Field logicForTestABIField = LogicController.class.getDeclaredField("logicForTestABI");
         logicForTestABIField.setAccessible(true);

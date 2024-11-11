@@ -9,7 +9,6 @@ import java.sql.SQLException;
  * Извлекает данные из базы данных для теста.
  */
 public class RetrieveData {
-
     private DatabaseConnection databaseConnection = new DatabaseConnection();
     private DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     /**
@@ -19,7 +18,6 @@ public class RetrieveData {
      */
     public String getDataById(int id, String data) {
         datebaseTables.createAnswersDataTableQuery();
-
         String selectAnswersFromDataTable = "SELECT * FROM AnswersData WHERE id_question = ?";
 
         try (Connection conn = databaseConnection.connect();

@@ -37,6 +37,13 @@ public class EmailSender {
         }
     }
     /**
+     * Получает имя пользователя для аутентификации.
+     * @return Имя пользователя.
+     */
+    public String getUsername(){
+        return username;
+    }
+    /**
      * Отправляет электронное письмо на заданный адрес.
      * @param recipient Адрес электронной почты получателя.
      * @param subject Тема письма.
@@ -69,12 +76,4 @@ public class EmailSender {
             e.printStackTrace();
         }
     }
-    /**
-     * Получает имя пользователя для аутентификации.
-     * @return Имя пользователя.
-     */
-    public String getUsername(){
-        return username;
-    }
-
 }

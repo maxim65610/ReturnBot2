@@ -13,7 +13,6 @@ import java.util.Map;
  * экземпляров логики бота и самого бота, а также запуск бота.
  */
 public class Main {
-
     public static void main(String[] args) {
         // Инициализация токена для базы данных из переменных окружения.
         String BOT_TOKEN = System.getenv("tgToken");

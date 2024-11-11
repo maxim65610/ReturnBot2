@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Класс EmailLogic обрабатывает логику взаимодействия с пользователями по электронной почте.
+ * Обрабатывает логику взаимодействия с пользователями при работе с /question(функция отправки сообщения
+ * от пользователя на почту).
  * Хранит состояния пользователей и их электронные адреса, а также управляет процессом
  * получения вопросов от пользователей.
  */
@@ -13,7 +14,6 @@ public class EmailLogic {
     private final Map<Long, String> userStatesForMail = new HashMap<>();
     private final Map<Long, String> userMails = new HashMap<>();
     private UsersData usersData = new UsersData();
-
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
      * @param chatID Идентификатор чата пользователя.
@@ -22,7 +22,20 @@ public class EmailLogic {
     public String getUserStatesForEmail(Long chatID){
         return userStatesForMail.getOrDefault(chatID, "0");
     }
-
+    /**
+     * Устанавливает объект UsersData, который будет использоваться для работы с данными пользователей(используется для тестов).
+     * @param usersData экземпляр класса UsersData, содержащий информацию о пользователях.
+     */
+    public void setUsersData(UsersData usersData) {
+        this.usersData = usersData;
+    }
+    /**
+     * Вызывает worksWithMail
+     */
+    public String getWorksWithMail(String messageText, Long userId, EmailSender emailSender,
+                                   EmailLogic emailLogic,DatabaseConnection databaseConnection){
+        return worksWithMail(messageText,userId,emailSender,emailLogic, databaseConnection);
+    }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием.
      *
@@ -48,19 +61,5 @@ public class EmailLogic {
             return "Ваш вопрос отправлен";
         }
         return textForMessage.handleMessage(messageText);
-    }
-    /**
-     * Вызывает worksWithMail
-     */
-    public String getWorksWithMail(String messageText, Long userId, EmailSender emailSender,
-                                   EmailLogic emailLogic,DatabaseConnection databaseConnection){
-       return worksWithMail(messageText,userId,emailSender,emailLogic, databaseConnection);
-    }
-    /**
-     * Устанавливает объект UsersData, который будет использоваться для работы с данными пользователей.
-     * @param usersData экземпляр класса UsersData, содержащий информацию о пользователях.
-     */
-    public void setUsersData(UsersData usersData) {
-        this.usersData = usersData;
     }
 }

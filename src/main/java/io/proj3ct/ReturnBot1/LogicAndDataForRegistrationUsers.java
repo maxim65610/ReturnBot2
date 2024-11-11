@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Класс для обработки логики и данных регистрации пользователей.
+ * Класс для обработки логики и хранения данных пользователей.
  */
 public class LogicAndDataForRegistrationUsers {
     private final Map<Long, String> nameUser  = new HashMap<>();
@@ -25,12 +25,14 @@ public class LogicAndDataForRegistrationUsers {
     public DatabaseConnection getDatabaseConnection() {return databaseConnection;}
     /**
      * Получает имя пользователя по его идентификатору чата.
+     *
      * @param chatID идентификатор чата пользователя
      * @return имя пользователя
      */
     public String getNameUser (Long chatID) {return nameUser .get(chatID);}
     /**
      * Получает фамилию пользователя по его идентификатору чата.
+     *
      * @param chatID идентификатор чата пользователя
      * @return фамилия пользователя
      */
@@ -50,35 +52,28 @@ public class LogicAndDataForRegistrationUsers {
      */
     public String getMailUser (Long chatID) {return mailUser .get(chatID);}
     /**
-     * Устанавливает объект UsersData для работы с данными пользователей.
+     * Устанавливает объект UsersData(для тестов).
      *
      * @param usersData объект, отвечающий за управление данными пользователей.
      */
-    public void setUsersData(UsersData usersData) {
-        this.usersData = usersData;
-    }
+    public void setUsersData(UsersData usersData) {this.usersData = usersData;}
     /**
-     * Устанавливает объект DatabaseConnection для работы с базой данных.
+     * Устанавливает объект DatabaseConnection(для тестов).
      *
      * @param databaseConnection объект, представляющий соединение с базой данных.
      */
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
-    }
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {this.databaseConnection = databaseConnection;}
     /**
-     * Устанавливает объект TextForMessage для обработки текстовых сообщений.
+     * Устанавливает объект TextForMessage(для тестов).
      *
      * @param textForMessage объект, отвечающий за формирование текстовых сообщений для пользователя.
      */
-    public void setTextForMessage(TextForMessage textForMessage) {
-        this.textForMessage = textForMessage;
+    public void setTextForMessage(TextForMessage textForMessage) {this.textForMessage = textForMessage;
     }
     /**
-     * Устанавливает объект setUserStateForRegistration для обработки текстовых сообщений.
+     * Устанавливает объект setUserStateForRegistration(для тестов).
      */
-    public void setUserStateForRegistration(Long userId, String state) {
-        userStatesForRegistration.put(userId, state);
-    }
+    public void setUserStateForRegistration(Long userId, String state) {userStatesForRegistration.put(userId, state);}
     /**
      * Получает состояние пользователя для регистрации по его идентификатору чата.
      *
@@ -87,6 +82,13 @@ public class LogicAndDataForRegistrationUsers {
      */
     public String getUserStatesForRegistration(Long chatID) {
         return userStatesForRegistration.getOrDefault(chatID, "0");
+    }
+    /**
+     *  Вызывает worksWithRegistration
+     */
+    public String getWorksWithRegistration(Update update, String messageText, Long userId, EmailSender emailSender,
+                                           LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
+        return worksWithRegistration(update,messageText,userId,emailSender,logicAndDataForRegistrationUsers);
     }
     /**
      * Обрабатывает логику регистрации пользователя на основе полученного обновления.
@@ -149,12 +151,5 @@ public class LogicAndDataForRegistrationUsers {
             }
         }
         return textForMessage.handleMessage("authorization");
-    }
-    /**
-     *  Вызывает worksWithRegistration
-     */
-    public String getWorksWithRegistration(Update update, String messageText, Long userId, EmailSender emailSender,
-                                       LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
-        return worksWithRegistration(update,messageText,userId,emailSender,logicAndDataForRegistrationUsers);
     }
 }

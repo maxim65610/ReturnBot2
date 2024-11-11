@@ -9,7 +9,10 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
+/**
+ * Содержит тесты для проверки корректности ответов на команды и запросы,
+ * которые обрабатываются методом {@link TextForMessage#handleMessage(String)}.
+ */
 class TextForMessageTest {
 
     private TextForMessage textForMessage;

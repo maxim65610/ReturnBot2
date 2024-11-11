@@ -10,12 +10,10 @@ import java.util.Map;
  * фамилия, класс и адрес электронной почты.
  */
 public class LogicForChangeDataUsers {
-    // Хранит состояния пользователей для изменения данных
     private final Map<Long, String> userStatesForChangeData = new HashMap<>();
     private UsersData usersData = new UsersData();
     private DatabaseConnection databaseConnection = new DatabaseConnection();
     private TextForMessage textForMessage = new TextForMessage();
-
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
      *
@@ -26,28 +24,30 @@ public class LogicForChangeDataUsers {
         return userStatesForChangeData.getOrDefault(chatID, "0");
     }
     /**
-     * Устанавливает объект UsersData для работы с данными пользователей.
+     * Устанавливает объект UsersData(для тестов).
      *
      * @param usersData объект, отвечающий за управление данными пользователей.
      */
-    public void setUsersData(UsersData usersData) {
-        this.usersData = usersData;
-    }
+    public void setUsersData(UsersData usersData) {this.usersData = usersData;}
     /**
-     * Устанавливает объект DatabaseConnection для работы с базой данных.
+     * Устанавливает объект DatabaseConnection(для тестов).
      *
      * @param databaseConnection объект, представляющий соединение с базой данных.
      */
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
-    }
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {this.databaseConnection = databaseConnection;}
     /**
-     * Устанавливает объект TextForMessage для обработки текстовых сообщений.
+     * Устанавливает объект TextForMessage(для тестов).
      *
      * @param textForMessage объект, отвечающий за формирование текстовых сообщений для пользователя.
      */
     public void setTextForMessage(TextForMessage textForMessage) {
         this.textForMessage = textForMessage;
+    }
+    /**
+     *  Вызывает worksWithChangeData
+     */
+    public String getWorksWithChangeData(String messageText, Long userId, EmailSender emailSender){
+        return worksWithChangeData( messageText,  userId,  emailSender);
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием изменения данных.
@@ -112,11 +112,5 @@ public class LogicForChangeDataUsers {
             }
         }
         return textForMessage.handleMessage("userDataChange");
-    }
-    /**
-     *  Вызывает worksWithChangeData
-     */
-    public String getWorksWithChangeData(String messageText, Long userId, EmailSender emailSender){
-        return worksWithChangeData( messageText,  userId,  emailSender);
     }
 }

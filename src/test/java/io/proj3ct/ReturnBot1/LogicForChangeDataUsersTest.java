@@ -29,7 +29,6 @@ public class LogicForChangeDataUsersTest {
     private EmailSender emailSender;
 
     private Long userId = 1L;
-
     /**
      * Настройка тестового окружения перед каждым тестом.
      * Инициализирует моки и устанавливает зависимости для тестируемого класса.
@@ -44,7 +43,6 @@ public class LogicForChangeDataUsersTest {
         logicForChangeDataUsers.setDatabaseConnection(databaseConnection);
         logicForChangeDataUsers.setTextForMessage(textForMessage);
     }
-
     /**
      * Тестирует процесс изменения имени пользователя.
      */
@@ -67,7 +65,6 @@ public class LogicForChangeDataUsersTest {
         assertEquals("Имя успешно изменено!", response);
         verify(usersData).changeName(userId, databaseConnection, "John");
     }
-
     /**
      * Тестирует процесс изменения фамилии пользователя.
      */
@@ -90,7 +87,6 @@ public class LogicForChangeDataUsersTest {
         assertEquals("Фамилия успешно изменена!", response);
         verify(usersData).changeSurname(userId, databaseConnection, "Doe");
     }
-
     /**
      * Тестирует процесс изменения класса пользователя.
      */
@@ -113,7 +109,6 @@ public class LogicForChangeDataUsersTest {
         assertEquals("Класс успешно изменен!", response);
         verify(usersData).changeClass(userId, databaseConnection, "10");
     }
-
     /**
      * Тестирует процесс изменения почты пользователя.
      */

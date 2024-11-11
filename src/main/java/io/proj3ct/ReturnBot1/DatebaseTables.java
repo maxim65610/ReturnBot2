@@ -9,18 +9,24 @@ import java.sql.Statement;
  * Класс для создания таблиц
  */
 public class DatebaseTables {
-
+    /**
+     * Объект для подключения к базе данных.
+     */
     private DatabaseConnection databaseConnection;
     /**
-     * Метод для создания таблицы AnswersData в базе данных
+     * Конструктор класса, который инициализирует объект подключения к базе данных.
+     *
+     * @param databaseConnection Объект для подключения к базе данных.
      */
-
     public DatebaseTables(DatabaseConnection databaseConnection){
         this.databaseConnection = databaseConnection;
     }
-
+    /**
+     * Метод для создания таблицы AnswersData в базе данных.
+     * Таблица предназначена для хранения данных о вопросах, ответах и связанной информации.
+     * Если таблица уже существует, она не будет создана повторно.
+     */
     public void createAnswersDataTableQuery() {
-
         String createAnswersDataTableQuery  = """
         CREATE TABLE IF NOT EXISTS AnswersData (
         id_question int PRIMARY KEY, 
@@ -47,7 +53,9 @@ public class DatebaseTables {
         }
     }
     /**
-     * Метод для создания таблицы DepartsInfoTable в базе данных
+     * Метод для создания таблицы DepartsInfo в базе данных.
+     * Таблица предназначена для хранения информации о департаментах.
+     * Если таблица уже существует, она не будет создана повторно.
      */
     public void createDepartsInfoTableQuery() {
 
@@ -70,9 +78,10 @@ public class DatebaseTables {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
     }
-
     /**
-     * Метод для создания таблицы RegistrationDataTable в базе данных
+     * Метод для создания таблицы RegistrationDataTable в базе данных.
+     * Таблица предназначена для хранения данных о регистрации пользователей.
+     * Если таблица уже существует, она не будет создана повторно.
      */
     public void createRegistrationDataTable() {
 
@@ -84,7 +93,6 @@ public class DatebaseTables {
         school_сlass text NOT NULL,  
         mail text NOT NULL
         );""";
-
         try {
             Connection conn = databaseConnection.connect();
             if (conn != null ) {

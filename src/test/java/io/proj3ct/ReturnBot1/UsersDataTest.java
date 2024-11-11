@@ -20,7 +20,6 @@ public class UsersDataTest {
     private final Connection connection;
     private final PreparedStatement preparedStatement;
     private final ResultSet resultSet;
-
     /**
      * Конструктор для инициализации зависимостей.
      */
@@ -32,7 +31,6 @@ public class UsersDataTest {
         preparedStatement = mock(PreparedStatement.class);
         resultSet = mock(ResultSet.class);
     }
-
     /**
      * Метод, который выполняется перед каждым тестом.
      * Настраивает заглушки для подключения к базе данных и данных пользователя.
@@ -46,7 +44,6 @@ public class UsersDataTest {
         when(logicAndDataForRegistrationUsers.getSchoolClassUser (anyLong())).thenReturn("10");
         when(logicAndDataForRegistrationUsers.getMailUser (anyLong())).thenReturn("test@example.com");
     }
-
     /**
      * Тест для проверки вставки данных пользователя в таблицу.
      * Проверяет, что все параметры установлены корректно и запрос выполнен.
@@ -62,7 +59,6 @@ public class UsersDataTest {
         verify(preparedStatement).setString(5, "test@example.com");
         verify(preparedStatement).executeUpdate();
     }
-
     /**
      * Тест для проверки изменения имени пользователя.
      * Проверяет, что имя установлено корректно и запрос выполнен.
@@ -76,7 +72,6 @@ public class UsersDataTest {
         verify(preparedStatement).setString(2, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
-
     /**
      * Тест для проверки изменения фамилии пользователя.
      * Проверяет, что фамилия установлена корректно и запрос выполнен.
@@ -90,7 +85,6 @@ public class UsersDataTest {
         verify(preparedStatement).setString(2, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
-
     /**
      * Тест для проверки изменения класса пользователя.
      * Проверяет, что класс установлен корректно и запрос выполнен.
@@ -104,7 +98,6 @@ public class UsersDataTest {
         verify(preparedStatement).setString(2, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
-
     /**
      * Тест для проверки изменения почты пользователя.
      * Проверяет, что почта установлена корректно и запрос выполнен.
@@ -118,7 +111,6 @@ public class UsersDataTest {
         verify(preparedStatement).setString(2, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
-
     /**
      * Тест для проверки существования пользователя в таблице регистрации.
      * Проверяет, что метод возвращает true, если пользователь существует.
@@ -132,7 +124,6 @@ public class UsersDataTest {
         verify(preparedStatement).setString(1, userId.toString());
         assertTrue(exists);
     }
-
     /**
      * Тест для проверки удаления данных пользователя из таблицы.
      * Проверяет, что запрос на удаление выполнен корректно.
@@ -144,7 +135,6 @@ public class UsersDataTest {
         verify(preparedStatement).setString(1, userId.toString());
         verify(preparedStatement).executeUpdate();
     }
-
     /**
      * Тест для получения данных пользователя из таблицы.
      * Проверяет, что данные пользователя возвращаются корректно.
@@ -161,7 +151,6 @@ public class UsersDataTest {
         String data = usersData.takeData(userId, databaseConnection);
         assertEquals("Ваше имя: qqqq\nВаша фамилия: wwww\nВаш класс: 10\nВаша почта: test@example.com", data);
     }
-
     /**
      * Тест для получения почты пользователя из таблицы.
      * Проверяет, что почта возвращается корректно.

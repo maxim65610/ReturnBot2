@@ -11,13 +11,18 @@ import java.sql.SQLException;
  * Нужен для того, чтобы из бд вытащить информацию про нужный факультет.
  */
 public class DepartmentsInfo {
-
-
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
-
     /**
-     * Выводит информацию о факультете урфу
+     * Извлекает информацию о факультете по заданному идентификатору.
+     *
+     * <p>Этот метод выполняет запрос к базе данных для получения информации
+     * о факультете из таблицы DepartsInfo, используя переданный идентификатор
+     * факультета. В случае успешного извлечения данных возвращается строка
+     * с информацией о факультете, если данные не найдены, возвращается null.</p>
+     *
+     * @param data Идентификатор факультета (например, строка с кодом факультета).
+     * @return Строка с информацией о факультете или null, если факультет не найден.
      */
     public String extract(String data) {
         datebaseTables.createDepartsInfoTableQuery();

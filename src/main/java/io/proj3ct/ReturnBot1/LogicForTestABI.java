@@ -8,37 +8,12 @@ import java.util.*;
  * и определяет подходящий факультет на основе выборов пользователя.
  */
 public class LogicForTestABI {
-    /*
-      Экземпляр класса RetrieveData, используемый для получения данных из базы данных.
-     */
     private final RetrieveData retrieveData = new RetrieveData();
-    /*
-      Экземпляр класса TextForMessage, используемый для обработки и формирования текстовых сообщений,
-      отправляемых пользователям в процессе тестирования.
-     */
     private final TextForMessage textForMessage = new TextForMessage();
-    /*
-      Карта, связывающая идентификаторы пользователей с идентификаторами тестов ABI.
-      Ключ: Идентификатор пользователя, Значение: Идентификатор строки в БД.
-     */
     private Map<Long, Integer> idTestABI = new HashMap<>();
-    /*
-      Карта, хранящая выборы пользователей во время теста ABI.
-      Ключ: Идентификатор пользователя, Значение: Список выбранных ответов.
-     */
     private Map<Long, List<String>> choiceABI = new HashMap<>();
-
-    /*
-      Карта, хранящая результаты теста ABI для каждого пользователя.
-      Ключ: Идентификатор пользователя, Значение: Название факультета, связанного с результатами пользователя.
-     */
     private Map<Long, String> resultsTestAbi = new HashMap<>();
-
-    /*
-      Карта, хранящая состояния пользователей во время теста.
-     */
     private Map<Long, String> userStatesForTest = new HashMap<>();
-
     /**
      * Получает текущее состояние теста для указанного пользователя.
      * @param chatID идентификатор пользователя
@@ -47,7 +22,6 @@ public class LogicForTestABI {
     public String getUserStatesForTest(Long chatID) {
         return userStatesForTest.getOrDefault(chatID, "0");
     }
-
     /**
      * Очищает состояние указанного пользователя.
      * @param chatID идентификатор пользователя
@@ -64,18 +38,12 @@ public class LogicForTestABI {
     private String getNameFacultyFromBD(int id_getfaculty) {
         return retrieveData.getDataById(id_getfaculty, "cash3");
     }
-
     /**
-     * Возвращает список данных из базы данных для работы с тестом абитуриента.
-     * @param messageText текст сообщения от пользователя
-     * @param userId идентификатор пользователя
-     * @param data данные, полученные с getCallbackQuery().getData()
-     * @return список данных из метода worksWithTestAPI
+     * Вызывает worksWithTestABI
      */
     public List<String> getDataBd(String messageText, Long userId, String data) {
-        return worksWithTestAPI(messageText, userId, data);
+        return worksWithTestABI(messageText, userId, data);
     }
-
     /**
      * Возвращает результат теста для указанного идентификатора чата.
      * @param chatID идентификатор чата
@@ -84,7 +52,6 @@ public class LogicForTestABI {
     public String getResult(long chatID) {
         return textForMessage.handleMessage("resultTestABI") + resultsTestAbi.get(chatID);
     }
-
     /**
      * Получает данные для теста по заданному идентификатору.
      * @param id_testABI идентификатор строки в базе данных
@@ -100,7 +67,6 @@ public class LogicForTestABI {
         data_BD.add(retrieveData.getDataById(id_testABI, "cash2"));
         return data_BD;
     }
-
     /**
      * Определяет, какой факультет наиболее подходит пользователю на основе его выборов.
      * @param userID идентификатор пользователя
@@ -124,7 +90,6 @@ public class LogicForTestABI {
                 }
             }
         }
-
         int maxcountchoiceABI = 0;
         int idforchoiceABI = 0;
 
@@ -136,7 +101,6 @@ public class LogicForTestABI {
         }
         return getNameFacultyFromBD(idforchoiceABI);
     }
-
     /**
      * Обрабатывает входящие сообщения от пользователей и управляет состоянием теста.
      * @param messageText текст сообщения от пользователя
@@ -144,7 +108,7 @@ public class LogicForTestABI {
      * @param data данные, полученные с getCallbackQuery().getData()
      * @return список данных, полученных из базы данных для текущего состояния теста
      */
-    private List<String> worksWithTestAPI(String messageText, Long userId, String data) {
+    private List<String> worksWithTestABI(String messageText, Long userId, String data) {
         String currentState = userStatesForTest.get(userId);
         List<String> dataBD = new ArrayList<>();
 
@@ -159,7 +123,6 @@ public class LogicForTestABI {
             choiceABI.putIfAbsent(userId, new ArrayList<>());
             choiceABI.get(userId).add(data);
         }
-
         // Обрабатываем переходы состояний теста
         if (messageText.equals("/testAbit") && (!userStatesForTest.containsKey(userId))) {
             userStatesForTest.put(userId, "awaiting_testABI_1");
