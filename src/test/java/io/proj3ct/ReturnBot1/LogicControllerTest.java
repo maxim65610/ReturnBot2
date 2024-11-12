@@ -10,7 +10,6 @@ import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,7 +84,7 @@ public class LogicControllerTest {
         when(update.getMessage()).thenReturn(messageMock);
         when(messageMock.getText()).thenReturn("/testAbit");
 
-        when(mockTextForMessage.handleMessage("/testAbit")).thenReturn("Тест начат");
+        when(mockTextForMessage.setTheText("/testAbit")).thenReturn("Тест начат");
 
         long userId = 0L;
         when(mockLogicForTestABI.getDataBd("/testAbit", userId, "100"))

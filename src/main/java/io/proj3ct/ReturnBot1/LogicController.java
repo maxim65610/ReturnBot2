@@ -1,7 +1,5 @@
 package io.proj3ct.ReturnBot1;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class LogicController {
      */
     private String checkWhatTodo(String data) {
         if (data.equals("ИЕНИМ") || data.equals("РТФ") || data.equals("ХТИ")) {
-            return textForMessage.handleMessage(data);
+            return textForMessage.setTheText(data);
         } else {
             return data;
         }
@@ -70,7 +68,7 @@ public class LogicController {
             }
             else if("/userDataChange".equals(messageText) || (!logicForChangeDataUsers.
                     getUserStatesForChangeData(userId).equals("0"))){
-                listForWorkWithKeyboardAndMessage.add(logicForChangeDataUsers.getWorksWithChangeData
+                listForWorkWithKeyboardAndMessage.add(logicForChangeDataUsers.worksWithChangeData
                         (messageText, userId, emailSender));
             }
             else if("/userInfo".equals(messageText)){
@@ -84,14 +82,14 @@ public class LogicController {
             }
             else if("/testAbit".equals(messageText)){
                 logicForTestABI.getDataBd(messageText, userId, "100");
-                listForWorkWithKeyboardAndMessage.add(textForMessage.handleMessage(messageText));
+                listForWorkWithKeyboardAndMessage.add(textForMessage.setTheText(messageText));
                 listForWorkWithKeyboardAndMessage.add(messageText);
             }
             else if("/testres".equals(messageText)){
                 listForWorkWithKeyboardAndMessage.add(logicForTestABI.getResult(userId));
             }
             else {
-                listForWorkWithKeyboardAndMessage.add(textForMessage.handleMessage(messageText));
+                listForWorkWithKeyboardAndMessage.add(textForMessage.setTheText(messageText));
                 listForWorkWithKeyboardAndMessage.add(messageText);
             }
         }

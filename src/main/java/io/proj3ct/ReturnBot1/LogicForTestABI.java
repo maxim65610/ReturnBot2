@@ -50,7 +50,7 @@ public class LogicForTestABI {
      * @return строка с результатом теста
      */
     public String getResult(long chatID) {
-        return textForMessage.handleMessage("resultTestABI") + resultsTestAbi.get(chatID);
+        return textForMessage.setTheText("resultTestABI") + resultsTestAbi.get(chatID);
     }
     /**
      * Получает данные для теста по заданному идентификатору.
@@ -135,7 +135,7 @@ public class LogicForTestABI {
             if (stepForAwaiting_testABI == 10) {
                 resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
                 userStatesForTest.remove(userId);
-                dataBD.add(textForMessage.handleMessage("userPassedTest"));
+                dataBD.add(textForMessage.setTheText("userPassedTest"));
                 userStatesForTest.put(userId, "awaiting_testABI_11");
             } else {
                 dataBD = arrayBdForTestABI(idTestABI.get(userId) + stepForAwaiting_testABI - 1);

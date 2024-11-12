@@ -1,7 +1,5 @@
 package io.proj3ct.ReturnBot1;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -99,19 +97,19 @@ public class LogicAndDataForRegistrationUsers {
             datebaseTables.createRegistrationDataTable();
             if (usersData.checkUserIdExistsInRegistrationDataTable(userId,
                     logicAndDataForRegistrationUsers.getDatabaseConnection())) {
-                return textForMessage.handleMessage("registration");
+                return textForMessage.setTheText("registration");
             }
             userStatesForRegistration.put(userId, "awaiting_nameUser ");
         } else if ("awaiting_nameUser ".equals(currentState)) {
             nameUser .put(userId, messageText);
             userStatesForRegistration.remove(userId);
             userStatesForRegistration.put(userId, "awaiting_surnameUser ");
-            return textForMessage.handleMessage("name");
+            return textForMessage.setTheText("name");
         } else if ("awaiting_surnameUser ".equals(currentState)) {
             surnameUser .put(userId, messageText);
             userStatesForRegistration.remove(userId);
             userStatesForRegistration.put(userId, "awaiting_schoolClassUser ");
-            return textForMessage.handleMessage("class");
+            return textForMessage.setTheText("class");
         } else if ("awaiting_schoolClassUser ".equals(currentState)) {
             try {
                 int classNumber = Integer.parseInt(messageText);
@@ -119,24 +117,24 @@ public class LogicAndDataForRegistrationUsers {
                     schoolClassUser.put(userId, messageText);
                     userStatesForRegistration.remove(userId);
                     userStatesForRegistration.put(userId, "awaiting_mailUser ");
-                    return textForMessage.handleMessage("mail");
+                    return textForMessage.setTheText("mail");
                 } else {
-                    return textForMessage.handleMessage("clas_bad");
+                    return textForMessage.setTheText("clas_bad");
                 }
             } catch (NumberFormatException e) {
-                return textForMessage.handleMessage("clas_bad");
+                return textForMessage.setTheText("clas_bad");
             }
         } else if ("awaiting_mailUser ".equals(currentState)) {
             if (emailSender.isValidEmail(messageText)) {
                 mailUser .put(userId, messageText);
                 userStatesForRegistration.remove(userId);
                 usersData.insertData(userId, this, databaseConnection);
-                return textForMessage.handleMessage("successfulReg");
+                return textForMessage.setTheText("successfulReg");
             } else {
                 mailUser .remove(userId, messageText);
-                return textForMessage.handleMessage("notСorrectMail");
+                return textForMessage.setTheText("notСorrectMail");
             }
         }
-        return textForMessage.handleMessage("authorization");
+        return textForMessage.setTheText("authorization");
     }
 }

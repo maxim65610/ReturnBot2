@@ -60,6 +60,6 @@ public class EmailLogic {
             userMails.remove(userId);
             return "Ваш вопрос отправлен";
         }
-        return textForMessage.handleMessage(messageText);
+        return textForMessage.setTheText(messageText);
     }
 }

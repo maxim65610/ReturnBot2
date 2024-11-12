@@ -43,12 +43,7 @@ public class LogicForChangeDataUsers {
     public void setTextForMessage(TextForMessage textForMessage) {
         this.textForMessage = textForMessage;
     }
-    /**
-     *  Вызывает worksWithChangeData
-     */
-    public String getWorksWithChangeData(String messageText, Long userId, EmailSender emailSender){
-        return worksWithChangeData( messageText,  userId,  emailSender);
-    }
+
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием изменения данных.
      *
@@ -57,7 +52,7 @@ public class LogicForChangeDataUsers {
      * @param emailSender  Объект для отправки электронной почты.
      * @return Ответ пользователю в зависимости от текущего состояния.
      */
-    private String worksWithChangeData(String messageText, Long userId, EmailSender emailSender) {
+    public String worksWithChangeData(String messageText, Long userId, EmailSender emailSender) {
         String currentState = userStatesForChangeData.get(userId);
         if ("/userDataChange".equals(messageText)) {
             userStatesForChangeData.put(userId, "awaiting_response");
@@ -65,28 +60,28 @@ public class LogicForChangeDataUsers {
             if (messageText.equals("/userDataChangeName")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_name");
-                return textForMessage.handleMessage("name");
+                return textForMessage.setTheText("name");
             } else if (messageText.equals("/userDataChangeSurname")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_surname");
-                return textForMessage.handleMessage("surname");
+                return textForMessage.setTheText("surname");
             } else if (messageText.equals("/userDataChangeClass")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_class");
-                return textForMessage.handleMessage("class");
+                return textForMessage.setTheText("class");
             } else if (messageText.equals("/userDataChangeMail")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_mail");
-                return textForMessage.handleMessage("mail");
+                return textForMessage.setTheText("mail");
             }
         } else if ("awaiting_name".equals(currentState)) {
             usersData.changeName(userId, databaseConnection, messageText);
             userStatesForChangeData.remove(userId);
-            return textForMessage.handleMessage("successful_name");
+            return textForMessage.setTheText("successful_name");
         } else if ("awaiting_surname".equals(currentState)) {
             usersData.changeSurname(userId, databaseConnection, messageText);
             userStatesForChangeData.remove(userId);
-            return textForMessage.handleMessage("successful_surname");
+            return textForMessage.setTheText("successful_surname");
         } else if ("awaiting_class".equals(currentState)) {
             String schoolClass = messageText;
             try {
@@ -94,23 +89,23 @@ public class LogicForChangeDataUsers {
                 if (classNumber <= 11 && classNumber >= 1) {
                     usersData.changeClass(userId, databaseConnection, messageText);
                     userStatesForChangeData.remove(userId);
-                    return textForMessage.handleMessage("successful_class");
+                    return textForMessage.setTheText("successful_class");
                 } else {
-                    return textForMessage.handleMessage("clas_bad");
+                    return textForMessage.setTheText("clas_bad");
                 }
             } catch (NumberFormatException e) {
-                return textForMessage.handleMessage("clas_bad");
+                return textForMessage.setTheText("clas_bad");
             }
         } else if ("awaiting_mail".equals(currentState)) {
             String mail = messageText;
             if (emailSender.isValidEmail(mail)) {
                 usersData.changeMail(userId, databaseConnection, messageText);
                 userStatesForChangeData.remove(userId);
-                return textForMessage.handleMessage("successful_mail");
+                return textForMessage.setTheText("successful_mail");
             } else {
-                return textForMessage.handleMessage("notСorrectMail");
+                return textForMessage.setTheText("notСorrectMail");
             }
         }
-        return textForMessage.handleMessage("userDataChange");
+        return textForMessage.setTheText("userDataChange");
     }
 }

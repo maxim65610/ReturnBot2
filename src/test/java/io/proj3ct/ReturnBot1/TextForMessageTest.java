@@ -1,17 +1,13 @@
 package io.proj3ct.ReturnBot1;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Содержит тесты для проверки корректности ответов на команды и запросы,
- * которые обрабатываются методом {@link TextForMessage#handleMessage(String)}.
+ * которые обрабатываются методом {@link TextForMessage#setTheText(String)}.
  */
 class TextForMessageTest {
 
@@ -29,12 +25,12 @@ class TextForMessageTest {
      */
     @Test
     public void testCommands() {
-        String answerCommandDefault = textForMessage.handleMessage("/start");
-        String answerCommandWork = textForMessage.handleMessage("/work");
+        String answerCommandDefault = textForMessage.setTheText("/start");
+        String answerCommandWork = textForMessage.setTheText("/work");
 
-        String answerCommandTestAbit = textForMessage.handleMessage("/testAbit");
-        String answerCommandQuestion = textForMessage.handleMessage("/question");
-        String answerCommandUserDataDell = textForMessage.handleMessage("/userDataDell");
+        String answerCommandTestAbit = textForMessage.setTheText("/testAbit");
+        String answerCommandQuestion = textForMessage.setTheText("/question");
+        String answerCommandUserDataDell = textForMessage.setTheText("/userDataDell");
 
         String ExpectedMessageDefault = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
                 " пожалуйста пользуйся кнопками.\n" +
@@ -69,23 +65,23 @@ class TextForMessageTest {
      */
     @Test
     public void testDepartCommands(){
-        String answerCommandInstIENIM = textForMessage.handleMessage("ИЕНИМ");
-        String answerCommandInstRTF = textForMessage.handleMessage("РТФ");
-        String answerCommandInstHTI = textForMessage.handleMessage("ХТИ");
-        String answerCommandCorrectMail = textForMessage.handleMessage("correctMail");
-        String answerCommandUnCorrectMail = textForMessage.handleMessage("notСorrectMail");
-        String answerCommandQuestionHasBeenSend = textForMessage.handleMessage("questionHasBeenSend");
-        String answerCommandUserPassedTest = textForMessage.handleMessage("userPassedTest");
-        String answerCommandResultTestABI = textForMessage.handleMessage("resultTestABI");
-        String answerCommandSuccessfulReg = textForMessage.handleMessage("successfulReg");
-        String answerCommandEnterName = textForMessage.handleMessage("name");
-        String answerCommandEnterSurname = textForMessage.handleMessage("surname");
-        String answerCommandEnterMail = textForMessage.handleMessage("mail");
-        String answerCommandEnterClass = textForMessage.handleMessage("class");
-        String answerCommandSuccessfulName = textForMessage.handleMessage("successful_name");
-        String answerCommandSuccessfulSurname = textForMessage.handleMessage("successful_surname");
-        String answerCommandSuccessfulMail = textForMessage.handleMessage("successful_mail");
-        String answerCommandSuccessfulClass = textForMessage.handleMessage("successful_class");
+        String answerCommandInstIENIM = textForMessage.setTheText("ИЕНИМ");
+        String answerCommandInstRTF = textForMessage.setTheText("РТФ");
+        String answerCommandInstHTI = textForMessage.setTheText("ХТИ");
+        String answerCommandCorrectMail = textForMessage.setTheText("correctMail");
+        String answerCommandUnCorrectMail = textForMessage.setTheText("notСorrectMail");
+        String answerCommandQuestionHasBeenSend = textForMessage.setTheText("questionHasBeenSend");
+        String answerCommandUserPassedTest = textForMessage.setTheText("userPassedTest");
+        String answerCommandResultTestABI = textForMessage.setTheText("resultTestABI");
+        String answerCommandSuccessfulReg = textForMessage.setTheText("successfulReg");
+        String answerCommandEnterName = textForMessage.setTheText("name");
+        String answerCommandEnterSurname = textForMessage.setTheText("surname");
+        String answerCommandEnterMail = textForMessage.setTheText("mail");
+        String answerCommandEnterClass = textForMessage.setTheText("class");
+        String answerCommandSuccessfulName = textForMessage.setTheText("successful_name");
+        String answerCommandSuccessfulSurname = textForMessage.setTheText("successful_surname");
+        String answerCommandSuccessfulMail = textForMessage.setTheText("successful_mail");
+        String answerCommandSuccessfulClass = textForMessage.setTheText("successful_class");
 
 
         String ExpectedMessageInstIENIM = "Вот все факультеты, которые есть в институте ИЕНИМ:";
