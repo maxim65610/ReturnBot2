@@ -65,14 +65,14 @@ public class LogicAndDataForRegistrationUsersTest {
         when(usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)).thenReturn(false);
         when(textForMessage.handleMessage("authorization")).thenReturn("Введите имя:");
 
-        String response = logicAndDataForRegistrationUsers.getWorksWithRegistration(update, "/authorization", userId, emailSender, logicAndDataForRegistrationUsers);
+        String response = logicAndDataForRegistrationUsers.worksWithRegistration("/authorization", userId, emailSender, logicAndDataForRegistrationUsers);
         assertEquals("Введите имя:", response);
 
         logicAndDataForRegistrationUsers.setUserStateForRegistration(userId, "awaiting_nameUser ");
         when(message.getText()).thenReturn("John");
         when(textForMessage.handleMessage("name")).thenReturn("Введите фамилию:");
 
-        response = logicAndDataForRegistrationUsers.getWorksWithRegistration(update, "John", userId, emailSender, logicAndDataForRegistrationUsers);
+        response = logicAndDataForRegistrationUsers.worksWithRegistration("John", userId, emailSender, logicAndDataForRegistrationUsers);
         assertEquals("Введите фамилию:", response);
         assertEquals("John", logicAndDataForRegistrationUsers.getNameUser (userId));
 
@@ -80,7 +80,7 @@ public class LogicAndDataForRegistrationUsersTest {
         when(message.getText()).thenReturn("Doe");
         when(textForMessage.handleMessage("class")).thenReturn("Введите класс:");
 
-        response = logicAndDataForRegistrationUsers.getWorksWithRegistration(update, "Doe", userId, emailSender, logicAndDataForRegistrationUsers);
+        response = logicAndDataForRegistrationUsers.worksWithRegistration("Doe", userId, emailSender, logicAndDataForRegistrationUsers);
         assertEquals("Введите класс:", response);
         assertEquals("Doe", logicAndDataForRegistrationUsers.getSurnameUser (userId));
 
@@ -88,7 +88,7 @@ public class LogicAndDataForRegistrationUsersTest {
         when(message.getText()).thenReturn("10");
         when(textForMessage.handleMessage("mail")).thenReturn("Введите почту:");
 
-        response = logicAndDataForRegistrationUsers.getWorksWithRegistration(update, "10", userId, emailSender, logicAndDataForRegistrationUsers);
+        response = logicAndDataForRegistrationUsers.worksWithRegistration("10", userId, emailSender, logicAndDataForRegistrationUsers);
         assertEquals("Введите почту:", response);
         assertEquals("10", logicAndDataForRegistrationUsers.getSchoolClassUser (userId));
 
@@ -97,7 +97,7 @@ public class LogicAndDataForRegistrationUsersTest {
         when(emailSender.isValidEmail("test@example.com")).thenReturn(true);
         when(textForMessage.handleMessage("successfulReg")).thenReturn("Регистрация успешна!");
 
-        response = logicAndDataForRegistrationUsers.getWorksWithRegistration(update, "test@example.com", userId, emailSender, logicAndDataForRegistrationUsers);
+        response = logicAndDataForRegistrationUsers.worksWithRegistration("test@example.com", userId, emailSender, logicAndDataForRegistrationUsers);
         assertEquals("Регистрация успешна!", response);
     }
 }

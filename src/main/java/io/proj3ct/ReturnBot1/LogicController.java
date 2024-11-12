@@ -35,51 +35,38 @@ public class LogicController {
         }
     }
     /**
-     * Вызывает messageHandlerForKeyboard
-     */
-    public List<String> getListStringWithTextToSendAndOptionForKeyboard(Update update, long userId){
-        return messageHandlerForKeyboard(update, userId);
-    }
-    /**
      * Обрабатывает обновления и генерирует ответные сообщения.
-     * @param update Обновление, полученное от Telegram.
      * @param userId ID пользователя, отправившего сообщение.
      * @return Список строк, представляющих сообщения и опции для клавиатуры.
      */
-    private List<String> messageHandlerForKeyboard(Update update, long userId) {
+    public List<String> handleMessage(long userId, String messageText,boolean flagForKeyboard) {
         List<String> listForWorkWithKeyboardAndMessage = new ArrayList<>();
-        if ((update.hasCallbackQuery() && update.getCallbackQuery() != null) &&
-                (!(logicForTestABI.getUserStatesForTest(update.getCallbackQuery().getFrom().getId())).equals("0"))) {
-            String data = update.getCallbackQuery().getData();
-
-            listForWorkWithKeyboardAndMessage =  logicForTestABI.getDataBd("", userId, data);
-            if (logicForTestABI.getUserStatesForTest(userId).equals("awaiting_testABI_11")) {
-                logicForTestABI.removeUserStatesForTest(userId);
+        if (flagForKeyboard){
+            if (!(logicForTestABI.getUserStatesForTest(userId).equals("0"))) {
+                listForWorkWithKeyboardAndMessage = logicForTestABI.getDataBd("", userId, messageText);
+                if (logicForTestABI.getUserStatesForTest(userId).equals("awaiting_testABI_11")) {
+                    logicForTestABI.removeUserStatesForTest(userId);
+                }
             }
-        }
-        else if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
-            String data = update.getCallbackQuery().getData();
-            if (departmentsInfo.extract(data) == null){
-                listForWorkWithKeyboardAndMessage.add(checkWhatTodo(data));
-                listForWorkWithKeyboardAndMessage.add(data);
+            else if (departmentsInfo.extract(messageText) == null){
+                listForWorkWithKeyboardAndMessage.add(checkWhatTodo(messageText));
+                listForWorkWithKeyboardAndMessage.add(messageText);
             }
             else {
-                listForWorkWithKeyboardAndMessage.add(departmentsInfo.extract(data));
-                listForWorkWithKeyboardAndMessage.add(data);
+                listForWorkWithKeyboardAndMessage.add(departmentsInfo.extract(messageText));
+                listForWorkWithKeyboardAndMessage.add(messageText);
             }
         }
-        else if(update.hasMessage() && update.getMessage() != null) {
-            String messageText = update.getMessage().getText();
-            userId = update.getMessage().getChatId();
+        else{
             if ("/question".equals(messageText) || (!(emailLogic.getUserStatesForEmail(userId).equals("0")))) {
                 listForWorkWithKeyboardAndMessage.add(emailLogic.getWorksWithMail
-                        (update.getMessage().getText(), update.getMessage().getChatId(), emailSender,
+                        (messageText, userId, emailSender,
                                 emailLogic,databaseConnection));
             }
             else if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
                     getUserStatesForRegistration(userId).equals("0"))){
-                listForWorkWithKeyboardAndMessage.add(logicAndDataForRegistrationUsers.getWorksWithRegistration
-                        (update, messageText, userId,emailSender, logicAndDataForRegistrationUsers));
+                listForWorkWithKeyboardAndMessage.add(logicAndDataForRegistrationUsers.worksWithRegistration
+                        (messageText, userId,emailSender, logicAndDataForRegistrationUsers));
             }
             else if("/userDataChange".equals(messageText) || (!logicForChangeDataUsers.
                     getUserStatesForChangeData(userId).equals("0"))){
@@ -87,11 +74,11 @@ public class LogicController {
                         (messageText, userId, emailSender));
             }
             else if("/userInfo".equals(messageText)){
-                listForWorkWithKeyboardAndMessage.add(usersData.takeData(update.getMessage().getChatId(),
+                listForWorkWithKeyboardAndMessage.add(usersData.takeData(userId,
                                 logicAndDataForRegistrationUsers.getDatabaseConnection()));
             }
             else if("/userDataDell".equals(messageText)){
-                usersData.deleteData(update.getMessage().getChatId(),
+                usersData.deleteData(userId,
                         logicAndDataForRegistrationUsers.getDatabaseConnection());
                 listForWorkWithKeyboardAndMessage.add("Ваши данные успешно удалены");
             }
@@ -101,7 +88,7 @@ public class LogicController {
                 listForWorkWithKeyboardAndMessage.add(messageText);
             }
             else if("/testres".equals(messageText)){
-                listForWorkWithKeyboardAndMessage.add(logicForTestABI.getResult(update.getMessage().getChatId()));
+                listForWorkWithKeyboardAndMessage.add(logicForTestABI.getResult(userId));
             }
             else {
                 listForWorkWithKeyboardAndMessage.add(textForMessage.handleMessage(messageText));
