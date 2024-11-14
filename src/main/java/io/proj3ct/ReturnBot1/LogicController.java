@@ -10,7 +10,7 @@ import java.util.List;
 public class LogicController {
     private final LogicForTestABI logicForTestABI = new LogicForTestABI();
     private final TextForMessage textForMessage = new TextForMessage();
-    private final DepartmentsInfo departmentsInfo = new DepartmentsInfo();
+    private DepartmentsInfo departmentsInfo = new DepartmentsInfo();
     private final EmailLogic emailLogic = new EmailLogic();
     private final String username = System.getenv("mail"); // Ваша почта
     private final String password = System.getenv("passwordForMail");
@@ -20,6 +20,13 @@ public class LogicController {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
             = new LogicAndDataForRegistrationUsers();
+    /**
+     * Сеттер для тестов
+     * @param departmentsInfo
+     */
+    public void setDepartmentsInfo(DepartmentsInfo departmentsInfo) {
+        this.departmentsInfo = departmentsInfo;
+    }
     /**
      * Проверяет, что делать с переданными данными для клавиатуры.
      * @param data Входные данные для обработки.
@@ -41,7 +48,7 @@ public class LogicController {
         List<String> listForWorkWithKeyboardAndMessage = new ArrayList<>();
         if (flagForKeyboard){
             if (!(logicForTestABI.getUserStatesForTest(userId).equals("0"))) {
-                listForWorkWithKeyboardAndMessage = logicForTestABI.getDataBd("", userId, messageText);
+                listForWorkWithKeyboardAndMessage = logicForTestABI.worksWithTestABI("", userId, messageText);
                 if (logicForTestABI.getUserStatesForTest(userId).equals("awaiting_testABI_11")) {
                     logicForTestABI.removeUserStatesForTest(userId);
                 }
@@ -57,7 +64,7 @@ public class LogicController {
         }
         else{
             if ("/question".equals(messageText) || (!(emailLogic.getUserStatesForEmail(userId).equals("0")))) {
-                listForWorkWithKeyboardAndMessage.add(emailLogic.getWorksWithMail
+                listForWorkWithKeyboardAndMessage.add(emailLogic.worksWithMail
                         (messageText, userId, emailSender,
                                 emailLogic,databaseConnection));
             }
@@ -81,7 +88,7 @@ public class LogicController {
                 listForWorkWithKeyboardAndMessage.add("Ваши данные успешно удалены");
             }
             else if("/testAbit".equals(messageText)){
-                logicForTestABI.getDataBd(messageText, userId, "100");
+                logicForTestABI.worksWithTestABI(messageText, userId, "100");
                 listForWorkWithKeyboardAndMessage.add(textForMessage.setTheText(messageText));
                 listForWorkWithKeyboardAndMessage.add(messageText);
             }

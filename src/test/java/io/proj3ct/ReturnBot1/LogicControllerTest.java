@@ -2,98 +2,82 @@ package io.proj3ct.ReturnBot1;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
-import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 
-import java.lang.reflect.Field;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 /**
- * Тестовый класс для проверки функциональности LogicСontroller.
+ * Тестирование класса LogicController.
+ * Этот класс содержит тесты для проверки функциональности методов LogicController.
+ * Мы используем Mockito для замоканивания зависимости DepartmentsInfo,
+ * чтобы изолировать логику тестируемого класса от реального взаимодействия с базой данных.
  */
-public class LogicControllerTest {
-    private final LogicController logicController;
-    private final LogicForTestABI mockLogicForTestABI;
-    private final TextForMessage mockTextForMessage;
-
+class LogicControllerTest {
+    private LogicController logicController;
+    private DepartmentsInfo mockDepartmentsInfo;
     /**
-     * Конструктор дял LogicControllerTest.
-     */
-    private LogicControllerTest() {
-        mockLogicForTestABI = Mockito.mock(LogicForTestABI.class);
-        mockTextForMessage = Mockito.mock(TextForMessage.class);
-        logicController = new LogicController();
-    }
-    /**
-     * Устанавливает моки для полей с помощью рефлексии.
+     * Инициализация перед каждым тестом.
+     * В этом методе мы создаем замоканный объект DepartmentsInfo и инициализируем экземпляр LogicController.
+     * Также настраиваем зависимость DepartmentsInfo через сеттер.
      */
     @BeforeEach
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        // Заменяем логику контроллера на мок
-        Field logicForTestABIField = LogicController.class.getDeclaredField("logicForTestABI");
-        logicForTestABIField.setAccessible(true);
-        logicForTestABIField.set(logicController, mockLogicForTestABI);
+    void setUp() {
+        mockDepartmentsInfo = mock(DepartmentsInfo.class);
 
-        Field textForMessageField = LogicController.class.getDeclaredField("textForMessage");
-        textForMessageField.setAccessible(true);
-        textForMessageField.set(logicController, mockTextForMessage);
+        logicController = new LogicController();
+
+        logicController.setDepartmentsInfo(mockDepartmentsInfo);
     }
-
     /**
-     * Проверяет, что метод возвращает ожидаемый список строк
-     * на основании данных, полученных из мока.
+     * Тестирование метода handleMessage в случае, если факультет найден.
+     * В этом тесте проверяется, что метод handleMessage правильно обрабатывает входные данные,
+     * когда метод DepartmentsInfo.extract(String) возвращает информацию о факультете.
      */
     @Test
-    public void testGetListStringWithTextToSendAndOptionForKeyboard_WithCallbackQuery() {
-        Update update = Mockito.mock(Update.class);
-        CallbackQuery callbackQuery = Mockito.mock(CallbackQuery.class);
-        User user = Mockito.mock(User.class);
+    void testHandleMessage_withDepartmentFound() {
+        String input = "ИЕНИМ";
+        String expectedResponse = "Информация о факультете ИЕНИМ";
 
-        when(update.hasCallbackQuery()).thenReturn(true);
-        when(update.getCallbackQuery()).thenReturn(callbackQuery);
-        when(callbackQuery.getFrom()).thenReturn(user);
-        when(user.getId()).thenReturn(12345L);
+        when(mockDepartmentsInfo.extract(input)).thenReturn(expectedResponse);
 
-        when(mockLogicForTestABI.getUserStatesForTest(12345L)).thenReturn("awaiting_testABI_1");
-        when(mockLogicForTestABI.getDataBd("", 12345L, "someData")).thenReturn(List.of("response"));
-        when(callbackQuery.getData()).thenReturn("someData");
+        List<String> result = logicController.handleMessage(123L, input, true);
 
-        List<String> result = logicController.handleMessage(12345L, "someData",true);
-
-        assertEquals(List.of("response"), result);
-        verify(mockLogicForTestABI).getDataBd("", 12345L, "someData");
+        assertEquals(2, result.size());
+        assertEquals(expectedResponse, result.get(0));
+        assertEquals(input, result.get(1));
     }
-
     /**
-     * Проверяет, что метод возвращает ожидаемый список строк
-     * на основании данных, полученных из мока.
+     * Тестирование метода handleMessage в случае, если факультет не найден.
+     * В этом тесте проверяется, что метод handleMessage корректно работает, когда метод
+     * DepartmentsInfo.extract(String) возвращает null, что означает отсутствие информации о факультете.
      */
     @Test
-    public void testGetListStringWithTextToSendAndOptionForKeyboard_WithMessage() {
-        Update update = Mockito.mock(Update.class);
-        Message messageMock = Mockito.mock(Message.class);
+    void testHandleMessage_withDepartmentNotFound() {
+        String input = "Неверный факультет";
+        when(mockDepartmentsInfo.extract(input)).thenReturn(null);
 
-        when(update.hasMessage()).thenReturn(true);
-        when(update.getMessage()).thenReturn(messageMock);
-        when(messageMock.getText()).thenReturn("/testAbit");
+        List<String> result = logicController.handleMessage(123L, input, true);
 
-        when(mockTextForMessage.setTheText("/testAbit")).thenReturn("Тест начат");
+        assertEquals(2, result.size());
+        assertEquals("Неверный факультет", result.get(0));
+        assertEquals(input, result.get(1));
+    }
+    /**
+     * Тестирование метода handleMessage для обработки обычных сообщений.
+     * В этом тесте проверяется, что метод handleMessage}корректно обрабатывает сообщения
+     * без участия системы факультетов, когда флаг для клавиатуры установлен в false.
+     */
+    @Test
+    public void testHandleMessage_DefaultCase() {
+        // Проверяем, что обработка обычного сообщения работает
+        List<String> result = logicController.handleMessage(123L, "Any message", false);
 
-        long userId = 0L;
-        when(mockLogicForTestABI.getDataBd("/testAbit", userId, "100"))
-                .thenReturn(List.of("Тест начат", "/testAbit"));
-
-        List<String> result = logicController.handleMessage(0L, "/testAbit",false);
-
-        assertEquals(List.of("Тест начат", "/testAbit"), result);
-        verify(mockLogicForTestABI).getDataBd("/testAbit", userId, "100");
+        // Проверяем, что обычное сообщение было возвращено
+        assertNotNull(result);
+        assertTrue(result.contains("Any message"));
     }
 }
+
 
