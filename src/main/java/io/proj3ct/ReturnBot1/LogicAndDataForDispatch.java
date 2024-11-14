@@ -1,93 +1,154 @@
 package io.proj3ct.ReturnBot1;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Класс для обработки логики и данных диспетча.
+ * Хранит информацию о текстах, времени, категории и отделе диспетча.
+ */
 public class LogicAndDataForDispatch {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
     private final Map<Long, String> dispatchText  = new HashMap<>();
     private final Map<Long, String> dispatchTime  = new HashMap<>();
     private final Map<Long, String> dispatchCategory  = new HashMap<>();
     private final Map<Long, String> dispatchDepartment  = new HashMap<>();
     private final Map<Long, String> userStatesForNewDispatch = new HashMap<>();
+
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final TextForMessage textForMessage = new TextForMessage();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     private DispatchData dispatchData = new DispatchData();
+
     /**
      * Получает объект подключения к базе данных.
+     *
      * @return объект DatabaseConnection
      */
-    public DatabaseConnection getDatabaseConnection() {return databaseConnection;}
+    public DatabaseConnection getDatabaseConnection() {
+        return databaseConnection;
+    }
 
-    public String getDispatchText(Long chatID) {return dispatchText .get(chatID);}
+    /**
+     * Получает текст диспетча для указанного идентификатора чата.
+     *
+     * @param chatID идентификатор чата
+     * @return текст диспетча или null, если не найдено
+     */
+    public String getDispatchText(Long chatID) {
+        return dispatchText.get(chatID);
+    }
 
-    public String getDispatchTime (Long chatID) {return dispatchTime .get(chatID);}
+    /**
+     * Получает время диспетча для указанного идентификатора чата.
+     *
+     * @param chatID идентификатор чата
+     * @return время диспетча или null, если не найдено
+     */
+    public String getDispatchTime(Long chatID) {
+        return dispatchTime.get(chatID);
+    }
 
-    public String getDispatchCategory (Long chatID) {return dispatchCategory .get(chatID);}
+    /**
+     * Получает категорию диспетча для указанного идентификатора чата.
+     *
+     * @param chatID идентификатор чата
+     * @return категория диспетча или null, если не найдено
+     */
+    public String getDispatchCategory(Long chatID) {
+        return dispatchCategory.get(chatID);
+    }
 
-    public String getDispatchDepartment (Long chatID) {return dispatchDepartment .get(chatID);}
+    /**
+     * Получает отдел диспетча для указанного идентификатора чата.
+     *
+     * @param chatID идентификатор чата
+     * @return отдел диспетча или null, если не найдено
+     */
+    public String getDispatchDepartment(Long chatID) {
+        return dispatchDepartment.get(chatID);
+    }
 
-    public void setDispatchData(DispatchData dispatchData) {this.dispatchData =  dispatchData;}
-
-
+    /**
+     * Получает состояние пользователя для нового диспетча.
+     *
+     * @param chatID идентификатор чата
+     * @return состояние пользователя или "0", если не найдено
+     */
     public String getUserStatesForNewDispatch(Long chatID) {
         return userStatesForNewDispatch.getOrDefault(chatID, "0");
     }
 
+    /**
+     * Обрабатывает новую команду диспетча от пользователя.
+     *
+     * @param messageText текст сообщения от пользователя
+     * @param userId идентификатор пользователя
+     * @param logicAndDataForDispatch объект логики и данных диспетча
+     * @return ответное сообщение для пользователя
+     */
     public String worksWithNewDispatch(String messageText, Long userId,
                                        LogicAndDataForDispatch logicAndDataForDispatch) {
         Long dispatchID = dispatchData.generateNewId(databaseConnection);
         String currentState = userStatesForNewDispatch.get(userId);
         datebaseTables.createDispatchDataTable();
+
         if ("/newDispatсh".equals(messageText)) {
             userStatesForNewDispatch.put(userId, "awaiting_dispatchPassword");
             return textForMessage.setTheText("newDispatсh");
         } else if ("awaiting_dispatchPassword".equals(currentState)) {
-            if (messageText.equals("1345")) {
+            if (messageText.equals(System.getenv("password"))) {
                 userStatesForNewDispatch.remove(userId);
-                userStatesForNewDispatch.put(userId, "awaiting_dispatchText "); // Обновляем состояние
+                userStatesForNewDispatch.put(userId, "awaiting_dispatchText"); // Обновляем состояние
                 return textForMessage.setTheText("goodPassword");
-            }
-            else{
+            } else {
                 userStatesForNewDispatch.remove(userId);
                 return textForMessage.setTheText("passwordBad");
             }
-        } else if ("awaiting_dispatchText ".equals(currentState)) {
+        } else if ("awaiting_dispatchText".equals(currentState)) {
             dispatchText.put(dispatchID, messageText);
             userStatesForNewDispatch.remove(userId);
-            userStatesForNewDispatch.put(userId, "awaiting_dispatchTime "); // Обновляем состояние
+            userStatesForNewDispatch.put(userId, "awaiting_dispatchTime"); // Обновляем состояние
             return textForMessage.setTheText("dispatchTime");
-        } else if ("awaiting_dispatchTime ".equals(currentState)) {
+        } else if ("awaiting_dispatchTime".equals(currentState)) {
             try {
                 LocalDate date = LocalDate.parse(messageText, DATE_FORMATTER);
                 dispatchTime.put(dispatchID, messageText);
                 userStatesForNewDispatch.remove(userId);
-                userStatesForNewDispatch.put(userId, "awaiting_dispatchCategory ");
+                userStatesForNewDispatch.put(userId, "awaiting_dispatchCategory");
                 return textForMessage.setTheText("dispatchCategory");
             } catch (DateTimeParseException e) {
                 return textForMessage.setTheText("badTime");
             }
-        } else if ("awaiting_dispatchCategory ".equals(currentState)) {
+        } else if ("awaiting_dispatchCategory".equals(currentState)) {
             if (messageText.equals("обычная") || messageText.equals("приемная комиссия")) {
-                dispatchCategory.put(dispatchID, messageText);
-                userStatesForNewDispatch.remove(userId);
-                userStatesForNewDispatch.put(userId, "awaiting_dispatchDepartment ");
-                return textForMessage.setTheText("dispatchDepartment");
-            }
-            else{
+                if (messageText.equals("обычная")) {
+                    dispatchCategory.put(dispatchID, messageText);
+                    dispatchDepartment.put(dispatchID, "-");
+                    userStatesForNewDispatch.remove(userId);
+                    dispatchData.insertData(dispatchID, this, databaseConnection);
+                    return textForMessage.setTheText("dispatchEnd");
+                } else {
+                    dispatchCategory.put(dispatchID, messageText);
+                    userStatesForNewDispatch.remove(userId);
+                    userStatesForNewDispatch.put(userId, "awaiting_dispatchDepartment");
+                    return textForMessage.setTheText("dispatchDepartment");
+                }
+            } else {
                 return textForMessage.setTheText("badTime");
             }
-        } else if ("awaiting_dispatchDepartment ".equals(currentState)) {
+        } else if ("awaiting_dispatchDepartment".equals(currentState)) {
             dispatchDepartment.put(dispatchID, messageText);
             userStatesForNewDispatch.remove(userId);
             dispatchData.insertData(dispatchID, this, databaseConnection);
             return textForMessage.setTheText("dispatchEnd");
         }
+
         System.out.println("Текущее состояние: " + currentState);
         return textForMessage.setTheText("newDispatсh");
     }
-
 }
