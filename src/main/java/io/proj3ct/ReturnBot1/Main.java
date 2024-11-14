@@ -20,9 +20,7 @@ public class Main {
          * Запуск бота.
          * Инициализируется TelegramBotsApi и регистрируется созданный бот.
          */
-        DatabaseConnection databaseConnection =new DatabaseConnection();
-        DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
-        datebaseTables.createDispatchDataTable();
+
         try  (TelegramBotsLongPollingApplication botsApplication = new TelegramBotsLongPollingApplication()) {
             botsApplication.registerBot(BOT_TOKEN, new TelegramBot(BOT_TOKEN));
             Thread.currentThread().join();

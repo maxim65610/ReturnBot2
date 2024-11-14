@@ -7,7 +7,6 @@ import java.time.format.DateTimeParseException;
 
 public class LogicAndDataForDispatch {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    private final Map<Long, String> dispatchPassword  = new HashMap<>();
     private final Map<Long, String> dispatchText  = new HashMap<>();
     private final Map<Long, String> dispatchTime  = new HashMap<>();
     private final Map<Long, String> dispatchCategory  = new HashMap<>();
@@ -22,8 +21,6 @@ public class LogicAndDataForDispatch {
      * @return объект DatabaseConnection
      */
     public DatabaseConnection getDatabaseConnection() {return databaseConnection;}
-
-    public String getDispatchPassword (Long chatID) {return dispatchPassword .get(chatID);}
 
     public String getDispatchText(Long chatID) {return dispatchText .get(chatID);}
 
@@ -42,7 +39,7 @@ public class LogicAndDataForDispatch {
 
     public String worksWithNewDispatch(String messageText, Long userId,
                                        LogicAndDataForDispatch logicAndDataForDispatch) {
-
+        Long dispatchID = dispatchData.generateNewId(databaseConnection);
         String currentState = userStatesForNewDispatch.get(userId);
         datebaseTables.createDispatchDataTable();
         if ("/newDispatсh".equals(messageText)) {
@@ -59,14 +56,14 @@ public class LogicAndDataForDispatch {
                 return textForMessage.setTheText("passwordBad");
             }
         } else if ("awaiting_dispatchText ".equals(currentState)) {
-            dispatchText.put(userId, messageText);
+            dispatchText.put(dispatchID, messageText);
             userStatesForNewDispatch.remove(userId);
             userStatesForNewDispatch.put(userId, "awaiting_dispatchTime "); // Обновляем состояние
             return textForMessage.setTheText("dispatchTime");
         } else if ("awaiting_dispatchTime ".equals(currentState)) {
             try {
                 LocalDate date = LocalDate.parse(messageText, DATE_FORMATTER);
-                dispatchTime.put(userId, messageText);
+                dispatchTime.put(dispatchID, messageText);
                 userStatesForNewDispatch.remove(userId);
                 userStatesForNewDispatch.put(userId, "awaiting_dispatchCategory ");
                 return textForMessage.setTheText("dispatchCategory");
@@ -75,7 +72,7 @@ public class LogicAndDataForDispatch {
             }
         } else if ("awaiting_dispatchCategory ".equals(currentState)) {
             if (messageText.equals("обычная") || messageText.equals("приемная комиссия")) {
-                dispatchCategory.put(userId, messageText);
+                dispatchCategory.put(dispatchID, messageText);
                 userStatesForNewDispatch.remove(userId);
                 userStatesForNewDispatch.put(userId, "awaiting_dispatchDepartment ");
                 return textForMessage.setTheText("dispatchDepartment");
@@ -84,8 +81,9 @@ public class LogicAndDataForDispatch {
                 return textForMessage.setTheText("badTime");
             }
         } else if ("awaiting_dispatchDepartment ".equals(currentState)) {
-            dispatchDepartment.put(userId, messageText);
+            dispatchDepartment.put(dispatchID, messageText);
             userStatesForNewDispatch.remove(userId);
+            dispatchData.insertData(dispatchID, this, databaseConnection);
             return textForMessage.setTheText("dispatchEnd");
         }
         System.out.println("Текущее состояние: " + currentState);

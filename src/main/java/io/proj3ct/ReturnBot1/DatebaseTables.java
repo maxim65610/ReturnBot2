@@ -109,20 +109,18 @@ public class DatebaseTables {
     }
     public void createDispatchDataTable() {
         String dispatchDataTableQuery = """
-    CREATE TABLE IF NOT EXISTS RegistrationDataTable (
-    id text PRIMARY KEY, 
-    text text NOT NULL,
-    time text NOT NULL, 
-    category text NOT NULL,  
-    department text NOT NULL
-    );""";
+        CREATE TABLE IF NOT EXISTS DispatchDataTable (
+        id int PRIMARY KEY, 
+        text text NOT NULL,
+        time text NOT NULL, 
+        category text NOT NULL,  
+        department text NOT NULL
+        );""";
 
         try (Connection conn = databaseConnection.connect()) {
             if (conn != null) {
                 try (Statement stmt = conn.createStatement()) {
-                    System.out.println("Попытка создать таблицу...");
                     stmt.executeUpdate(dispatchDataTableQuery);
-                    System.out.println("Таблица успешно создана или уже существует.");
                 }
             } else {
                 System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
