@@ -136,6 +136,8 @@ public class MessageConstants {
 
     public static final String DISPATCH_TIME = "Введите дату отправки (в формате dd.MM.yyyy):";
 
+    public static final String DISPATCH_TIME_BAD = "Вы ввели некорректные данные:";
+
     public static final String DISPATCH_CATEGORY = "Введите категорию (обычная / приемная комиссия):";
 
     public static final String DISPATCH_DEPARTMENT= "Введите факультет (не обязательно, " +

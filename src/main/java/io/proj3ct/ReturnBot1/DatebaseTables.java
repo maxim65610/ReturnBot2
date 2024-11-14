@@ -85,7 +85,7 @@ public class DatebaseTables {
      */
     public void createRegistrationDataTable() {
 
-        String registrationDataTable = """
+        String registrationDataTableQuery = """
         CREATE TABLE IF NOT EXISTS RegistrationDataTable (
         id_chat text PRIMARY KEY, 
         name text NOT NULL,
@@ -97,7 +97,7 @@ public class DatebaseTables {
             Connection conn = databaseConnection.connect();
             if (conn != null ) {
                 try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(registrationDataTable);
+                    stmt.executeUpdate(registrationDataTableQuery);
                 }
             } else {
                 System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
@@ -106,6 +106,31 @@ public class DatebaseTables {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
 
+    }
+    public void createDispatchDataTable() {
+        String dispatchDataTableQuery = """
+    CREATE TABLE IF NOT EXISTS RegistrationDataTable (
+    id text PRIMARY KEY, 
+    text text NOT NULL,
+    time text NOT NULL, 
+    category text NOT NULL,  
+    department text NOT NULL
+    );""";
+
+        try (Connection conn = databaseConnection.connect()) {
+            if (conn != null) {
+                try (Statement stmt = conn.createStatement()) {
+                    System.out.println("Попытка создать таблицу...");
+                    stmt.executeUpdate(dispatchDataTableQuery);
+                    System.out.println("Таблица успешно создана или уже существует.");
+                }
+            } else {
+                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка создания таблицы: " + e.getMessage());
+            e.printStackTrace(); // Для получения более подробной информации о проблеме
+        }
     }
 
 }

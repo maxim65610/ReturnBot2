@@ -31,27 +31,9 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         botToken = token;
         telegramClient = new OkHttpTelegramClient(botToken);
 
-        // Добавление команд
-        listCommands.add(new BotCommand("/start", "Начало"));
-        listCommands.add(new BotCommand("/work", "Посмотреть описания факультетов"));
-        listCommands.add(new BotCommand("/authorization", "Пройти регистрацию"));
-        listCommands.add(new BotCommand("/testAbit", "Пройти тест на определение факультета"));
-        listCommands.add(new BotCommand("/question", "Задать вопрос"));
-        listCommands.add(new BotCommand("/userDataChange", "Поменять данные регистрации"));
-        listCommands.add(new BotCommand("/userDataDell", "Удалить данные регистрации"));
-
-        // Установка команд
-        setBotCommands();
     }
 
-    private void setBotCommands() {
-        try {
-            telegramClient.execute(new SetMyCommands(listCommands,
-                    new BotCommandScopeDefault(), null));
-        } catch (TelegramApiException e) {
-            System.out.println("Ошибка установки команд: " + e.getMessage());
-        }
-    }
+
     @Override
     public void consume(Update update) {
         long userId;

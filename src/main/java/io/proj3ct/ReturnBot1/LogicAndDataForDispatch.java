@@ -1,16 +1,20 @@
 package io.proj3ct.ReturnBot1;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class LogicAndDataForDispatch {
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final Map<Long, String> dispatchPassword  = new HashMap<>();
     private final Map<Long, String> dispatchText  = new HashMap<>();
     private final Map<Long, String> dispatchTime  = new HashMap<>();
     private final Map<Long, String> dispatchCategory  = new HashMap<>();
     private final Map<Long, String> dispatchDepartment  = new HashMap<>();
     private final Map<Long, String> userStatesForNewDispatch = new HashMap<>();
-    private DatabaseConnection databaseConnection = new DatabaseConnection();
-    private TextForMessage textForMessage = new TextForMessage();
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    private final TextForMessage textForMessage = new TextForMessage();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     private DispatchData dispatchData = new DispatchData();
     /**
@@ -31,12 +35,6 @@ public class LogicAndDataForDispatch {
 
     public void setDispatchData(DispatchData dispatchData) {this.dispatchData =  dispatchData;}
 
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {this.databaseConnection = databaseConnection;}
-
-    public void setTextForMessage(TextForMessage textForMessage) {this.textForMessage = textForMessage;
-    }
-
-    public void setUserStatesForNewDispatch(Long userId, String state) {userStatesForNewDispatch.put(userId, state);}
 
     public String getUserStatesForNewDispatch(Long chatID) {
         return userStatesForNewDispatch.getOrDefault(chatID, "0");
@@ -46,47 +44,52 @@ public class LogicAndDataForDispatch {
                                        LogicAndDataForDispatch logicAndDataForDispatch) {
 
         String currentState = userStatesForNewDispatch.get(userId);
+        datebaseTables.createDispatchDataTable();
         if ("/newDispatсh".equals(messageText)) {
-            datebaseTables.createRegistrationDataTable();
-            userStatesForNewDispatch.put(userId, "awaiting_dispatchPassword ");
+            userStatesForNewDispatch.put(userId, "awaiting_dispatchPassword");
             return textForMessage.setTheText("newDispatсh");
-
-        } else if ("awaiting_dispatchPassword ".equals(currentState)) {
-                if (messageText.equals("1345")) {
-                    System.out.println(messageText);
-                    dispatchText.put(userId, messageText);
-                    userStatesForNewDispatch.remove(userId);
-                    userStatesForNewDispatch.put(userId, "awaiting_dispatchText");
-                    return textForMessage.setTheText("goodPassword");
-                } else {
-                    return textForMessage.setTheText("passwordBad");
-                }
-
-        } else if ("awaiting_dispatchText".equals(currentState)) {
+        } else if ("awaiting_dispatchPassword".equals(currentState)) {
+            if (messageText.equals("1345")) {
+                userStatesForNewDispatch.remove(userId);
+                userStatesForNewDispatch.put(userId, "awaiting_dispatchText "); // Обновляем состояние
+                return textForMessage.setTheText("goodPassword");
+            }
+            else{
+                userStatesForNewDispatch.remove(userId);
+                return textForMessage.setTheText("passwordBad");
+            }
+        } else if ("awaiting_dispatchText ".equals(currentState)) {
             dispatchText.put(userId, messageText);
             userStatesForNewDispatch.remove(userId);
-            userStatesForNewDispatch.put(userId, "awaiting_dispatchTime ");
-            return textForMessage.setTheText("dispatchText");
-        } else if ("awaiting_dispatchTime ".equals(currentState)) {
-            dispatchTime .put(userId, messageText);
-            userStatesForNewDispatch.remove(userId);
-            userStatesForNewDispatch.put(userId, "awaiting_dispatchCategory ");
+            userStatesForNewDispatch.put(userId, "awaiting_dispatchTime "); // Обновляем состояние
             return textForMessage.setTheText("dispatchTime");
+        } else if ("awaiting_dispatchTime ".equals(currentState)) {
+            try {
+                LocalDate date = LocalDate.parse(messageText, DATE_FORMATTER);
+                dispatchTime.put(userId, messageText);
+                userStatesForNewDispatch.remove(userId);
+                userStatesForNewDispatch.put(userId, "awaiting_dispatchCategory ");
+                return textForMessage.setTheText("dispatchCategory");
+            } catch (DateTimeParseException e) {
+                return textForMessage.setTheText("badTime");
+            }
         } else if ("awaiting_dispatchCategory ".equals(currentState)) {
-            dispatchCategory .put(userId, messageText);
-            userStatesForNewDispatch.remove(userId);
-            userStatesForNewDispatch.put(userId, "awaiting_dispatchDepartment ");
-            return textForMessage.setTheText("dispatchCategory");
+            if (messageText.equals("обычная") || messageText.equals("приемная комиссия")) {
+                dispatchCategory.put(userId, messageText);
+                userStatesForNewDispatch.remove(userId);
+                userStatesForNewDispatch.put(userId, "awaiting_dispatchDepartment ");
+                return textForMessage.setTheText("dispatchDepartment");
+            }
+            else{
+                return textForMessage.setTheText("badTime");
+            }
         } else if ("awaiting_dispatchDepartment ".equals(currentState)) {
-            dispatchDepartment .put(userId, messageText);
-            userStatesForNewDispatch.remove(userId);
-            userStatesForNewDispatch.put(userId, "awaiting_dispatchEnd ");
-            return textForMessage.setTheText("dispatchDepartment");
-        }
-        else if ("awaiting_dispatchEnd ".equals(currentState)) {
+            dispatchDepartment.put(userId, messageText);
             userStatesForNewDispatch.remove(userId);
             return textForMessage.setTheText("dispatchEnd");
         }
+        System.out.println("Текущее состояние: " + currentState);
         return textForMessage.setTheText("newDispatсh");
     }
+
 }

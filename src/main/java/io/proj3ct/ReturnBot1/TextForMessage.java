@@ -62,8 +62,12 @@ public class TextForMessage {
         messageMap.put("РТФ", MessageConstants.INST_RTF_COMMAND_RESPONSE);
         messageMap.put("ХТИ", MessageConstants.INST_CHTI_COMMAND_RESPONSE);
 
+        messageMap.put("/newDispatсh", MessageConstants.NEW_DISPATCH);
+
         messageMap.put("newDispatсh", MessageConstants.NEW_DISPATCH);
         messageMap.put("passwordBad", MessageConstants.BAD_PASSWORD_NEW_DISPATCH);
+        messageMap.put("badTime", MessageConstants.DISPATCH_TIME_BAD);
+
         messageMap.put("goodPassword", MessageConstants.SUCCESSFUL_PASSWORD_NEW_DISPATCH);
         messageMap.put("dispatchTime", MessageConstants.DISPATCH_TIME);
         messageMap.put("dispatchCategory", MessageConstants.DISPATCH_CATEGORY);
