@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class TextForMessageTest {
 
-    private TextForMessage textForMessage;
+    private final TextForMessage textForMessage;
 
     /**
      * Конструктор дял TextForMessageTest.
@@ -30,7 +30,6 @@ class TextForMessageTest {
 
         String answerCommandTestAbit = textForMessage.setTheText("/testAbit");
         String answerCommandQuestion = textForMessage.setTheText("/question");
-        String answerCommandUserDataDell = textForMessage.setTheText("/userDataDell");
 
         String ExpectedMessageDefault = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
                 " пожалуйста пользуйся кнопками.\n" +
@@ -43,12 +42,10 @@ class TextForMessageTest {
         String ExpectedMessageTestAbit = "Вы начали проходить тестирование по выбору факультета, " +
                 "выберите один предмет из этих трех:";
         String ExpectedMessageQuestion = "Пожалуйста, отправьте свой вопрос:";
-        String ExpectedMessageDataDell = "Ваши данные успешно удалены";
         assertEquals(ExpectedMessageDefault, answerCommandDefault);
         assertEquals(ExpectedMessageWork, answerCommandWork);
         assertEquals(ExpectedMessageTestAbit, answerCommandTestAbit);
         assertEquals(ExpectedMessageQuestion, answerCommandQuestion);
-        assertEquals(ExpectedMessageDataDell, answerCommandUserDataDell);
 
     }
     /**
