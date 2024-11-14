@@ -61,6 +61,15 @@ public class TextForMessage {
         messageMap.put("ИЕНИМ", MessageConstants.INST_IENIM_COMMAND_RESPONSE);
         messageMap.put("РТФ", MessageConstants.INST_RTF_COMMAND_RESPONSE);
         messageMap.put("ХТИ", MessageConstants.INST_CHTI_COMMAND_RESPONSE);
+
+        messageMap.put("newDispatсh", MessageConstants.NEW_DISPATCH);
+        messageMap.put("passwordBad", MessageConstants.BAD_PASSWORD_NEW_DISPATCH);
+        messageMap.put("goodPassword", MessageConstants.SUCCESSFUL_PASSWORD_NEW_DISPATCH);
+        messageMap.put("dispatchTime", MessageConstants.DISPATCH_TIME);
+        messageMap.put("dispatchCategory", MessageConstants.DISPATCH_CATEGORY);
+        messageMap.put("dispatchDepartment", MessageConstants.DISPATCH_DEPARTMENT);
+        messageMap.put("dispatchEnd", MessageConstants.NEW_DISPATCH_SUCCESSFUL);
+
     }
     /**
      * Возвращает сообщение для отправки пользователю

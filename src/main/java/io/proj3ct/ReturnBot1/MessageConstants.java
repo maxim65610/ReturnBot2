@@ -127,6 +127,25 @@ public class MessageConstants {
      * Сообщение, информирующее пользователя о том, что класс успешно изменен.
      */
     public static final String SUCCESSFUL_CLASS = "Класс успешно изменен";
+
+    public static final String NEW_DISPATCH = "Введите пароль:";
+
+    public static final String BAD_PASSWORD_NEW_DISPATCH = "Пароль не верный, в доступе отказано";
+
+    public static final String SUCCESSFUL_PASSWORD_NEW_DISPATCH = "Пароль верный, введите текст рассылки:";
+
+    public static final String DISPATCH_TIME = "Введите дату отправки (в формате dd.MM.yyyy):";
+
+    public static final String DISPATCH_CATEGORY = "Введите категорию (обычная / приемная комиссия):";
+
+    public static final String DISPATCH_DEPARTMENT= "Введите факультет (не обязательно, " +
+            "введите ‘-’, чтобы пропустить вопрос):";
+
+    public static final String NEW_DISPATCH_SUCCESSFUL= "Рассылка успешно добавлена";
+
+
+
+
 }
 
 

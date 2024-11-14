@@ -20,6 +20,7 @@ public class LogicController {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
             = new LogicAndDataForRegistrationUsers();
+    private final LogicAndDataForDispatch logicAndDataForDispatch = new LogicAndDataForDispatch();
     /**
      * Проверяет, что делать с переданными данными для клавиатуры.
      * @param data Входные данные для обработки.
@@ -65,6 +66,11 @@ public class LogicController {
                     getUserStatesForRegistration(userId).equals("0"))){
                 listForWorkWithKeyboardAndMessage.add(logicAndDataForRegistrationUsers.worksWithRegistration
                         (messageText, userId,emailSender, logicAndDataForRegistrationUsers));
+            }
+            else if("/newDispatсh".equals(messageText) || (!logicAndDataForDispatch.
+                    getUserStatesForNewDispatch(userId).equals("0"))){
+                listForWorkWithKeyboardAndMessage.add(logicAndDataForDispatch.worksWithNewDispatch
+                        (messageText, userId, logicAndDataForDispatch));
             }
             else if("/userDataChange".equals(messageText) || (!logicForChangeDataUsers.
                     getUserStatesForChangeData(userId).equals("0"))){
