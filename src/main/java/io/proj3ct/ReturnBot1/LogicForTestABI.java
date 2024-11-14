@@ -29,7 +29,6 @@ public class LogicForTestABI {
     public void removeUserStatesForTest(Long chatID) {
         userStatesForTest.remove(chatID);
     }
-
     /**
      * Получает название факультета из базы данных по заданному идентификатору.
      * @param id_getfaculty идентификатор факультета
@@ -37,12 +36,6 @@ public class LogicForTestABI {
      */
     private String getNameFacultyFromBD(int id_getfaculty) {
         return retrieveData.getDataById(id_getfaculty, "cash3");
-    }
-    /**
-     * Вызывает worksWithTestABI
-     */
-    public List<String> getDataBd(String messageText, Long userId, String data) {
-        return worksWithTestABI(messageText, userId, data);
     }
     /**
      * Возвращает результат теста для указанного идентификатора чата.
@@ -108,7 +101,7 @@ public class LogicForTestABI {
      * @param data данные, полученные с getCallbackQuery().getData()
      * @return список данных, полученных из базы данных для текущего состояния теста
      */
-    private List<String> worksWithTestABI(String messageText, Long userId, String data) {
+    public List<String> worksWithTestABI(String messageText, Long userId, String data) {
         String currentState = userStatesForTest.get(userId);
         List<String> dataBD = new ArrayList<>();
 

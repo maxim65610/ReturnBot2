@@ -30,13 +30,6 @@ public class EmailLogic {
         this.usersData = usersData;
     }
     /**
-     * Вызывает worksWithMail
-     */
-    public String getWorksWithMail(String messageText, Long userId, EmailSender emailSender,
-                                   EmailLogic emailLogic,DatabaseConnection databaseConnection){
-        return worksWithMail(messageText,userId,emailSender,emailLogic, databaseConnection);
-    }
-    /**
      * Обрабатывает сообщения пользователей и управляет состоянием.
      *
      * @param messageText  Текст сообщения пользователя.
@@ -45,7 +38,7 @@ public class EmailLogic {
      * @param emailLogic   Объект EmailLogic, используемый для управления состоянием.
      * @return Ответ пользователю в зависимости от текущего состояния.
      */
-    private String worksWithMail(String messageText, Long userId, EmailSender emailSender, EmailLogic emailLogic,
+    public String worksWithMail(String messageText, Long userId, EmailSender emailSender, EmailLogic emailLogic,
                                  DatabaseConnection databaseConnection) {
         String currentState = userStatesForMail.get(userId);
         if ("/question".equals(messageText)) {

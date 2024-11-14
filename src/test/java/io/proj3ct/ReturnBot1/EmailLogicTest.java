@@ -45,7 +45,7 @@ public class EmailLogicTest {
 
         when(usersDataMock.checkUserIdExistsInRegistrationDataTable(userId, databaseConnectionMock))
                 .thenReturn(false);
-        String response = emailLogic.getWorksWithMail(messageText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
+        String response = emailLogic.worksWithMail(messageText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
 
         assertEquals("Эта функция недоступна, пока вы не зарегистрируетесь", response);
     }
@@ -61,14 +61,14 @@ public class EmailLogicTest {
         when(usersDataMock.checkUserIdExistsInRegistrationDataTable(userId, databaseConnectionMock))
                 .thenReturn(true);
         emailLogic.getUserStatesForEmail(userId); // Это нужно для инициализации состояния
-        emailLogic.getWorksWithMail(messageText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
+        emailLogic.worksWithMail(messageText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
 
         String questionText = "Как зарегистрироваться?";
         String mailUser  = "test@example.com";
 
         when(usersDataMock.getUserMail(userId, databaseConnectionMock)).thenReturn(mailUser );
         when(emailSenderMock.getUsername()).thenReturn("testUser ");
-        String response = emailLogic.getWorksWithMail(questionText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
+        String response = emailLogic.worksWithMail(questionText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
         verify(emailSenderMock).sendEmail(eq("testUser "), eq("Вопрос от абитуриента " + mailUser ), eq(questionText));
         assertEquals("Ваш вопрос отправлен", response);
     }
