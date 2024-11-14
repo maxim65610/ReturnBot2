@@ -36,14 +36,19 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     @Override
     public void consume(Update update) {
         long userId;
+        boolean flagForKeyboard = false;
+        String messageText;
         if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
             userId = update.getCallbackQuery().getFrom().getId();
+            flagForKeyboard = true;
+            messageText = update.getCallbackQuery().getData();
         } else if (update.hasMessage() && update.getMessage() != null) {
             userId = update.getMessage().getChatId();
+            messageText = update.getMessage().getText();
         } else {
             return; // Неизвестный тип обновления
         }
-        sendMessage(userId, logicController.getListStringWithTextToSendAndOptionForKeyboard(update, userId));
+        sendMessage(userId, logicController.handleMessage(userId, messageText, flagForKeyboard));
     }
     /**
      * Подготавливает и отправляет сообщение в указанный чат.

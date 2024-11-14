@@ -10,7 +10,6 @@ import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,9 +19,9 @@ import static org.mockito.Mockito.*;
  * Тестовый класс для проверки функциональности LogicСontroller.
  */
 public class LogicControllerTest {
-    private LogicController logicController;
-    private LogicForTestABI mockLogicForTestABI;
-    private TextForMessage mockTextForMessage;
+    private final LogicController logicController;
+    private final LogicForTestABI mockLogicForTestABI;
+    private final TextForMessage mockTextForMessage;
 
     /**
      * Конструктор дял LogicControllerTest.
@@ -66,7 +65,7 @@ public class LogicControllerTest {
         when(mockLogicForTestABI.getDataBd("", 12345L, "someData")).thenReturn(List.of("response"));
         when(callbackQuery.getData()).thenReturn("someData");
 
-        List<String> result = logicController.getListStringWithTextToSendAndOptionForKeyboard(update, 12345L);
+        List<String> result = logicController.handleMessage(12345L, "someData",true);
 
         assertEquals(List.of("response"), result);
         verify(mockLogicForTestABI).getDataBd("", 12345L, "someData");
@@ -85,13 +84,13 @@ public class LogicControllerTest {
         when(update.getMessage()).thenReturn(messageMock);
         when(messageMock.getText()).thenReturn("/testAbit");
 
-        when(mockTextForMessage.handleMessage("/testAbit")).thenReturn("Тест начат");
+        when(mockTextForMessage.setTheText("/testAbit")).thenReturn("Тест начат");
 
         long userId = 0L;
         when(mockLogicForTestABI.getDataBd("/testAbit", userId, "100"))
                 .thenReturn(List.of("Тест начат", "/testAbit"));
 
-        List<String> result = logicController.getListStringWithTextToSendAndOptionForKeyboard(update, userId);
+        List<String> result = logicController.handleMessage(0L, "/testAbit",false);
 
         assertEquals(List.of("Тест начат", "/testAbit"), result);
         verify(mockLogicForTestABI).getDataBd("/testAbit", userId, "100");

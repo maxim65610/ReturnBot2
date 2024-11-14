@@ -1,7 +1,5 @@
 package io.proj3ct.ReturnBot1;
 
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,72 +82,59 @@ public class LogicAndDataForRegistrationUsers {
         return userStatesForRegistration.getOrDefault(chatID, "0");
     }
     /**
-     *  Вызывает worksWithRegistration
-     */
-    public String getWorksWithRegistration(Update update, String messageText, Long userId, EmailSender emailSender,
-                                           LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
-        return worksWithRegistration(update,messageText,userId,emailSender,logicAndDataForRegistrationUsers);
-    }
-    /**
      * Обрабатывает логику регистрации пользователя на основе полученного обновления.
      *
-     * @param update объект Update от Telegram API
      * @param messageText текст сообщения от пользователя
      * @param userId идентификатор пользователя
      * @param emailSender объект для отправки электронной почты
      * @param logicAndDataForRegistrationUsers объект логики и данных для регистрации
      * @return ответ пользователю в зависимости от состояния регистрации
      */
-    private String worksWithRegistration(Update update, String messageText, Long userId, EmailSender emailSender,
+    public String worksWithRegistration(String messageText, Long userId, EmailSender emailSender,
                                         LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers) {
         String currentState = userStatesForRegistration.get(userId);
         if ("/authorization".equals(messageText)) {
             datebaseTables.createRegistrationDataTable();
             if (usersData.checkUserIdExistsInRegistrationDataTable(userId,
                     logicAndDataForRegistrationUsers.getDatabaseConnection())) {
-                return textForMessage.handleMessage("registration");
+                return textForMessage.setTheText("registration");
             }
             userStatesForRegistration.put(userId, "awaiting_nameUser ");
         } else if ("awaiting_nameUser ".equals(currentState)) {
-
-            String name = update.getMessage().getText();
-            nameUser .put(userId, name);
+            nameUser .put(userId, messageText);
             userStatesForRegistration.remove(userId);
             userStatesForRegistration.put(userId, "awaiting_surnameUser ");
-            return textForMessage.handleMessage("name");
+            return textForMessage.setTheText("name");
         } else if ("awaiting_surnameUser ".equals(currentState)) {
-            String surname = update.getMessage().getText();
-            surnameUser .put(userId, surname);
+            surnameUser .put(userId, messageText);
             userStatesForRegistration.remove(userId);
             userStatesForRegistration.put(userId, "awaiting_schoolClassUser ");
-            return textForMessage.handleMessage("class");
+            return textForMessage.setTheText("class");
         } else if ("awaiting_schoolClassUser ".equals(currentState)) {
-            String schoolClass = update.getMessage().getText();
             try {
-                int classNumber = Integer.parseInt(schoolClass);
+                int classNumber = Integer.parseInt(messageText);
                 if (classNumber <= 11 && classNumber >= 1) {
-                    schoolClassUser.put(userId, schoolClass);
+                    schoolClassUser.put(userId, messageText);
                     userStatesForRegistration.remove(userId);
                     userStatesForRegistration.put(userId, "awaiting_mailUser ");
-                    return textForMessage.handleMessage("mail");
+                    return textForMessage.setTheText("mail");
                 } else {
-                    return textForMessage.handleMessage("clas_bad");
+                    return textForMessage.setTheText("clas_bad");
                 }
             } catch (NumberFormatException e) {
-                return textForMessage.handleMessage("clas_bad");
+                return textForMessage.setTheText("clas_bad");
             }
         } else if ("awaiting_mailUser ".equals(currentState)) {
-            String mail = update.getMessage().getText();
-            if (emailSender.isValidEmail(mail)) {
-                mailUser .put(userId, mail);
+            if (emailSender.isValidEmail(messageText)) {
+                mailUser .put(userId, messageText);
                 userStatesForRegistration.remove(userId);
                 usersData.insertData(userId, this, databaseConnection);
-                return textForMessage.handleMessage("successfulReg");
+                return textForMessage.setTheText("successfulReg");
             } else {
-                mailUser .remove(userId, mail);
-                return textForMessage.handleMessage("notСorrectMail");
+                mailUser .remove(userId, messageText);
+                return textForMessage.setTheText("notСorrectMail");
             }
         }
-        return textForMessage.handleMessage("authorization");
+        return textForMessage.setTheText("authorization");
     }
 }

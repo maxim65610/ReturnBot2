@@ -49,19 +49,19 @@ public class LogicForChangeDataUsersTest {
     @Test
     public void testWorksWithChangeDataName() {
         // Начало процесса изменения данных
-        when(textForMessage.handleMessage("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
+        when(textForMessage.setTheText("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
 
-        String response = logicForChangeDataUsers.getWorksWithChangeData("/userDataChange", userId, emailSender);
+        String response = logicForChangeDataUsers.worksWithChangeData("/userDataChange", userId, emailSender);
         assertEquals("Выберите, что хотите изменить: имя, фамилию, класс или почту.", response);
 
         // Изменение имени
-        when(textForMessage.handleMessage("name")).thenReturn("Введите новое имя:");
-        response = logicForChangeDataUsers.getWorksWithChangeData("/userDataChangeName", userId, emailSender);
+        when(textForMessage.setTheText("name")).thenReturn("Введите новое имя:");
+        response = logicForChangeDataUsers.worksWithChangeData("/userDataChangeName", userId, emailSender);
         assertEquals("Введите новое имя:", response);
 
         // Ввод нового имени
-        when(textForMessage.handleMessage("successful_name")).thenReturn("Имя успешно изменено!");
-        response = logicForChangeDataUsers.getWorksWithChangeData("John", userId, emailSender);
+        when(textForMessage.setTheText("successful_name")).thenReturn("Имя успешно изменено!");
+        response = logicForChangeDataUsers.worksWithChangeData("John", userId, emailSender);
         assertEquals("Имя успешно изменено!", response);
         verify(usersData).changeName(userId, databaseConnection, "John");
     }
@@ -71,19 +71,19 @@ public class LogicForChangeDataUsersTest {
     @Test
     public void testWorksWithChangeDataSurname() {
         // Начало процесса изменения данных
-        when(textForMessage.handleMessage("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
+        when(textForMessage.setTheText("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
 
-        String response = logicForChangeDataUsers.getWorksWithChangeData("/userDataChange", userId, emailSender);
+        String response = logicForChangeDataUsers.worksWithChangeData("/userDataChange", userId, emailSender);
         assertEquals("Выберите, что хотите изменить: имя, фамилию, класс или почту.", response);
 
         // Изменение фамилии
-        when(textForMessage.handleMessage("surname")).thenReturn("Введите новую фамилию:");
-        response = logicForChangeDataUsers.getWorksWithChangeData("/userDataChangeSurname", userId, emailSender);
+        when(textForMessage.setTheText("surname")).thenReturn("Введите новую фамилию:");
+        response = logicForChangeDataUsers.worksWithChangeData("/userDataChangeSurname", userId, emailSender);
         assertEquals("Введите новую фамилию:", response);
 
         // Ввод новой фамилии
-        when(textForMessage.handleMessage("successful_surname")).thenReturn("Фамилия успешно изменена!");
-        response = logicForChangeDataUsers.getWorksWithChangeData("Doe", userId, emailSender);
+        when(textForMessage.setTheText("successful_surname")).thenReturn("Фамилия успешно изменена!");
+        response = logicForChangeDataUsers.worksWithChangeData("Doe", userId, emailSender);
         assertEquals("Фамилия успешно изменена!", response);
         verify(usersData).changeSurname(userId, databaseConnection, "Doe");
     }
@@ -93,19 +93,19 @@ public class LogicForChangeDataUsersTest {
     @Test
     public void testWorksWithChangeDataClass() {
         // Начало процесса изменения данных
-        when(textForMessage.handleMessage("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
+        when(textForMessage.setTheText("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
 
-        String response = logicForChangeDataUsers.getWorksWithChangeData("/userDataChange", userId, emailSender);
+        String response = logicForChangeDataUsers.worksWithChangeData("/userDataChange", userId, emailSender);
         assertEquals("Выберите, что хотите изменить: имя, фамилию, класс или почту.", response);
 
         // Изменение класса
-        when(textForMessage.handleMessage("class")).thenReturn("Введите новый класс:");
-        response = logicForChangeDataUsers.getWorksWithChangeData("/userDataChangeClass", userId, emailSender);
+        when(textForMessage.setTheText("class")).thenReturn("Введите новый класс:");
+        response = logicForChangeDataUsers.worksWithChangeData("/userDataChangeClass", userId, emailSender);
         assertEquals("Введите новый класс:", response);
 
         // Ввод нового класса
-        when(textForMessage.handleMessage("successful_class")).thenReturn("Класс успешно изменен!");
-        response = logicForChangeDataUsers.getWorksWithChangeData("10", userId, emailSender);
+        when(textForMessage.setTheText("successful_class")).thenReturn("Класс успешно изменен!");
+        response = logicForChangeDataUsers.worksWithChangeData("10", userId, emailSender);
         assertEquals("Класс успешно изменен!", response);
         verify(usersData).changeClass(userId, databaseConnection, "10");
     }
@@ -115,20 +115,20 @@ public class LogicForChangeDataUsersTest {
     @Test
     public void testWorksWithChangeDataMail() {
         // Начало процесса изменения данных
-        when(textForMessage.handleMessage("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
+        when(textForMessage.setTheText("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
 
-        String response = logicForChangeDataUsers.getWorksWithChangeData("/userDataChange", userId, emailSender);
+        String response = logicForChangeDataUsers.worksWithChangeData("/userDataChange", userId, emailSender);
         assertEquals("Выберите, что хотите изменить: имя, фамилию, класс или почту.", response);
 
         // Изменение почты
-        when(textForMessage.handleMessage("mail")).thenReturn("Введите новый адрес электронной почты:");
-        response = logicForChangeDataUsers.getWorksWithChangeData("/userDataChangeMail", userId, emailSender);
+        when(textForMessage.setTheText("mail")).thenReturn("Введите новый адрес электронной почты:");
+        response = logicForChangeDataUsers.worksWithChangeData("/userDataChangeMail", userId, emailSender);
         assertEquals("Введите новый адрес электронной почты:", response);
 
         // Ввод новой почты
         when(emailSender.isValidEmail("test@example.com")).thenReturn(true);
-        when(textForMessage.handleMessage("successful_mail")).thenReturn("Почта успешно изменена!");
-        response = logicForChangeDataUsers.getWorksWithChangeData("test@example.com", userId, emailSender);
+        when(textForMessage.setTheText("successful_mail")).thenReturn("Почта успешно изменена!");
+        response = logicForChangeDataUsers.worksWithChangeData("test@example.com", userId, emailSender);
         assertEquals("Почта успешно изменена!", response);
         verify(usersData).changeMail(userId, databaseConnection, "test@example.com");
     }
