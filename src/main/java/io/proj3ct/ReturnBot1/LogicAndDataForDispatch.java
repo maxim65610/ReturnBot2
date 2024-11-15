@@ -11,7 +11,7 @@ import java.time.format.DateTimeParseException;
  * Хранит информацию о текстах, времени, категории и отделе диспетча.
  */
 public class LogicAndDataForDispatch {
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     private final Map<Long, String> dispatchText  = new HashMap<>();
     private final Map<Long, String> dispatchTime  = new HashMap<>();
@@ -83,6 +83,9 @@ public class LogicAndDataForDispatch {
         return userStatesForNewDispatch.getOrDefault(chatID, "0");
     }
 
+
+
+
     /**
      * Обрабатывает новую команду диспетча от пользователя.
      *
@@ -94,6 +97,7 @@ public class LogicAndDataForDispatch {
     public String worksWithNewDispatch(String messageText, Long userId,
                                        LogicAndDataForDispatch logicAndDataForDispatch) {
         Long dispatchID = dispatchData.generateNewId(databaseConnection);
+
         String currentState = userStatesForNewDispatch.get(userId);
         datebaseTables.createDispatchDataTable();
 
@@ -130,7 +134,8 @@ public class LogicAndDataForDispatch {
                     dispatchCategory.put(dispatchID, messageText);
                     dispatchDepartment.put(dispatchID, "-");
                     userStatesForNewDispatch.remove(userId);
-                    dispatchData.insertData(dispatchID, this, databaseConnection);
+                    dispatchData.insertData(dispatchID, this,
+                            databaseConnection,dispatchID);
                     return textForMessage.setTheText("dispatchEnd");
                 } else {
                     dispatchCategory.put(dispatchID, messageText);
@@ -144,7 +149,8 @@ public class LogicAndDataForDispatch {
         } else if ("awaiting_dispatchDepartment".equals(currentState)) {
             dispatchDepartment.put(dispatchID, messageText);
             userStatesForNewDispatch.remove(userId);
-            dispatchData.insertData(dispatchID, this, databaseConnection);
+            dispatchData.insertData(dispatchID, this,
+                    databaseConnection,dispatchID);
             return textForMessage.setTheText("dispatchEnd");
         }
 

@@ -25,11 +25,19 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final String botToken;
     private final LogicController logicController = new LogicController();
-    private final List<BotCommand> listCommands = new ArrayList<>();
+    private final List<BotCommand> listCommands;
 
     public TelegramBot(String token) {
         botToken = token;
         telegramClient = new OkHttpTelegramClient(botToken);
+        listCommands = new ArrayList<>();
+        listCommands.add(new BotCommand("/start","Начало работы"));
+        listCommands.add(new BotCommand("/work", "Посмотреть описания факультетов"));
+        listCommands.add(new BotCommand("/authorization", "Пройти регистрацию"));
+        listCommands.add(new BotCommand("/testAbit", "Пройти тест на определение факультета"));
+        listCommands.add(new BotCommand("/question", "Задать вопрос"));
+        listCommands.add(new BotCommand("/userDataChange", "Поменять данные регистрации"));
+        listCommands.add(new BotCommand("/userDataDell", "Удалить данные регистрации"));
 
     }
 
@@ -77,6 +85,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
 
     private void executeMessage(SendMessage message) {
         try {
+
             telegramClient.execute(message);
         } catch (TelegramApiException e) {
             System.out.println("Ошибка отправки сообщения: " + e.getMessage());
