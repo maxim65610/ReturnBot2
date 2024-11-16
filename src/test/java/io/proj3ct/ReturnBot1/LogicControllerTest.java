@@ -1,5 +1,8 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.baseClasses.LogicController;
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

@@ -1,5 +1,7 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.baseClasses.KeyboardLogic;
+import io.proj3ct.ReturnBot1.baseClasses.LogicController;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -11,9 +13,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -32,12 +32,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         telegramClient = new OkHttpTelegramClient(botToken);
         listCommands = new ArrayList<>();
         listCommands.add(new BotCommand("/start","Начало работы"));
-        listCommands.add(new BotCommand("/work", "Посмотреть описания факультетов"));
-        listCommands.add(new BotCommand("/authorization", "Пройти регистрацию"));
-        listCommands.add(new BotCommand("/testAbit", "Пройти тест на определение факультета"));
-        listCommands.add(new BotCommand("/question", "Задать вопрос"));
-        listCommands.add(new BotCommand("/userDataChange", "Поменять данные регистрации"));
-        listCommands.add(new BotCommand("/userDataDell", "Удалить данные регистрации"));
 
     }
 
@@ -85,7 +79,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
 
     private void executeMessage(SendMessage message) {
         try {
-
+            telegramClient.execute((new SetMyCommands(listCommands, new BotCommandScopeDefault(),null)));
             telegramClient.execute(message);
         } catch (TelegramApiException e) {
             System.out.println("Ошибка отправки сообщения: " + e.getMessage());

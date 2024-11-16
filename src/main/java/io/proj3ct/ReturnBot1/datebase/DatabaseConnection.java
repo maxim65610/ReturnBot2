@@ -1,9 +1,8 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.datebase;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Класс для подключения к базе данных

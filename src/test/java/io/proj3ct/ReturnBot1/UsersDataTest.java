@@ -3,6 +3,10 @@ package io.proj3ct.ReturnBot1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.registration.LogicAndDataForRegistrationUsers;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 import org.junit.Before;
 import org.junit.Test;
 import java.sql.Connection;
@@ -146,7 +150,7 @@ public class UsersDataTest {
         when(resultSet.getString("name")).thenReturn("qqqq");
         when(resultSet.getString("surname")).thenReturn("wwww");
         when(resultSet.getString("school_сlass")).thenReturn("10");
-        when(resultSet.getString("mail")).thenReturn("test@example.com");
+        when(resultSet.getString("io/proj3ct/ReturnBot1/mail")).thenReturn("test@example.com");
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         String data = usersData.takeData(userId, databaseConnection);
         assertEquals("Ваше имя: qqqq\nВаша фамилия: wwww\nВаш класс: 10\nВаша почта: test@example.com", data);
@@ -159,7 +163,7 @@ public class UsersDataTest {
     public void testGetUserMail() throws SQLException {
         Long userId = 1L;
         when(resultSet.next()).thenReturn(true);
-        when(resultSet.getString("mail")).thenReturn("test@example.com");
+        when(resultSet.getString("io/proj3ct/ReturnBot1/mail")).thenReturn("test@example.com");
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         String email = usersData.getUserMail(userId, databaseConnection);
         assertEquals("test@example.com", email);

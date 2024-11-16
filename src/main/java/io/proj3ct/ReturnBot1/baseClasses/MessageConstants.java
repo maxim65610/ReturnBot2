@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.baseClasses;
 
 /**
  * Константы для сообщений, используемых ботом.

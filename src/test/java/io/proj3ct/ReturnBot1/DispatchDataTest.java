@@ -1,5 +1,8 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.dispatch.DispatchData;
+import io.proj3ct.ReturnBot1.dispatch.LogicAndDataForDispatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

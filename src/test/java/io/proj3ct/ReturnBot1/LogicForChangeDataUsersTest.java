@@ -3,6 +3,11 @@ package io.proj3ct.ReturnBot1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
+import io.proj3ct.ReturnBot1.registration.LogicForChangeDataUsers;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -121,7 +126,7 @@ public class LogicForChangeDataUsersTest {
         assertEquals("Выберите, что хотите изменить: имя, фамилию, класс или почту.", response);
 
         // Изменение почты
-        when(textForMessage.setTheText("mail")).thenReturn("Введите новый адрес электронной почты:");
+        when(textForMessage.setTheText("io/proj3ct/ReturnBot1/mail")).thenReturn("Введите новый адрес электронной почты:");
         response = logicForChangeDataUsers.worksWithChangeData("/userDataChangeMail", userId, emailSender);
         assertEquals("Введите новый адрес электронной почты:", response);
 

@@ -3,6 +3,11 @@ package io.proj3ct.ReturnBot1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
+import io.proj3ct.ReturnBot1.registration.LogicAndDataForRegistrationUsers;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -86,7 +91,7 @@ public class LogicAndDataForRegistrationUsersTest {
 
         logicAndDataForRegistrationUsers.setUserStateForRegistration(userId, "awaiting_schoolClassUser ");
         when(message.getText()).thenReturn("10");
-        when(textForMessage.setTheText("mail")).thenReturn("Введите почту:");
+        when(textForMessage.setTheText("io/proj3ct/ReturnBot1/mail")).thenReturn("Введите почту:");
 
         response = logicAndDataForRegistrationUsers.worksWithRegistration("10", userId, emailSender, logicAndDataForRegistrationUsers);
         assertEquals("Введите почту:", response);

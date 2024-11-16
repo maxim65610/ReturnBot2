@@ -1,4 +1,6 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.registration;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
 import java.sql.*;
 
@@ -13,7 +15,7 @@ public class UsersData {
      @param databaseConnection объект для подключения к базе данных
      */
     public String insertData(Long userId, LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
-            ,DatabaseConnection databaseConnection ) {
+            , DatabaseConnection databaseConnection ) {
 
         String dataRequest = "INSERT INTO RegistrationDataTable " +
                 "(id_chat, name, surname, school_сlass, mail) VALUES (?, ?, ?, ?, ?)";
@@ -230,7 +232,7 @@ public class UsersData {
                 String name = rs.getString("name");
                 String surname = rs.getString("surname");
                 String schoolClass = rs.getString("school_сlass");
-                String mail = rs.getString("mail");
+                String mail = rs.getString("io/proj3ct/ReturnBot1/mail");
                 return "Ваше имя: " + name +
                         "\nВаша фамилия: " + surname +
                         "\nВаш класс: " + schoolClass +
@@ -256,7 +258,7 @@ public class UsersData {
             stmt.setString(1, userId.toString());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getString("mail");
+                return rs.getString("io/proj3ct/ReturnBot1/mail");
             }
         } catch (SQLException e) {
             System.out.println("Ошибка получения данных: " + e.getMessage());

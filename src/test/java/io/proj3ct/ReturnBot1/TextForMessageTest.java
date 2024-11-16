@@ -1,5 +1,6 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
 import org.junit.jupiter.api.Test;
 
 
@@ -73,7 +74,7 @@ class TextForMessageTest {
         String answerCommandSuccessfulReg = textForMessage.setTheText("successfulReg");
         String answerCommandEnterName = textForMessage.setTheText("name");
         String answerCommandEnterSurname = textForMessage.setTheText("surname");
-        String answerCommandEnterMail = textForMessage.setTheText("mail");
+        String answerCommandEnterMail = textForMessage.setTheText("io/proj3ct/ReturnBot1/mail");
         String answerCommandEnterClass = textForMessage.setTheText("class");
         String answerCommandSuccessfulName = textForMessage.setTheText("successful_name");
         String answerCommandSuccessfulSurname = textForMessage.setTheText("successful_surname");

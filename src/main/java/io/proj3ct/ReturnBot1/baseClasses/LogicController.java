@@ -1,4 +1,14 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.baseClasses;
+
+import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.departmentsAndTest.DepartmentsInfo;
+import io.proj3ct.ReturnBot1.dispatch.LogicAndDataForDispatch;
+import io.proj3ct.ReturnBot1.mail.EmailLogic;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
+import io.proj3ct.ReturnBot1.registration.LogicAndDataForRegistrationUsers;
+import io.proj3ct.ReturnBot1.registration.LogicForChangeDataUsers;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +22,7 @@ public class LogicController {
     private final TextForMessage textForMessage = new TextForMessage();
     private final DepartmentsInfo departmentsInfo = new DepartmentsInfo();
     private final EmailLogic emailLogic = new EmailLogic();
-    private final String username = System.getenv("mail"); // Ваша почта
+    private final String username = System.getenv("io/proj3ct/ReturnBot1/mail"); // Ваша почта
     private final String password = System.getenv("passwordForMail");
     private final EmailSender emailSender = new EmailSender(username, password);
     private final LogicForChangeDataUsers logicForChangeDataUsers = new LogicForChangeDataUsers();

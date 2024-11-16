@@ -2,6 +2,11 @@ package io.proj3ct.ReturnBot1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.registration.LogicAndDataForRegistrationUsers;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 import org.junit.Before;
 import org.junit.Test;
 import java.sql.Connection;

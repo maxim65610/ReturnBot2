@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.mail;
 
 import javax.mail.*;
 import javax.mail.internet.*;

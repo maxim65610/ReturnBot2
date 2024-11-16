@@ -1,4 +1,6 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.departmentsAndTest;
+
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
 
 import java.util.*;
 

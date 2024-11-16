@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.baseClasses;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,12 +47,12 @@ public class TextForMessage {
         messageMap.put("questionHasBeenSend", MessageConstants.QUESTION_HAS_BEEN_SEND_COMMAND_RESPONSE);
         messageMap.put("userPassedTest", MessageConstants.END_TEST_ABI_COMMAND_RESPONSE);
         messageMap.put("resultTestABI", MessageConstants.RESULT_TEST_ABI_COMMAND_RESPONSE);
-        messageMap.put("registration", MessageConstants.AUTHORISATION_COMMAND_RESPONSE);
+        messageMap.put("io/proj3ct/ReturnBot1/registration", MessageConstants.AUTHORISATION_COMMAND_RESPONSE);
         messageMap.put("successful_name", MessageConstants.SUCCESSFUL_NAME);
         messageMap.put("successful_surname", MessageConstants.SUCCESSFUL_SURNAME);
         messageMap.put("successful_mail", MessageConstants.SUCCESSFUL_MAIL);
         messageMap.put("successful_class", MessageConstants.SUCCESSFUL_CLASS);
-        messageMap.put("mail", MessageConstants.ENTER_MAIL);
+        messageMap.put("io/proj3ct/ReturnBot1/mail", MessageConstants.ENTER_MAIL);
         messageMap.put("surname", MessageConstants.ENTER_SURNAME);
         messageMap.put("name", MessageConstants.ENTER_NAME);
         messageMap.put("class", MessageConstants.ENTER_CLASS);

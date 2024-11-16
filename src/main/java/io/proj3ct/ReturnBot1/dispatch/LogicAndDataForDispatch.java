@@ -1,4 +1,8 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.dispatch;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.datebase.DatebaseTables;
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
 
 import java.util.HashMap;
 import java.util.Map;

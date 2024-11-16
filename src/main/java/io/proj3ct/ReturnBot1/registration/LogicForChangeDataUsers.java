@@ -1,5 +1,9 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.registration;
 
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +76,7 @@ public class LogicForChangeDataUsers {
             } else if (messageText.equals("/userDataChangeMail")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_mail");
-                return textForMessage.setTheText("mail");
+                return textForMessage.setTheText("io/proj3ct/ReturnBot1/mail");
             }
         } else if ("awaiting_name".equals(currentState)) {
             usersData.changeName(userId, databaseConnection, messageText);
