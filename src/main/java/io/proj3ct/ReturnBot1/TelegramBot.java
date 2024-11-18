@@ -1,10 +1,8 @@
 package io.proj3ct.ReturnBot1;
 
-import com.fasterxml.jackson.core.JsonEncoding;
 import io.proj3ct.ReturnBot1.baseClasses.KeyboardLogic;
 import io.proj3ct.ReturnBot1.baseClasses.LogicController;
 import io.proj3ct.ReturnBot1.dispatch.LogicAndDataForDispatch;
-import io.proj3ct.ReturnBot1.registration.LogicAndDataForRegistrationUsers;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -12,18 +10,14 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 /**
@@ -80,10 +74,10 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         sendMessage(userId, logicController.handleMessage(userId, messageText, flagForKeyboard));
     }
     /**
-     * Метод для запуска таймера, который периодически отправляет сообщения.
+     * Метод для запуска таймера, который периодически запускает метод sendMessageForDispatch.
      */
     public void timerWithPeriodicityOfDay() {
-        scheduler.scheduleAtFixedRate(this::sendMessageForDispatch, 0, 25, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::sendMessageForDispatch, 0, 1, TimeUnit.DAYS);
     }
     /**
      * Метод для отправки сообщений пользователям на основе данных для рассылки.

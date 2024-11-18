@@ -20,7 +20,7 @@ public class UsersData {
 
         Integer year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
         String year_end = logicAndDataForRegistrationUsers.getSchoolClassUser (userId);
-        year = year + 12 - Integer.parseInt(year_end);
+        year = year + 12 - Integer.parseInt(year_end) - 1;
 
         String dataRequest = "INSERT INTO RegistrationDataTable " +
                 "(id_chat, name, surname, school_сlass, mail, dispatch, " +
@@ -104,7 +104,7 @@ public class UsersData {
         // SQL-запрос для обновления имени в таблице RegistrationDataTable по userId
         String dataRequest = "UPDATE RegistrationDataTable SET school_сlass = ?, year_end_school = ? WHERE id_chat = ?";
         Integer year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
-        year = year + 12 - Integer.parseInt(schoolClass);
+        year = year + 12 - Integer.parseInt(schoolClass) - 1;
 
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {

@@ -12,11 +12,13 @@ import java.util.Map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 /**
  * Класс для обработки логики и данных диспетча.
- * Хранит информацию о текстах, времени, категории и отделе диспетча.
+ * Хранит информацию о текстах, времени, категории и отделе диспетча,
+ * а также взаимодействует с базой данных для создания и получения данных о диспетчах.
+ * Обрабатывает команды пользователей для создания и получения диспетчей,
+ * включая проверку прав доступа, состояния пользователя.
  */
 public class LogicAndDataForDispatch {
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -31,7 +33,6 @@ public class LogicAndDataForDispatch {
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     private final UsersData usersData = new UsersData();
     private DispatchData dispatchData = new DispatchData();
-
     /**
      * Получает объект подключения к базе данных.
      *
@@ -40,7 +41,6 @@ public class LogicAndDataForDispatch {
     public DatabaseConnection getDatabaseConnection() {
         return databaseConnection;
     }
-
     /**
      * Получает текст диспетча для указанного идентификатора чата.
      *
@@ -50,7 +50,6 @@ public class LogicAndDataForDispatch {
     public String getDispatchText(Long chatID) {
         return dispatchText.get(chatID);
     }
-
     /**
      * Получает время диспетча для указанного идентификатора чата.
      *
@@ -60,7 +59,6 @@ public class LogicAndDataForDispatch {
     public String getDispatchTime(Long chatID) {
         return dispatchTime.get(chatID);
     }
-
     /**
      * Получает категорию диспетча для указанного идентификатора чата.
      *
@@ -70,7 +68,6 @@ public class LogicAndDataForDispatch {
     public String getDispatchCategory(Long chatID) {
         return dispatchCategory.get(chatID);
     }
-
     /**
      * Получает отдел диспетча для указанного идентификатора чата.
      *
@@ -80,7 +77,6 @@ public class LogicAndDataForDispatch {
     public String getDispatchDepartment(Long chatID) {
         return dispatchDepartment.get(chatID);
     }
-
     /**
      * Получает состояние пользователя для нового диспетча.
      *
@@ -90,6 +86,12 @@ public class LogicAndDataForDispatch {
     public String getUserStatesForNewDispatch(Long chatID) {
         return userStatesForNewDispatch.getOrDefault(chatID, "0");
     }
+    /**
+     * Включает режим диспетча для пользователя.
+     *
+     * @param userId идентификатор пользователя
+     * @return сообщение о результате операции
+     */
     public String dispatchOn(Long userId){
         if (!usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)) {
             return "Эта функция недоступна, пока вы не зарегистрируетесь";
@@ -97,30 +99,71 @@ public class LogicAndDataForDispatch {
         usersData.changeDispatchStatusOn(userId, databaseConnection);
         return textForMessage.setTheText("/dispatchOn");
     }
+    /**
+     * Проверяет наличие диспетчей на текущую дату в базе данных.
+     *
+     * @return двумерный массив, содержащий идентификаторы пользователей и тексты для отправки
+     */
     public String[][] checkDateForDispatch(){
         String[][] allRowsFromBdDispatch = dispatchData.getAllDispatchData(databaseConnection);
+        List<String[]> userIdAndTextToSendList = new ArrayList<>();
         for(int i = 0; i < allRowsFromBdDispatch.length; i++){
             String date = allRowsFromBdDispatch[i][2];
             String textToSend = allRowsFromBdDispatch[i][1];
+            String categoryDispatch = allRowsFromBdDispatch[i][3];
+            String department = allRowsFromBdDispatch[i][4];
             LocalDate inputDate = LocalDate.parse(date, DATE_FORMATTER);
             LocalDate currentDate = LocalDate.now();
             if(inputDate.equals(currentDate)){
-                return messageToUserWithDispatch(textToSend);
+                String[][] userIdAndTextToSendArray= messageToUserWithDispatch(textToSend,
+                        categoryDispatch, currentDate, department);
+                for(String[] row : userIdAndTextToSendArray) {
+                    userIdAndTextToSendList.add(row);
+                }
             }
         }
-        return new String[0][0];
+        return userIdAndTextToSendList.toArray(new String[0][0]);
     }
-    private String[][] messageToUserWithDispatch(String textToSend){
+    /**
+     * Формирует сообщения для пользователей на основе данных диспетча.
+     *
+     * @param textToSend текст для отправки
+     * @param categoryDispatch категория диспетча(обычная или приемная комиссия)
+     * @param currentDate текущая дата
+     * @param department департамент
+     * @return двумерный массив с идентификаторами пользователей и текстами для отправки
+     */
+    private String[][] messageToUserWithDispatch(String textToSend, String categoryDispatch,
+                                                 LocalDate currentDate, String department){
         String[][] rowsFromBDRegistration = dispatchData.getUserIdAndDispatchOnOrOff(databaseConnection);
         List<String[]> dispatchList = new ArrayList<>();
         for(int i = 0; i < rowsFromBDRegistration.length; i++){
             String dispatchOnOrOff = rowsFromBDRegistration[i][1];
+            String[] userIdAndDispatchText = new String[2];
             if(dispatchOnOrOff.equals("True")){
-                String[] userIdAndDispatchText = new String[2];
                 String userId = rowsFromBDRegistration[i][0];
-                userIdAndDispatchText[0] = userId;
-                userIdAndDispatchText[1] = textToSend;
-                dispatchList.add(userIdAndDispatchText);
+                if(categoryDispatch.equals("приемная комиссия")){
+                    String yearEndSchoolUser = dispatchData.getUserYearEndSchool(Long.valueOf(userId), databaseConnection);
+                    String currentYear = String.valueOf(currentDate).substring(0,4);
+                    if(currentYear.equals(yearEndSchoolUser)){
+                        String departmentUser = dispatchData.getUserResultTest(Long.valueOf(userId), databaseConnection);
+                        if(departmentUser.equals("-")){
+                            userIdAndDispatchText[0] = userId;
+                            userIdAndDispatchText[1] = "Приглашаем вас стать студентом УРФУ";
+                            dispatchList.add(userIdAndDispatchText);
+                        }
+                        else if(departmentUser.equals(department)){
+                            userIdAndDispatchText[0] = userId;
+                            userIdAndDispatchText[1] = textToSend;
+                            dispatchList.add(userIdAndDispatchText);
+                        }
+                    }
+                }
+                else{
+                    userIdAndDispatchText[0] = userId;
+                    userIdAndDispatchText[1] = textToSend;
+                    dispatchList.add(userIdAndDispatchText);
+                }
             }
         }
         String[][] dispatchDataArray = new String[dispatchList.size()][2];
@@ -129,6 +172,12 @@ public class LogicAndDataForDispatch {
         }
         return dispatchDataArray;
     }
+    /**
+     * Выключает режим диспетча для пользователя.
+     *
+     * @param userId идентификатор пользователя
+     * @return сообщение о результате операции
+     */
     public String dispatchOff(Long userId){
         if (!usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)) {
             return "Эта функция недоступна, пока вы не зарегистрируетесь";

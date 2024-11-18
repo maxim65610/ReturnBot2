@@ -169,4 +169,56 @@ public class DispatchData {
         }
         return dispatchDataArray;
     }
+    /**
+     * Получает год окончания школы для пользователя из таблицы регистрации.
+     * Этот метод выполняет запрос к базе данных и возвращает год окончания школы,
+     * если пользователь найден в таблице регистрации.
+     *
+     * @param userId идентификатор пользователя, чьи данные необходимо получить
+     * @param databaseConnection объект подключения к базе данных
+     * @return год окончания школы для пользователя, или строку "Вы не прошли регистрацию",
+     *         если пользователь не найден или произошла ошибка при запросе данных
+     */
+    public String getUserYearEndSchool(Long userId,DatabaseConnection databaseConnection ) {
+
+        String takeData = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
+
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(takeData)) {
+            stmt.setString(1, userId.toString());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("year_end_school");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка получения данных: " + e.getMessage());
+        }
+        return "Вы не прошли регистрацию";
+    }
+    /**
+     * Получает результат теста (или факультет), связанный с пользователем из таблицы регистрации.
+     * Этот метод выполняет запрос к базе данных и возвращает название факультета,
+     * если пользователь найден в таблице регистрации.
+     *
+     * @param userId идентификатор пользователя, чьи данные необходимо получить
+     * @param databaseConnection объект подключения к базе данных
+     * @return результат теста (факультет) для пользователя, или строку "Вы не прошли регистрацию",
+     *         если пользователь не найден или произошла ошибка при запросе данных
+     */
+    public String getUserResultTest(Long userId,DatabaseConnection databaseConnection ) {
+        String takeData = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
+
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(takeData)) {
+            stmt.setString(1, userId.toString());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("department");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка получения данных: " + e.getMessage());
+        }
+        return "Вы не прошли регистрацию";
+    }
+
 }
