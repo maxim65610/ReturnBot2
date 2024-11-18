@@ -18,7 +18,7 @@ public class UsersData {
             , DatabaseConnection databaseConnection ) {
 
         String dataRequest = "INSERT INTO RegistrationDataTable " +
-                "(id_chat, name, surname, school_сlass, mail) VALUES (?, ?, ?, ?, ?)";
+                "(id_chat, name, surname, school_сlass, mail, dispatch) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
@@ -27,6 +27,7 @@ public class UsersData {
             stmt.setString(3, logicAndDataForRegistrationUsers.getSurnameUser(userId));
             stmt.setString(4, logicAndDataForRegistrationUsers.getSchoolClassUser(userId));
             stmt.setString(5, logicAndDataForRegistrationUsers.getMailUser(userId));
+            stmt.setString(6, "False");
             stmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -264,5 +265,27 @@ public class UsersData {
             System.out.println("Ошибка получения данных: " + e.getMessage());
         }
         return "Вы не прошли регистрацию";
+    }
+    public void changeDispatchStatusOn(Long userId, DatabaseConnection databaseConnection){
+        String dataRequest = "UPDATE RegistrationDataTable SET dispatch = ? WHERE id_chat = ?";
+        try (Connection conn = databaseConnection.connect();
+        PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
+
+            stmt.setString(1, "True");
+            stmt.setString(2, userId.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+        }
+    }
+    public void changeDispatchStatusOff(Long userId, DatabaseConnection databaseConnection){
+        String dataRequest = "UPDATE RegistrationDataTable SET dispatch = ? WHERE id_chat = ?";
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
+
+            stmt.setString(1, "False");
+            stmt.setString(2, userId.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+        }
     }
 }

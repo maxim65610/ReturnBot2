@@ -61,7 +61,8 @@ public class TextForMessage {
         messageMap.put("ИЕНИМ", MessageConstants.INST_IENIM_COMMAND_RESPONSE);
         messageMap.put("РТФ", MessageConstants.INST_RTF_COMMAND_RESPONSE);
         messageMap.put("ХТИ", MessageConstants.INST_CHTI_COMMAND_RESPONSE);
-
+        messageMap.put("/dispatchOn", MessageConstants.DISPATCH_ON_COMMAND_RESPONSE);
+        messageMap.put("/dispatchOff", MessageConstants.DISPATCH_OFF_COMMAND_RESPONSE);
         messageMap.put("/newDispatсh", MessageConstants.NEW_DISPATCH);
 
         messageMap.put("newDispatсh", MessageConstants.NEW_DISPATCH);

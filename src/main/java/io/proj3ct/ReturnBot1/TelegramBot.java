@@ -1,7 +1,10 @@
 package io.proj3ct.ReturnBot1;
 
+import com.fasterxml.jackson.core.JsonEncoding;
 import io.proj3ct.ReturnBot1.baseClasses.KeyboardLogic;
 import io.proj3ct.ReturnBot1.baseClasses.LogicController;
+import io.proj3ct.ReturnBot1.dispatch.LogicAndDataForDispatch;
+import io.proj3ct.ReturnBot1.registration.LogicAndDataForRegistrationUsers;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -16,9 +19,11 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 /**
@@ -31,7 +36,9 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final String botToken;
     private final LogicController logicController = new LogicController();
     private final List<BotCommand> listCommands;
+    private final LogicAndDataForDispatch logicAndDataForDispatch= new LogicAndDataForDispatch();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
     public TelegramBot(String token) {
         botToken = token;
         telegramClient = new OkHttpTelegramClient(botToken);
@@ -44,7 +51,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         listCommands.add(new BotCommand("/userdatadell", "Удалить данные, веденные при регистрации"));
         listCommands.add(new BotCommand("/userinfo", "Узнать информацию, которую вы ввели при регистрации"));
 
-        //startScheduledTask();
+        timerWithPeriodicityOfDay();
     }
 
     @Override
@@ -64,13 +71,18 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         }
         sendMessage(userId, logicController.handleMessage(userId, messageText, flagForKeyboard));
     }
-
-    //public void startScheduledTask() {
-        //scheduler.scheduleAtFixedRate(this::checkAndSendScheduledMessages, 0, 10, TimeUnit.SECONDS);
-    //}
-    //public void checkAndSendScheduledMessages(){
-        //System.out.println("11");
-    //}
+    public void timerWithPeriodicityOfDay() {
+        scheduler.scheduleAtFixedRate(this::sendMessageForDispatch, 0, 25, TimeUnit.SECONDS);
+    }
+    public void sendMessageForDispatch(){
+        String[][] userIdAndTextToSendDataArray = logicAndDataForDispatch.checkDateForDispatch();
+        for(int i = 0; i < userIdAndTextToSendDataArray.length; i++){
+            Long userId = Long.parseLong(userIdAndTextToSendDataArray[i][0]);
+            String textToSend = userIdAndTextToSendDataArray[i][1];
+            SendMessage message = createMessage(userId, textToSend);
+            executeMessage(message);
+        }
+    }
     void sendMessage(long chatId, List<String> listForWorkWithKeyboard) {
         String textToSend = "";
         if (!listForWorkWithKeyboard.isEmpty()) {

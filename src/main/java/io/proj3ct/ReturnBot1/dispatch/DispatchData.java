@@ -82,6 +82,7 @@ public class DispatchData {
                 dispatchData[2] = rs.getString("dispatch_category");
                 dispatchData[3] = rs.getString("dispatch_department");
                 dispatchData[4] = rs.getString("user_id");
+
                 dispatchDataList.add(dispatchData);
             }
         } catch (SQLException e) {
@@ -96,5 +97,62 @@ public class DispatchData {
 
         return dispatchDataArray;
     }
+    public String[][] getAllDispatchData(DatabaseConnection databaseConnection) {
+        // Изменяем запрос на получение всех данных
+        String query = "SELECT * FROM DispatchDataTable";
+        List<String[]> dispatchDataList = new ArrayList<>();
 
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            // Обрабатываем результат запроса
+            while (rs.next()) {
+                String[] dispatchData = new String[5];
+                dispatchData[0] = rs.getString("id");
+                dispatchData[1] = rs.getString("text");
+                dispatchData[2] = rs.getString("time");
+                dispatchData[3] = rs.getString("category");
+                dispatchData[4] = rs.getString("department");
+
+                dispatchDataList.add(dispatchData);
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка получения данных: " + e.getMessage());
+        }
+
+        // Преобразуем список в двумерный массив
+        String[][] dispatchDataArray = new String[dispatchDataList.size()][5];
+        for (int i = 0; i < dispatchDataList.size(); i++) {
+            dispatchDataArray[i] = dispatchDataList.get(i);
+        }
+
+        return dispatchDataArray;
+    }
+    public String[][] getUserIdAndDispatchOnOrOff(DatabaseConnection databaseConnection) {
+        // Изменяем запрос на получение всех данных
+        String query = "SELECT * FROM RegistrationDataTable";
+        List<String[]> dispatchDataList = new ArrayList<>();
+
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            ResultSet rs = stmt.executeQuery();
+            // Обрабатываем результат запроса
+            while (rs.next()) {
+                String[] dispatchData = new String[2];
+                dispatchData[0] = rs.getString("id_chat");
+                dispatchData[1] = rs.getString("dispatch");
+                dispatchDataList.add(dispatchData);
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка получения данных: " + e.getMessage());
+        }
+        // Преобразуем список в двумерный массив
+        String[][] dispatchDataArray = new String[dispatchDataList.size()][2];
+        for (int i = 0; i < dispatchDataList.size(); i++) {
+            dispatchDataArray[i] = dispatchDataList.get(i);
+        }
+        return dispatchDataArray;
+    }
 }

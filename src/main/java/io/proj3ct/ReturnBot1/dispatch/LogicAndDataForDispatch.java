@@ -3,13 +3,17 @@ package io.proj3ct.ReturnBot1.dispatch;
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 import io.proj3ct.ReturnBot1.datebase.DatebaseTables;
 import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 /**
  * Класс для обработки логики и данных диспетча.
  * Хранит информацию о текстах, времени, категории и отделе диспетча.
@@ -22,10 +26,10 @@ public class LogicAndDataForDispatch {
     private final Map<Long, String> dispatchCategory  = new HashMap<>();
     private final Map<Long, String> dispatchDepartment  = new HashMap<>();
     private final Map<Long, String> userStatesForNewDispatch = new HashMap<>();
-
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final TextForMessage textForMessage = new TextForMessage();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
+    private final UsersData usersData = new UsersData();
     private DispatchData dispatchData = new DispatchData();
 
     /**
@@ -86,7 +90,52 @@ public class LogicAndDataForDispatch {
     public String getUserStatesForNewDispatch(Long chatID) {
         return userStatesForNewDispatch.getOrDefault(chatID, "0");
     }
-
+    public String dispatchOn(Long userId){
+        if (!usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)) {
+            return "Эта функция недоступна, пока вы не зарегистрируетесь";
+        }
+        usersData.changeDispatchStatusOn(userId, databaseConnection);
+        return textForMessage.setTheText("/dispatchOn");
+    }
+    public String[][] checkDateForDispatch(){
+        String[][] allRowsFromBdDispatch = dispatchData.getAllDispatchData(databaseConnection);
+        for(int i = 0; i < allRowsFromBdDispatch.length; i++){
+            String date = allRowsFromBdDispatch[i][2];
+            String textToSend = allRowsFromBdDispatch[i][1];
+            LocalDate inputDate = LocalDate.parse(date, DATE_FORMATTER);
+            LocalDate currentDate = LocalDate.now();
+            if(inputDate.equals(currentDate)){
+                return messageToUserWithDispatch(textToSend);
+            }
+        }
+        return new String[0][0];
+    }
+    private String[][] messageToUserWithDispatch(String textToSend){
+        String[][] rowsFromBDRegistration = dispatchData.getUserIdAndDispatchOnOrOff(databaseConnection);
+        List<String[]> dispatchList = new ArrayList<>();
+        for(int i = 0; i < rowsFromBDRegistration.length; i++){
+            String dispatchOnOrOff = rowsFromBDRegistration[i][1];
+            if(dispatchOnOrOff.equals("True")){
+                String[] userIdAndDispatchText = new String[2];
+                String userId = rowsFromBDRegistration[i][0];
+                userIdAndDispatchText[0] = userId;
+                userIdAndDispatchText[1] = textToSend;
+                dispatchList.add(userIdAndDispatchText);
+            }
+        }
+        String[][] dispatchDataArray = new String[dispatchList.size()][2];
+        for (int i = 0; i < dispatchList.size(); i++) {
+            dispatchDataArray[i] = dispatchList.get(i);
+        }
+        return dispatchDataArray;
+    }
+    public String dispatchOff(Long userId){
+        if (!usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)) {
+            return "Эта функция недоступна, пока вы не зарегистрируетесь";
+        }
+        usersData.changeDispatchStatusOff(userId, databaseConnection);
+        return textForMessage.setTheText("/dispatchOff");
+    }
     /**
      * Обрабатывает новую команду диспетча от пользователя.
      *

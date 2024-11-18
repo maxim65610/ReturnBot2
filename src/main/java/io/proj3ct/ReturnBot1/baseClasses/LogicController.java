@@ -87,6 +87,12 @@ public class LogicController {
                 listForWorkWithKeyboardAndMessage.add(logicForChangeDataUsers.worksWithChangeData
                         (messageText, userId, emailSender));
             }
+            else if("/dispatchOn".equals(messageText)){
+                listForWorkWithKeyboardAndMessage.add(logicAndDataForDispatch.dispatchOn(userId));
+            }
+            else if("/dispatchOff".equals(messageText)){
+                listForWorkWithKeyboardAndMessage.add(logicAndDataForDispatch.dispatchOff(userId));
+            }
             else if("/userinfo".equals(messageText)){
                 listForWorkWithKeyboardAndMessage.add(usersData.takeData(userId,
                                 logicAndDataForRegistrationUsers.getDatabaseConnection()));

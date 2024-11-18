@@ -144,8 +144,8 @@ public class MessageConstants {
             "введите ‘-’, чтобы пропустить вопрос):";
 
     public static final String NEW_DISPATCH_SUCCESSFUL= "Рассылка успешно добавлена";
-
-
+    public static final String DISPATCH_ON_COMMAND_RESPONSE = "Вы подписались на рассылку, бот будет отправлять Вам важную информацию";
+    public static final String DISPATCH_OFF_COMMAND_RESPONSE = "Вы отписались от рассылки";
 
 
 }
