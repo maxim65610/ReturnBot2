@@ -97,6 +97,14 @@ public class DispatchData {
 
         return dispatchDataArray;
     }
+    /**
+
+     Метод для получения всех данных о dispatch из таблицы DispatchDataTable.
+
+     @param databaseConnection объект для подключения к базе данных.
+
+     @return двумерный массив строк, где каждая строка содержит данные о dispatch.
+     */
     public String[][] getAllDispatchData(DatabaseConnection databaseConnection) {
         // Изменяем запрос на получение всех данных
         String query = "SELECT * FROM DispatchDataTable";
@@ -130,6 +138,12 @@ public class DispatchData {
 
         return dispatchDataArray;
     }
+    /**
+     * Метод для получения идентификаторов пользователей и статуса dispatch из таблицы регистрации.
+     *
+     * @param databaseConnection объект для подключения к базе данных.
+     * @return двумерный массив строк, где каждая строка содержит идентификатор пользователя и статус dispatch.
+     */
     public String[][] getUserIdAndDispatchOnOrOff(DatabaseConnection databaseConnection) {
         // Изменяем запрос на получение всех данных
         String query = "SELECT * FROM RegistrationDataTable";

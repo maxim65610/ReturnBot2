@@ -92,7 +92,9 @@ public class DatebaseTables {
         surname text NOT NULL, 
         school_сlass text NOT NULL,  
         mail text NOT NULL,
-        dispatch text NOT NULL
+        dispatch text NOT NULL,
+        year_end_school int NOT NULL,
+        department text NOT NULL
         );""";
         try {
             Connection conn = databaseConnection.connect();

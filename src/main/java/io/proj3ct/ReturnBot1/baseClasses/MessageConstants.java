@@ -140,8 +140,7 @@ public class MessageConstants {
 
     public static final String DISPATCH_CATEGORY = "Введите категорию (обычная / приемная комиссия):";
 
-    public static final String DISPATCH_DEPARTMENT= "Введите факультет (не обязательно, " +
-            "введите ‘-’, чтобы пропустить вопрос):";
+    public static final String DISPATCH_DEPARTMENT= "Введите факультет:";
 
     public static final String NEW_DISPATCH_SUCCESSFUL= "Рассылка успешно добавлена";
     public static final String DISPATCH_ON_COMMAND_RESPONSE = "Вы подписались на рассылку, бот будет отправлять Вам важную информацию";

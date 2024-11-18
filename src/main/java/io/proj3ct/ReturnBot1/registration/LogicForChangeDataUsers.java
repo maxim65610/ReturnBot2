@@ -76,7 +76,7 @@ public class LogicForChangeDataUsers {
             } else if (messageText.equals("/userDataChangeMail")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_mail");
-                return textForMessage.setTheText("io/proj3ct/ReturnBot1/mail");
+                return textForMessage.setTheText("mail");
             }
         } else if ("awaiting_name".equals(currentState)) {
             usersData.changeName(userId, databaseConnection, messageText);
