@@ -87,23 +87,18 @@ public class LogicAndDataForDispatch {
         return userStatesForNewDispatch.getOrDefault(chatID, "0");
     }
 
-
-
-
     /**
      * Обрабатывает новую команду диспетча от пользователя.
      *
      * @param messageText текст сообщения от пользователя
      * @param userId идентификатор пользователя
-     * @param logicAndDataForDispatch объект логики и данных диспетча
      * @return ответное сообщение для пользователя
      */
-    public String worksWithNewDispatch(String messageText, Long userId,
-                                       LogicAndDataForDispatch logicAndDataForDispatch) {
+    public String worksWithNewDispatch(String messageText, Long userId) {
         Long dispatchID = dispatchData.generateNewId(databaseConnection);
 
-        String currentState = userStatesForNewDispatch.get(userId);
         datebaseTables.createDispatchDataTable();
+        String currentState = userStatesForNewDispatch.get(userId);
 
         if ("/newDispatсh".equals(messageText)) {
             userStatesForNewDispatch.put(userId, "awaiting_dispatchPassword");

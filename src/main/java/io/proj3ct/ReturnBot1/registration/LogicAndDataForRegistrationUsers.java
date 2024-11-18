@@ -122,7 +122,7 @@ public class LogicAndDataForRegistrationUsers {
                     schoolClassUser.put(userId, messageText);
                     userStatesForRegistration.remove(userId);
                     userStatesForRegistration.put(userId, "awaiting_mailUser ");
-                    return textForMessage.setTheText("io/proj3ct/ReturnBot1/mail");
+                    return textForMessage.setTheText("mail");
                 } else {
                     return textForMessage.setTheText("clas_bad");
                 }

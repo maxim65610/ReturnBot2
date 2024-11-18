@@ -22,7 +22,7 @@ public class LogicController {
     private final TextForMessage textForMessage = new TextForMessage();
     private final DepartmentsInfo departmentsInfo = new DepartmentsInfo();
     private final EmailLogic emailLogic = new EmailLogic();
-    private final String username = System.getenv("io/proj3ct/ReturnBot1/mail"); // Ваша почта
+    private final String username = System.getenv("mail"); // Ваша почта
     private final String password = System.getenv("passwordForMail");
     private final EmailSender emailSender = new EmailSender(username, password);
     private final LogicForChangeDataUsers logicForChangeDataUsers = new LogicForChangeDataUsers();
@@ -80,23 +80,23 @@ public class LogicController {
             else if("/newDispatсh".equals(messageText) || (!logicAndDataForDispatch.
                     getUserStatesForNewDispatch(userId).equals("0"))){
                 listForWorkWithKeyboardAndMessage.add(logicAndDataForDispatch.worksWithNewDispatch
-                        (messageText, userId, logicAndDataForDispatch));
+                        (messageText, userId));
             }
-            else if("/userDataChange".equals(messageText) || (!logicForChangeDataUsers.
+            else if("/userdatachange".equals(messageText) || (!logicForChangeDataUsers.
                     getUserStatesForChangeData(userId).equals("0"))){
                 listForWorkWithKeyboardAndMessage.add(logicForChangeDataUsers.worksWithChangeData
                         (messageText, userId, emailSender));
             }
-            else if("/userInfo".equals(messageText)){
+            else if("/userinfo".equals(messageText)){
                 listForWorkWithKeyboardAndMessage.add(usersData.takeData(userId,
                                 logicAndDataForRegistrationUsers.getDatabaseConnection()));
             }
-            else if("/userDataDell".equals(messageText)){
+            else if("/userdatadell".equals(messageText)){
                 usersData.deleteData(userId,
                         logicAndDataForRegistrationUsers.getDatabaseConnection());
                 listForWorkWithKeyboardAndMessage.add("Ваши данные успешно удалены");
             }
-            else if("/testAbit".equals(messageText)){
+            else if("/testabit".equals(messageText)){
                 logicForTestABI.getDataBd(messageText, userId, "100");
                 listForWorkWithKeyboardAndMessage.add(textForMessage.setTheText(messageText));
                 listForWorkWithKeyboardAndMessage.add(messageText);

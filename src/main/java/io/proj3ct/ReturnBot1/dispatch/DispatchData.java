@@ -14,7 +14,6 @@ import java.util.List;
  * Предоставляет методы для вставки данных и генерации нового идентификатора.
  */
 public class DispatchData {
-
     /**
      * Вставляет данные диспетча в таблицу DispatchDataTable.
      *
@@ -97,4 +96,5 @@ public class DispatchData {
 
         return dispatchDataArray;
     }
+
 }

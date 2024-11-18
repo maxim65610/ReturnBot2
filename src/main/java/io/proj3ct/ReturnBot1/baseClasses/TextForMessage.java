@@ -34,13 +34,13 @@ public class TextForMessage {
      * где ключ — это команда, а значение — текст сообщения для ответа.
      */
     private void initializeMessageMap() {
-        messageMap.put("/testAbit", MessageConstants.TEST_ABIT_COMMAND_RESPONSE);
+        messageMap.put("/testabit", MessageConstants.TEST_ABIT_COMMAND_RESPONSE);
         messageMap.put("/work", MessageConstants.WORK_COMMAND_RESPONSE);
         messageMap.put("/question", MessageConstants.QUESTION_COMMAND_RESPONSE);
         messageMap.put("/authorization", MessageConstants.REGISTRATION_COMMAND_RESPONSE);
         messageMap.put("authorization", MessageConstants.REGISTRATION_COMMAND_RESPONSE);
         messageMap.put("/userDataDell", MessageConstants.DEL_DATA_COMMAND_RESPONSE);
-        messageMap.put("/userDataChange", MessageConstants.CHANGEDATA_COMMAND_RESPONSE);
+        messageMap.put("userdatachange", MessageConstants.CHANGEDATA_COMMAND_RESPONSE);
         messageMap.put("userDataChange", MessageConstants.CHANGEDATA_COMMAND_RESPONSE);
         messageMap.put("correctMail", MessageConstants.CORRECT_MAIL_COMMAND_RESPONSE);
         messageMap.put("notСorrectMail", MessageConstants.NOT_CORRECT_MAIL_COMMAND_RESPONSE);
@@ -52,7 +52,7 @@ public class TextForMessage {
         messageMap.put("successful_surname", MessageConstants.SUCCESSFUL_SURNAME);
         messageMap.put("successful_mail", MessageConstants.SUCCESSFUL_MAIL);
         messageMap.put("successful_class", MessageConstants.SUCCESSFUL_CLASS);
-        messageMap.put("io/proj3ct/ReturnBot1/mail", MessageConstants.ENTER_MAIL);
+        messageMap.put("mail", MessageConstants.ENTER_MAIL);
         messageMap.put("surname", MessageConstants.ENTER_SURNAME);
         messageMap.put("name", MessageConstants.ENTER_NAME);
         messageMap.put("class", MessageConstants.ENTER_CLASS);

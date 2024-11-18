@@ -232,7 +232,7 @@ public class UsersData {
                 String name = rs.getString("name");
                 String surname = rs.getString("surname");
                 String schoolClass = rs.getString("school_сlass");
-                String mail = rs.getString("io/proj3ct/ReturnBot1/mail");
+                String mail = rs.getString("mail");
                 return "Ваше имя: " + name +
                         "\nВаша фамилия: " + surname +
                         "\nВаш класс: " + schoolClass +
@@ -258,7 +258,7 @@ public class UsersData {
             stmt.setString(1, userId.toString());
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getString("io/proj3ct/ReturnBot1/mail");
+                return rs.getString("mail");
             }
         } catch (SQLException e) {
             System.out.println("Ошибка получения данных: " + e.getMessage());

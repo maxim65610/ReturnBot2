@@ -58,7 +58,7 @@ public class LogicForChangeDataUsers {
      */
     public String worksWithChangeData(String messageText, Long userId, EmailSender emailSender) {
         String currentState = userStatesForChangeData.get(userId);
-        if ("/userDataChange".equals(messageText)) {
+        if ("/userdatachange".equals(messageText)) {
             userStatesForChangeData.put(userId, "awaiting_response");
         } else if ("awaiting_response".equals(currentState)) {
             if (messageText.equals("/userDataChangeName")) {
@@ -110,6 +110,6 @@ public class LogicForChangeDataUsers {
                 return textForMessage.setTheText("notСorrectMail");
             }
         }
-        return textForMessage.setTheText("userDataChange");
+        return textForMessage.setTheText("userdatachange");
     }
 }

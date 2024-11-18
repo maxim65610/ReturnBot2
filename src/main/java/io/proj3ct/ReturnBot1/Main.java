@@ -27,7 +27,6 @@ public class Main {
          * Запуск бота.
          * Инициализируется TelegramBotsApi и регистрируется созданный бот.
          */
-
         try  (TelegramBotsLongPollingApplication botsApplication = new TelegramBotsLongPollingApplication()) {
             botsApplication.registerBot(BOT_TOKEN, new TelegramBot(BOT_TOKEN));
             Thread.currentThread().join();
