@@ -38,7 +38,11 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final List<BotCommand> listCommands;
     private final LogicAndDataForDispatch logicAndDataForDispatch= new LogicAndDataForDispatch();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
+    /**
+     * Конструктор класса TelegramBot.
+     *
+     * @param token Токен бота для подключения к Telegram API.
+     */
     public TelegramBot(String token) {
         botToken = token;
         telegramClient = new OkHttpTelegramClient(botToken);
@@ -53,7 +57,11 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
 
         timerWithPeriodicityOfDay();
     }
-
+    /**
+     * Метод для обработки обновлений от пользователей.
+     *
+     * @param update Объект Update, содержащий информацию о полученном обновлении.
+     */
     @Override
     public void consume(Update update) {
         long userId;
@@ -71,9 +79,15 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         }
         sendMessage(userId, logicController.handleMessage(userId, messageText, flagForKeyboard));
     }
+    /**
+     * Метод для запуска таймера, который периодически отправляет сообщения.
+     */
     public void timerWithPeriodicityOfDay() {
         scheduler.scheduleAtFixedRate(this::sendMessageForDispatch, 0, 25, TimeUnit.SECONDS);
     }
+    /**
+     * Метод для отправки сообщений пользователям на основе данных для рассылки.
+     */
     public void sendMessageForDispatch(){
         String[][] userIdAndTextToSendDataArray = logicAndDataForDispatch.checkDateForDispatch();
         for(int i = 0; i < userIdAndTextToSendDataArray.length; i++){
@@ -83,6 +97,12 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
             executeMessage(message);
         }
     }
+    /**
+     * Метод для отправки сообщения пользователю с возможностью добавления клавиатуры.
+     *
+     * @param chatId             Идентификатор чата пользователя.
+     * @param listForWorkWithKeyboard Список строк для обработки с клавиатурой.
+     */
     void sendMessage(long chatId, List<String> listForWorkWithKeyboard) {
         String textToSend = "";
         if (!listForWorkWithKeyboard.isEmpty()) {
@@ -98,14 +118,24 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
 
         executeMessage(message);
     }
-
+    /**
+     * Метод для создания сообщения SendMessage для отправки пользователю.
+     *
+     * @param chatId Идентификатор чата пользователя.
+     * @param text   Текст сообщения.
+     * @return Созданное сообщение SendMessage.
+     */
     private SendMessage createMessage(long chatId, String text) {
         return SendMessage.builder()
                 .chatId(chatId)
                 .text(text)
                 .build();
     }
-
+    /**
+     * Метод для выполнения отправки сообщения через Telegram API.
+     *
+     * @param message Сообщение, которое нужно отправить.
+     */
     private void executeMessage(SendMessage message) {
         try {
             telegramClient.execute((new SetMyCommands(listCommands, new BotCommandScopeDefault(),null)));
