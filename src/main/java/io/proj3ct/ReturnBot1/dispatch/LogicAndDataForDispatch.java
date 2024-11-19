@@ -22,36 +22,34 @@ import java.time.format.DateTimeParseException;
  */
 public class LogicAndDataForDispatch {
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
     private final Map<Long, String> dispatchText  = new HashMap<>();
     private final Map<Long, String> dispatchTime  = new HashMap<>();
     private final Map<Long, String> dispatchCategory  = new HashMap<>();
     private final Map<Long, String> dispatchDepartment  = new HashMap<>();
     private final Map<Long, String> userStatesForNewDispatch = new HashMap<>();
-    private DatabaseConnection databaseConnection = new DatabaseConnection();
-    private TextForMessage textForMessage = new TextForMessage();
-    private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
-    private UsersData usersData = new UsersData();
-    private final DispatchData dispatchData = new DispatchData();
-
-    /**
-     * Конструктор по умолчанию.
-     */
-    public LogicAndDataForDispatch(){
+    private final DatabaseConnection databaseConnection;
+    private final TextForMessage textForMessage;
+    private final DatebaseTables datebaseTables;
+    private final UsersData usersData;
+    private final DispatchData dispatchData;
+    public LogicAndDataForDispatch() {
+        this.databaseConnection = new DatabaseConnection();
+        this.textForMessage = new TextForMessage();
+        this.datebaseTables = new DatebaseTables(databaseConnection);
+        this.usersData = new UsersData();
+        this.dispatchData = new DispatchData();
     }
-    /**
-     * Конструктор для тестов инициализации с пользовательскими зависимостями.
-     *
-     * @param databaseConnection объект для подключения к базе данных
-     * @param usersData объект для работы с данными пользователей
-     * @param textForMessage объект для работы с текстами сообщений
-     */
+    // Конструктор с параметрами для инъекции зависимостей
     public LogicAndDataForDispatch(DatabaseConnection databaseConnection,
-                                   UsersData usersData,TextForMessage textForMessage){
+                                   TextForMessage textForMessage,
+                                   DispatchData dispatchData,
+                                   UsersData usersData,
+                                   DatebaseTables datebaseTables) {
         this.databaseConnection = databaseConnection;
-        this.usersData = usersData;
         this.textForMessage = textForMessage;
-
+        this.dispatchData = dispatchData;
+        this.usersData = usersData;
+        this.datebaseTables = datebaseTables;
     }
     /**
      * Получает объект подключения к базе данных.
@@ -163,12 +161,10 @@ public class LogicAndDataForDispatch {
             if(dispatchOnOrOff.equals("True")){
                 String userId = rowsFromBDRegistration[i][0];
                 if(categoryDispatch.equals("приемная комиссия")){
-                    String yearEndSchoolUser = dispatchData.getUserYearEndSchool
-                            (Long.valueOf(userId), databaseConnection);
+                    String yearEndSchoolUser = dispatchData.getUserYearEndSchool(Long.valueOf(userId), databaseConnection);
                     String currentYear = String.valueOf(currentDate).substring(0,4);
                     if(currentYear.equals(yearEndSchoolUser)){
-                        String departmentUser = dispatchData.getUserResultTest
-                                (Long.valueOf(userId), databaseConnection);
+                        String departmentUser = dispatchData.getUserResultTest(Long.valueOf(userId), databaseConnection);
                         if(departmentUser.equals("-")){
                             userIdAndDispatchText[0] = userId;
                             userIdAndDispatchText[1] = "Приглашаем вас стать студентом УРФУ";
