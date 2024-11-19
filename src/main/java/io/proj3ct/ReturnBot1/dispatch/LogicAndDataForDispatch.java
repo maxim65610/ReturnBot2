@@ -28,11 +28,31 @@ public class LogicAndDataForDispatch {
     private final Map<Long, String> dispatchCategory  = new HashMap<>();
     private final Map<Long, String> dispatchDepartment  = new HashMap<>();
     private final Map<Long, String> userStatesForNewDispatch = new HashMap<>();
-    private final DatabaseConnection databaseConnection = new DatabaseConnection();
-    private final TextForMessage textForMessage = new TextForMessage();
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private TextForMessage textForMessage = new TextForMessage();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
-    private final UsersData usersData = new UsersData();
+    private UsersData usersData = new UsersData();
     private final DispatchData dispatchData = new DispatchData();
+
+    /**
+     * Конструктор по умолчанию.
+     */
+    public LogicAndDataForDispatch(){
+    }
+    /**
+     * Конструктор для тестов инициализации с пользовательскими зависимостями.
+     *
+     * @param databaseConnection объект для подключения к базе данных
+     * @param usersData объект для работы с данными пользователей
+     * @param textForMessage объект для работы с текстами сообщений
+     */
+    public LogicAndDataForDispatch(DatabaseConnection databaseConnection,
+                                   UsersData usersData,TextForMessage textForMessage){
+        this.databaseConnection = databaseConnection;
+        this.usersData = usersData;
+        this.textForMessage = textForMessage;
+
+    }
     /**
      * Получает объект подключения к базе данных.
      *
