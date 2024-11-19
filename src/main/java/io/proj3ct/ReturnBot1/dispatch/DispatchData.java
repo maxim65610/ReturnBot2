@@ -23,7 +23,8 @@ public class DispatchData {
      */
     public void insertData(Long userId, LogicAndDataForDispatch logicAndDataForDispatch
             , DatabaseConnection databaseConnection, Long newId) {
-        String dataRequest = "INSERT INTO DispatchDataTable (id, text, time, category, department) VALUES (?, ?, ?, ?, ?)";
+        String dataRequest = "INSERT INTO DispatchDataTable " +
+                "(id, text, time, category, department) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 

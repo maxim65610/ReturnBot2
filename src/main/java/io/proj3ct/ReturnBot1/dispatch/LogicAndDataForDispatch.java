@@ -32,7 +32,7 @@ public class LogicAndDataForDispatch {
     private final TextForMessage textForMessage = new TextForMessage();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     private final UsersData usersData = new UsersData();
-    private DispatchData dispatchData = new DispatchData();
+    private final DispatchData dispatchData = new DispatchData();
     /**
      * Получает объект подключения к базе данных.
      *
@@ -143,10 +143,12 @@ public class LogicAndDataForDispatch {
             if(dispatchOnOrOff.equals("True")){
                 String userId = rowsFromBDRegistration[i][0];
                 if(categoryDispatch.equals("приемная комиссия")){
-                    String yearEndSchoolUser = dispatchData.getUserYearEndSchool(Long.valueOf(userId), databaseConnection);
+                    String yearEndSchoolUser = dispatchData.getUserYearEndSchool
+                            (Long.valueOf(userId), databaseConnection);
                     String currentYear = String.valueOf(currentDate).substring(0,4);
                     if(currentYear.equals(yearEndSchoolUser)){
-                        String departmentUser = dispatchData.getUserResultTest(Long.valueOf(userId), databaseConnection);
+                        String departmentUser = dispatchData.getUserResultTest
+                                (Long.valueOf(userId), databaseConnection);
                         if(departmentUser.equals("-")){
                             userIdAndDispatchText[0] = userId;
                             userIdAndDispatchText[1] = "Приглашаем вас стать студентом УРФУ";
