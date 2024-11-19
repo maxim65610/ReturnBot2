@@ -1,6 +1,7 @@
 package io.proj3ct.ReturnBot1;
 
 
+import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -51,7 +52,7 @@ class LogicForTestABITest {
     @Test
     void testGetDataBd() {
         Long userId = 1L;
-        String messageText = "/testAbit";
+        String messageText = "/testabit";
         String data = "100";
         List<String> dataBD = logicForTestABI.getDataBd(messageText, userId, data);
         assertNotNull(dataBD);
@@ -64,7 +65,7 @@ class LogicForTestABITest {
     @Test
     void testWorksWithTestAPI() {
         Long userId = 1L;
-        String messageText = "/testAbit";
+        String messageText = "/testabit";
         String data = "100";
         List<String> dataBD = logicForTestABI.getDataBd(messageText, userId, data);
         assertNotNull(dataBD);

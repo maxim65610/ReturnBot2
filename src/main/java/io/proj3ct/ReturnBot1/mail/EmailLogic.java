@@ -1,4 +1,8 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.mail;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +37,7 @@ public class EmailLogic {
      * Вызывает worksWithMail
      */
     public String getWorksWithMail(String messageText, Long userId, EmailSender emailSender,
-                                   EmailLogic emailLogic,DatabaseConnection databaseConnection){
+                                   EmailLogic emailLogic, DatabaseConnection databaseConnection){
         return worksWithMail(messageText,userId,emailSender,emailLogic, databaseConnection);
     }
     /**

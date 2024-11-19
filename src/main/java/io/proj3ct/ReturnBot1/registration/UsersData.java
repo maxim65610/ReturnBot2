@@ -1,4 +1,6 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.registration;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
 import java.sql.*;
 
@@ -7,30 +9,39 @@ import java.sql.*;
  */
 public class UsersData {
     /**
-     Метод для вставки данных пользователя в таблицу регистрации
-     @param userId идентификатор пользователя
-     @param logicAndDataForRegistrationUsers объект, содержащий логику и данные для регистрации пользователя
-     @param databaseConnection объект для подключения к базе данных
+     * Метод для вставки данных пользователя в таблицу регистрации
+     *
+     * @param userId                           идентификатор пользователя
+     * @param logicAndDataForRegistrationUsers объект, содержащий логику и данные для регистрации пользователя
+     * @param databaseConnection               объект для подключения к базе данных
      */
-    public String insertData(Long userId, LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
-            ,DatabaseConnection databaseConnection ) {
+    public void insertData(Long userId, LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
+            , DatabaseConnection databaseConnection ) {
+
+        Integer year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+        String year_end = logicAndDataForRegistrationUsers.getSchoolClassUser (userId);
+        year = year + 12 - Integer.parseInt(year_end) - 1;
 
         String dataRequest = "INSERT INTO RegistrationDataTable " +
-                "(id_chat, name, surname, school_сlass, mail) VALUES (?, ?, ?, ?, ?)";
+                "(id_chat, name, surname, school_сlass, mail, dispatch, " +
+                "year_end_school, department) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             stmt.setString(1, userId.toString());
-            stmt.setString(2, logicAndDataForRegistrationUsers.getNameUser(userId));
-            stmt.setString(3, logicAndDataForRegistrationUsers.getSurnameUser(userId));
-            stmt.setString(4, logicAndDataForRegistrationUsers.getSchoolClassUser(userId));
-            stmt.setString(5, logicAndDataForRegistrationUsers.getMailUser(userId));
+            stmt.setString(2, logicAndDataForRegistrationUsers.getNameUser (userId));
+            stmt.setString(3, logicAndDataForRegistrationUsers.getSurnameUser (userId));
+            stmt.setString(4, logicAndDataForRegistrationUsers.getSchoolClassUser (userId));
+            stmt.setString(5, logicAndDataForRegistrationUsers.getMailUser (userId));
+            stmt.setString(6, "False");
+            stmt.setInt(7, year);
+            stmt.setString(8, "-");
+
             stmt.executeUpdate();
 
         } catch (SQLException e) {
             System.out.println("Ошибка вставки данных: " + e.getMessage());
         }
-        return "";
     }
     /**
      Метод для изменения поля имя пользователя в бд
@@ -50,19 +61,11 @@ public class UsersData {
             // Установка значений для параметров запроса
             stmt.setString(1, name); // Установка нового имени
             stmt.setString(2, userId.toString()); // Установка userId для фильтрации
-
-            // Выполнение обновления
-            int rowsAffected = stmt.executeUpdate();
-
-            // Проверка, обновлено ли хоть одно значение
-            if (rowsAffected > 0) {
-            } else {
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             // Обработка исключений
             System.out.println("Ошибка обновления данных: " + e.getMessage());
-            e.getMessage();
         }
     }
     /**
@@ -84,18 +87,11 @@ public class UsersData {
             stmt.setString(1, surname); // Установка нового имени
             stmt.setString(2, userId.toString()); // Установка userId для фильтрации
 
-            // Выполнение обновления
-            int rowsAffected = stmt.executeUpdate();
-
-            // Проверка, обновлено ли хоть одно значение
-            if (rowsAffected > 0) {
-            } else {
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             // Обработка исключений
             System.out.println("Ошибка обновления данных: " + e.getMessage());
-            e.getMessage();
         }
     }
     /**
@@ -104,31 +100,25 @@ public class UsersData {
      @param userId идентификатор пользователя
      @param databaseConnection объект для подключения к базе данных
      */
-    public void changeClass(Long userId
-            , DatabaseConnection databaseConnection, String schoolClass) {
-
+    public void changeClass(Long userId, DatabaseConnection databaseConnection, String schoolClass) {
         // SQL-запрос для обновления имени в таблице RegistrationDataTable по userId
-        String dataRequest = "UPDATE RegistrationDataTable SET school_сlass = ? WHERE id_chat = ?";
+        String dataRequest = "UPDATE RegistrationDataTable SET school_сlass = ?, year_end_school = ? WHERE id_chat = ?";
+        Integer year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+        year = year + 12 - Integer.parseInt(schoolClass) - 1;
 
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             // Установка значений для параметров запроса
-            stmt.setString(1, schoolClass); // Установка нового имени
-            stmt.setString(2, userId.toString()); // Установка userId для фильтрации
+            stmt.setString(1, schoolClass); // Установка нового класса
+            stmt.setInt(2, year); // Установка года окончания школы
+            stmt.setString(3, String.valueOf(userId)); // Преобразование userId в строку для фильтрации
 
-            // Выполнение обновления
-            int rowsAffected = stmt.executeUpdate();
-
-            // Проверка, обновлено ли хоть одно значение
-            if (rowsAffected > 0) {
-            } else {
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             // Обработка исключений
             System.out.println("Ошибка обновления данных: " + e.getMessage());
-            e.getMessage();
         }
     }
     /**
@@ -150,20 +140,39 @@ public class UsersData {
             stmt.setString(1, mail); // Установка нового имени
             stmt.setString(2, userId.toString()); // Установка userId для фильтрации
 
-            // Выполнение обновления
-            int rowsAffected = stmt.executeUpdate();
-
-            // Проверка, обновлено ли хоть одно значение
-            if (rowsAffected > 0) {
-            } else {
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             // Обработка исключений
             System.out.println("Ошибка обновления данных: " + e.getMessage());
-            e.getMessage();
+
         }
     }
+    /**
+     * Обновляет поле department в таблице RegistrationDataTable для указанного пользователя.
+     *
+     * @param userId             Идентификатор пользователя, для которого нужно обновить department.
+     * @param databaseConnection  Объект для подключения к базе данных.
+     * @param department          Новое значение для поля department.
+     */
+    public void changeDepartment(Long userId, DatabaseConnection databaseConnection, String department) {
+        // SQL-запрос для обновления поля department в таблице RegistrationDataTable по userId
+        String dataRequest = "UPDATE RegistrationDataTable SET department = ? WHERE id_chat = ?";
+
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
+
+            // Установка значений для параметров запроса
+            stmt.setString(1, department); // Установка нового значения department
+            stmt.setString(2, userId.toString()); // Преобразование userId в строку для фильтрации
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            // Обработка исключений
+            System.out.println("Ошибка обновления данных: " + e.getMessage());
+        }
+    }
+
     /**
      Метод для проверки существования пользователя в таблице регистрации
      @param userId идентификатор пользователя
@@ -189,8 +198,8 @@ public class UsersData {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false; // Обработка ошибки
+              System.out.println("Ошибка получения данных: " + e.getMessage());
+              return false; // Обработка ошибки
         }
     }
     /**
@@ -262,5 +271,41 @@ public class UsersData {
             System.out.println("Ошибка получения данных: " + e.getMessage());
         }
         return "Вы не прошли регистрацию";
+    }
+    /**
+     * Метод для изменения статуса dispatch на "True" в базе данных.
+     *
+     * @param userId идентификатор пользователя.
+     * @param databaseConnection объект для подключения к базе данных.
+     */
+    public void changeDispatchStatusOn(Long userId, DatabaseConnection databaseConnection){
+        String dataRequest = "UPDATE RegistrationDataTable SET dispatch = ? WHERE id_chat = ?";
+        try (Connection conn = databaseConnection.connect();
+        PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
+
+            stmt.setString(1, "True");
+            stmt.setString(2, userId.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Ошибка получения данных: " + e.getMessage());
+        }
+    }
+    /**
+     * Метод для изменения статуса dispatch на "False" в базе данных.
+     *
+     * @param userId идентификатор пользователя.
+     * @param databaseConnection объект для подключения к базе данных.
+     */
+    public void changeDispatchStatusOff(Long userId, DatabaseConnection databaseConnection){
+        String dataRequest = "UPDATE RegistrationDataTable SET dispatch = ? WHERE id_chat = ?";
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
+
+            stmt.setString(1, "False");
+            stmt.setString(2, userId.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Ошибка получения данных: " + e.getMessage());
+        }
     }
 }

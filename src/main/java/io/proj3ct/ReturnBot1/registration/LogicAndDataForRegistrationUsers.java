@@ -1,4 +1,9 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.registration;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.datebase.DatebaseTables;
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -97,7 +102,7 @@ public class LogicAndDataForRegistrationUsers {
             datebaseTables.createRegistrationDataTable();
             if (usersData.checkUserIdExistsInRegistrationDataTable(userId,
                     logicAndDataForRegistrationUsers.getDatabaseConnection())) {
-                return textForMessage.setTheText("registration");
+                return textForMessage.setTheText("io/proj3ct/ReturnBot1/registration");
             }
             userStatesForRegistration.put(userId, "awaiting_nameUser ");
         } else if ("awaiting_nameUser ".equals(currentState)) {

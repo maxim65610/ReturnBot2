@@ -1,4 +1,8 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.departmentsAndTest;
+
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 
 import java.util.*;
 
@@ -14,6 +18,8 @@ public class LogicForTestABI {
     private Map<Long, List<String>> choiceABI = new HashMap<>();
     private Map<Long, String> resultsTestAbi = new HashMap<>();
     private Map<Long, String> userStatesForTest = new HashMap<>();
+    private final UsersData usersData = new UsersData();
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
     /**
      * Получает текущее состояние теста для указанного пользователя.
      * @param chatID идентификатор пользователя
@@ -124,7 +130,7 @@ public class LogicForTestABI {
             choiceABI.get(userId).add(data);
         }
         // Обрабатываем переходы состояний теста
-        if (messageText.equals("/testAbit") && (!userStatesForTest.containsKey(userId))) {
+        if (messageText.equals("/testabit") && (!userStatesForTest.containsKey(userId))) {
             userStatesForTest.put(userId, "awaiting_testABI_1");
         } else if ("awaiting_testABI_1".equals(currentState)) {
             dataBD = arrayBdForTestABI(idTestABI.get(userId));
@@ -133,7 +139,11 @@ public class LogicForTestABI {
         } else if (currentState != null && currentState.startsWith("awaiting_testABI")) {
             int stepForAwaiting_testABI = Integer.parseInt(currentState.split("_")[2]);
             if (stepForAwaiting_testABI == 10) {
-                resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
+                String res = gettingResult(userId, choiceABI);
+                if(usersData.checkUserIdExistsInRegistrationDataTable(userId,databaseConnection)) {
+                    usersData.changeDepartment(userId,databaseConnection,res);
+                }
+                resultsTestAbi.put(userId, res);
                 userStatesForTest.remove(userId);
                 dataBD.add(textForMessage.setTheText("userPassedTest"));
                 userStatesForTest.put(userId, "awaiting_testABI_11");

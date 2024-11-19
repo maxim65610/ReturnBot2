@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.baseClasses;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -141,7 +141,7 @@ public class KeyboardLogic {
                     .build();
             message.setReplyMarkup(keyboard);
         }
-        if (data.equals("/testAbit")) {
+        if (data.equals("/testabit")) {
             InlineKeyboardMarkup keyboard = InlineKeyboardMarkup
                     .builder()
                     .keyboardRow(new InlineKeyboardRow(

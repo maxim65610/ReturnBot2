@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.baseClasses;
 
 /**
  * Константы для сообщений, используемых ботом.
@@ -11,7 +11,7 @@ public class MessageConstants {
     public static final String DEFAULT_RESPONSE = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить, " +
             "пожалуйста пользуйся кнопками.\nЕсли у тебя остались вопросы, можешь воспользоваться " +
             "командой /question.\nЕсли хотите начать работу, напишите /work.\nТакже у тебя есть возможность " +
-            "пройти тест на то, какое направление вам больше подходит, просто напиши /testAbit." +
+            "пройти тест на то, какое направление вам больше подходит, просто напиши /testabit." +
             "\nЕсли вы хотите получить больший функционал бота воспользуйтесь /authorization";;
     /**
      * Ответ бота на команду, запрашивающую список институтов.
@@ -71,9 +71,9 @@ public class MessageConstants {
      * Ответ бота на успешную авторизации.
      */
     public static final String SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE ="Авторизация окончена успешно." +
-            "\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
-            "\nЕсли хотите удалить данные воспользуйтесь /userDataDell"+
-            "\nЕсли хотите поменять данные воспользуйтесь /userDataChange";
+            "\nЕсли хотите проверить данные воспользуйтесь /userinfo" +
+            "\nЕсли хотите удалить данные воспользуйтесь /userdatadell"+
+            "\nЕсли хотите поменять данные воспользуйтесь /userdatachange";
 
     public static final String UN_SUCCESSFUL_CLASS = "Вы ввели некорректный класс, введите класс заново";
     /**
@@ -88,9 +88,9 @@ public class MessageConstants {
      * Ответ бота на то, что пользователь уже прошел регистрацию.
      */
     public static final String AUTHORISATION_COMMAND_RESPONSE ="Вы уже зарегистрированы!!!" +
-            "\nЕсли хотите проверить данные воспользуйтесь /userInfo" +
-            "\nЕсли хотите удалить данные воспользуйтесь /userDataDell" +
-            "\nЕсли хотите поменять данные воспользуйтесь /userDataChange";
+            "\nЕсли хотите проверить данные воспользуйтесь /userinfo" +
+            "\nЕсли хотите удалить данные воспользуйтесь /userdatadell" +
+            "\nЕсли хотите поменять данные воспользуйтесь /userdatachange";
     /**
      * Сообщение, информирующее пользователя о том, что его данные успешно удалены.
      */
@@ -127,6 +127,26 @@ public class MessageConstants {
      * Сообщение, информирующее пользователя о том, что класс успешно изменен.
      */
     public static final String SUCCESSFUL_CLASS = "Класс успешно изменен";
+
+    public static final String NEW_DISPATCH = "Введите пароль:";
+
+    public static final String BAD_PASSWORD_NEW_DISPATCH = "Пароль не верный, в доступе отказано";
+
+    public static final String SUCCESSFUL_PASSWORD_NEW_DISPATCH = "Пароль верный, введите текст рассылки:";
+
+    public static final String DISPATCH_TIME = "Введите дату отправки (в формате dd.MM.yyyy):";
+
+    public static final String DISPATCH_TIME_BAD = "Вы ввели некорректные данные:";
+
+    public static final String DISPATCH_CATEGORY = "Введите категорию (обычная / приемная комиссия):";
+
+    public static final String DISPATCH_DEPARTMENT= "Введите факультет:";
+
+    public static final String NEW_DISPATCH_SUCCESSFUL= "Рассылка успешно добавлена";
+    public static final String DISPATCH_ON_COMMAND_RESPONSE = "Вы подписались на рассылку, бот будет отправлять Вам важную информацию";
+    public static final String DISPATCH_OFF_COMMAND_RESPONSE = "Вы отписались от рассылки";
+
+
 }
 
 

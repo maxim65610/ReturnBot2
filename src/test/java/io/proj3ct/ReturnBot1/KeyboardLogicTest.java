@@ -1,6 +1,7 @@
 package io.proj3ct.ReturnBot1;
 
 
+import io.proj3ct.ReturnBot1.baseClasses.KeyboardLogic;
 import org.junit.jupiter.api.BeforeEach;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -98,7 +99,7 @@ public class KeyboardLogicTest {
     public void testKeyboardsTestAbitCommand() {
         KeyboardLogic logic = new KeyboardLogic();
 
-        String data = "/testAbit";
+        String data = "/testabit";
         SendMessage resultMessage = logic.keyboards(message, data);
 
         InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();

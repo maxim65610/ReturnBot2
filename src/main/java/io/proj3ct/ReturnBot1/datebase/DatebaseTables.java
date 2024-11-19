@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.datebase;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -85,19 +85,22 @@ public class DatebaseTables {
      */
     public void createRegistrationDataTable() {
 
-        String registrationDataTable = """
+        String registrationDataTableQuery = """
         CREATE TABLE IF NOT EXISTS RegistrationDataTable (
         id_chat text PRIMARY KEY, 
         name text NOT NULL,
         surname text NOT NULL, 
         school_сlass text NOT NULL,  
-        mail text NOT NULL
+        mail text NOT NULL,
+        dispatch text NOT NULL,
+        year_end_school int NOT NULL,
+        department text NOT NULL
         );""";
         try {
             Connection conn = databaseConnection.connect();
             if (conn != null ) {
                 try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(registrationDataTable);
+                    stmt.executeUpdate(registrationDataTableQuery);
                 }
             } else {
                 System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
@@ -106,6 +109,29 @@ public class DatebaseTables {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
 
+    }
+    public void createDispatchDataTable() {
+        String dispatchDataTableQuery = """
+        CREATE TABLE IF NOT EXISTS DispatchDataTable (
+        id int PRIMARY KEY, 
+        text text NOT NULL,
+        time text NOT NULL, 
+        category text NOT NULL,  
+        department text NOT NULL
+        );""";
+
+        try (Connection conn = databaseConnection.connect()) {
+            if (conn != null) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate(dispatchDataTableQuery);
+                }
+            } else {
+                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ошибка создания таблицы: " + e.getMessage());
+            e.printStackTrace(); // Для получения более подробной информации о проблеме
+        }
     }
 
 }

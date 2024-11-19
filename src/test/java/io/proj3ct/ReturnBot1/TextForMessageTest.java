@@ -1,5 +1,6 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
 import org.junit.jupiter.api.Test;
 
 
@@ -28,7 +29,7 @@ class TextForMessageTest {
         String answerCommandDefault = textForMessage.setTheText("/start");
         String answerCommandWork = textForMessage.setTheText("/work");
 
-        String answerCommandTestAbit = textForMessage.setTheText("/testAbit");
+        String answerCommandTestAbit = textForMessage.setTheText("/testabit");
         String answerCommandQuestion = textForMessage.setTheText("/question");
 
         String ExpectedMessageDefault = "Привет, этот бот может помочь тебе понять куда ты хочешь поступить," +
@@ -36,7 +37,7 @@ class TextForMessageTest {
                 "Если у тебя остались вопросы, можешь воспользоваться командой /question.\n" +
                 "Если хотите начать работу, напишите /work.\n" +
                 "Также у тебя есть возможность пройти тест на то, какое направление вам больше подходит," +
-                " просто напиши /testAbit.\n" +
+                " просто напиши /testabit.\n" +
                 "Если вы хотите получить больший функционал бота воспользуйтесь /authorization";
         String ExpectedMessageWork = "Вот все институты, у которых ты можешь посмотреть факультеты:";
         String ExpectedMessageTestAbit = "Вы начали проходить тестирование по выбору факультета, " +
@@ -92,9 +93,9 @@ class TextForMessageTest {
                 " Чтобы узнать результат напишите /testres";
         String ExpectedMessageResultTestABI = "Вам больше всего подходит факультет: ";
         String ExpectedMessageSuccessfulReg ="Авторизация окончена успешно.\n" +
-                "Если хотите проверить данные воспользуйтесь /userInfo\n" +
-                "Если хотите удалить данные воспользуйтесь /userDataDell\n" +
-                "Если хотите поменять данные воспользуйтесь /userDataChange";
+                "Если хотите проверить данные воспользуйтесь /userinfo\n" +
+                "Если хотите удалить данные воспользуйтесь /userdatadell\n" +
+                "Если хотите поменять данные воспользуйтесь /userdatachange";
         String ExpectedMessageEnterName = "Введите имя:";
         String ExpectedMessageEnterSurname = "Введите фамилию:";
         String ExpectedMessageEnterMail = "Введите почту:";

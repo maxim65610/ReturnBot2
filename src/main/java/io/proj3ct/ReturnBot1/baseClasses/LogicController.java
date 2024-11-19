@@ -1,4 +1,14 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.baseClasses;
+
+import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.departmentsAndTest.DepartmentsInfo;
+import io.proj3ct.ReturnBot1.dispatch.LogicAndDataForDispatch;
+import io.proj3ct.ReturnBot1.mail.EmailLogic;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
+import io.proj3ct.ReturnBot1.registration.LogicAndDataForRegistrationUsers;
+import io.proj3ct.ReturnBot1.registration.LogicForChangeDataUsers;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +30,7 @@ public class LogicController {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
             = new LogicAndDataForRegistrationUsers();
+    private final LogicAndDataForDispatch logicAndDataForDispatch = new LogicAndDataForDispatch();
     /**
      * Проверяет, что делать с переданными данными для клавиатуры.
      * @param data Входные данные для обработки.
@@ -66,21 +77,32 @@ public class LogicController {
                 listForWorkWithKeyboardAndMessage.add(logicAndDataForRegistrationUsers.worksWithRegistration
                         (messageText, userId,emailSender, logicAndDataForRegistrationUsers));
             }
-            else if("/userDataChange".equals(messageText) || (!logicForChangeDataUsers.
+            else if("/newDispatсh".equals(messageText) || (!logicAndDataForDispatch.
+                    getUserStatesForNewDispatch(userId).equals("0"))){
+                listForWorkWithKeyboardAndMessage.add(logicAndDataForDispatch.worksWithNewDispatch
+                        (messageText, userId));
+            }
+            else if("/userdatachange".equals(messageText) || (!logicForChangeDataUsers.
                     getUserStatesForChangeData(userId).equals("0"))){
                 listForWorkWithKeyboardAndMessage.add(logicForChangeDataUsers.worksWithChangeData
                         (messageText, userId, emailSender));
             }
-            else if("/userInfo".equals(messageText)){
+            else if("/dispatchOn".equals(messageText)){
+                listForWorkWithKeyboardAndMessage.add(logicAndDataForDispatch.dispatchOn(userId));
+            }
+            else if("/dispatchOff".equals(messageText)){
+                listForWorkWithKeyboardAndMessage.add(logicAndDataForDispatch.dispatchOff(userId));
+            }
+            else if("/userinfo".equals(messageText)){
                 listForWorkWithKeyboardAndMessage.add(usersData.takeData(userId,
                                 logicAndDataForRegistrationUsers.getDatabaseConnection()));
             }
-            else if("/userDataDell".equals(messageText)){
+            else if("/userdatadell".equals(messageText)){
                 usersData.deleteData(userId,
                         logicAndDataForRegistrationUsers.getDatabaseConnection());
                 listForWorkWithKeyboardAndMessage.add("Ваши данные успешно удалены");
             }
-            else if("/testAbit".equals(messageText)){
+            else if("/testabit".equals(messageText)){
                 logicForTestABI.getDataBd(messageText, userId, "100");
                 listForWorkWithKeyboardAndMessage.add(textForMessage.setTheText(messageText));
                 listForWorkWithKeyboardAndMessage.add(messageText);

@@ -1,5 +1,8 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.baseClasses.LogicController;
+import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -84,16 +87,16 @@ public class LogicControllerTest {
         when(update.getMessage()).thenReturn(messageMock);
         when(messageMock.getText()).thenReturn("/testAbit");
 
-        when(mockTextForMessage.setTheText("/testAbit")).thenReturn("Тест начат");
+        when(mockTextForMessage.setTheText("/testabit")).thenReturn("Тест начат");
 
         long userId = 0L;
-        when(mockLogicForTestABI.getDataBd("/testAbit", userId, "100"))
-                .thenReturn(List.of("Тест начат", "/testAbit"));
+        when(mockLogicForTestABI.getDataBd("/testabit", userId, "100"))
+                .thenReturn(List.of("Тест начат", "/testabit"));
 
-        List<String> result = logicController.handleMessage(0L, "/testAbit",false);
+        List<String> result = logicController.handleMessage(0L, "/testabit",false);
 
-        assertEquals(List.of("Тест начат", "/testAbit"), result);
-        verify(mockLogicForTestABI).getDataBd("/testAbit", userId, "100");
+        assertEquals(List.of("Тест начат", "/testabit"), result);
+        verify(mockLogicForTestABI).getDataBd("/testabit", userId, "100");
     }
 }
 
