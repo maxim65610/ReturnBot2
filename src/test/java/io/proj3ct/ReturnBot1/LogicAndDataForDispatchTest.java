@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
@@ -100,9 +103,13 @@ public class LogicAndDataForDispatchTest {
      */
     @Test
     public void testCheckDateForDispatch_dispatchForToday() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate currentDate = LocalDate.now();
+        String formattedDate = currentDate.format(formatter);
+
         String[][] dispatchDataFromDb = {
-                {"1", "Text", "19.11.2024", "category", "department"},
-                {"2", "Text", "19.11.2024", "category", "department"}
+                {"1", "Text", formattedDate, "category", "department"},
+                {"2", "Text", formattedDate, "category", "department"}
         };
         when(mockDispatchData.getAllDispatchData(mockDatabaseConnection)).thenReturn(dispatchDataFromDb);
         String[][] registrationData = {

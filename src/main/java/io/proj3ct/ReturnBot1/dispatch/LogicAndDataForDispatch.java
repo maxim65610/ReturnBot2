@@ -39,7 +39,6 @@ public class LogicAndDataForDispatch {
         this.usersData = new UsersData();
         this.dispatchData = new DispatchData();
     }
-
     // Конструктор с параметрами для инъекции зависимостей
     public LogicAndDataForDispatch(DatabaseConnection databaseConnection,
                                    TextForMessage textForMessage,
