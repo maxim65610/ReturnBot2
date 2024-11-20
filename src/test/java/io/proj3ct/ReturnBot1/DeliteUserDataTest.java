@@ -17,8 +17,6 @@ public class DeliteUserDataTest {
     private final DatabaseConnection databaseConnection;
     private final Connection connection;
     private final PreparedStatement preparedStatement;
-    private final TextForMessage textForMessage;
-
     /**
      * Конструктор для инициализации зависимостей.
      */
@@ -28,7 +26,7 @@ public class DeliteUserDataTest {
         databaseConnection = mock(DatabaseConnection.class);
         connection = mock(Connection.class);
         preparedStatement = mock(PreparedStatement.class);
-        textForMessage = new TextForMessage();
+
 
     }
     /**
@@ -43,14 +41,13 @@ public class DeliteUserDataTest {
         when(logicAndDataForRegistrationUsers.getSchoolClassUser (anyLong())).thenReturn("10");
         when(logicAndDataForRegistrationUsers.getMailUser (anyLong())).thenReturn("test@example.com");
     }
-
     /**
      * Тест для команды /userDataDell
      * Проверяет функционал и вывод
      */
     @Test
     public void DeliteUserDataTestCommand() throws SQLException{
-        String answerCommandUserDataDell = textForMessage.setTheText("/userDataDell");
+        String answerCommandUserDataDell = MessageConstants.DATA_DELETED;
         String ExpectedMessageDataDell = "Ваши данные успешно удалены";
 
         Long userId = 1L;
@@ -58,9 +55,5 @@ public class DeliteUserDataTest {
         verify(preparedStatement).setString(1, userId.toString());
         verify(preparedStatement).executeUpdate();
         assertEquals(ExpectedMessageDataDell, answerCommandUserDataDell);
-
-
     }
-
-
 }

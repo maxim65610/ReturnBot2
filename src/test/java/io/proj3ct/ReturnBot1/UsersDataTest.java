@@ -140,15 +140,15 @@ public class UsersDataTest {
      * Проверяет, что данные пользователя возвращаются корректно.
      */
     @Test
-    public void testTakeData() throws SQLException {
+    public void testGetRegistrationData() throws SQLException {
         Long userId = 1L;
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getString("name")).thenReturn("qqqq");
         when(resultSet.getString("surname")).thenReturn("wwww");
-        when(resultSet.getString("school_сlass")).thenReturn("10");
+        when(resultSet.getString("school_class")).thenReturn("10");
         when(resultSet.getString("mail")).thenReturn("test@example.com");
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        String data = usersData.takeData(userId, databaseConnection);
+        String data = usersData.getRegistrationData(userId, databaseConnection);
         assertEquals("Ваше имя: qqqq\nВаша фамилия: wwww\nВаш класс: 10\nВаша почта: test@example.com", data);
     }
     /**

@@ -14,60 +14,64 @@ public class LogicAndDataForRegistrationUsers {
     private final Map<Long, String> userStatesForRegistration = new HashMap<>();
     private UsersData usersData = new UsersData();
     private DatabaseConnection databaseConnection = new DatabaseConnection();
-    private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
+    private DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
+
+    /**
+     * Дефолтный конструктор
+     */
+    public LogicAndDataForRegistrationUsers() {
+    }
+    /**
+     * Конструктор с параметрами для тестирования
+     */
+    public LogicAndDataForRegistrationUsers(UsersData usersData, DatabaseConnection databaseConnection) {
+        this.usersData = usersData;
+        this.databaseConnection = databaseConnection;
+        this.datebaseTables = new DatebaseTables(databaseConnection);
+    }
+
     /**
      * Получает объект подключения к базе данных.
      * @return объект DatabaseConnection
      */
-    public DatabaseConnection getDatabaseConnection() {return databaseConnection;}
+    public DatabaseConnection getDatabaseConnection() {
+        return databaseConnection;
+    }
     /**
      * Получает имя пользователя по его идентификатору чата.
      *
      * @param chatID идентификатор чата пользователя
      * @return имя пользователя
      */
-    public String getNameUser (Long chatID) {return nameUser .get(chatID);}
+    public String getNameUser (Long chatID) {
+        return nameUser .get(chatID);
+    }
     /**
      * Получает фамилию пользователя по его идентификатору чата.
      *
      * @param chatID идентификатор чата пользователя
      * @return фамилия пользователя
      */
-    public String getSurnameUser (Long chatID) {return surnameUser .get(chatID);}
+    public String getSurnameUser (Long chatID) {
+        return surnameUser .get(chatID);
+    }
     /**
      * Получает класс пользователя по его идентификатору чата.
      *
      * @param chatID идентификатор чата пользователя
      * @return класс пользователя
      */
-    public String getSchoolClassUser (Long chatID) {return schoolClassUser .get(chatID);}
+    public String getSchoolClassUser (Long chatID) {
+        return schoolClassUser .get(chatID);
+    }
     /**
      * Получает электронную почту пользователя по его идентификатору чата.
      *
      * @param chatID идентификатор чата пользователя
      * @return электронная почта пользователя
      */
-    public String getMailUser (Long chatID) {return mailUser .get(chatID);}
-    /**
-     * Устанавливает объект UsersData(для тестов).
-     *
-     * @param usersData объект, отвечающий за управление данными пользователей.
-     */
-    public void setUsersData(UsersData usersData) {this.usersData = usersData;}
-    /**
-     * Устанавливает объект DatabaseConnection(для тестов).
-     *
-     * @param databaseConnection объект, представляющий соединение с базой данных.
-     */
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
-    }
-
-    /**
-     * Устанавливает объект setUserStateForRegistration(для тестов).
-     */
-    public void setUserStateForRegistration(Long userId, String state) {
-        userStatesForRegistration.put(userId, state);
+    public String getMailUser (Long chatID) {
+        return mailUser .get(chatID);
     }
     /**
      * Получает состояние пользователя для регистрации по его идентификатору чата.
@@ -101,7 +105,7 @@ public class LogicAndDataForRegistrationUsers {
             nameUser .put(userId, messageText);
             userStatesForRegistration.remove(userId);
             userStatesForRegistration.put(userId, "awaiting_surnameUser ");
-            return MessageConstants.ENTER_NAME;
+            return MessageConstants.ENTER_SURNAME;
         } else if ("awaiting_surnameUser ".equals(currentState)) {
             surnameUser .put(userId, messageText);
             userStatesForRegistration.remove(userId);

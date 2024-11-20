@@ -1,103 +1,148 @@
 package io.proj3ct.ReturnBot1;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.message.Message;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
- * Тестовый класс для проверки логики регистрации пользователей в классе
- * LogicAndDataForRegistrationUsers.
+ * Модульные тесты для класса LogicAndDataForRegistrationUsers.
+ * Этот класс тестирует логику регистрации пользователей, включая обработку
+ * авторизации, ввод личных данных и проверку электронной почты.
  */
 public class LogicAndDataForRegistrationUsersTest {
-
-    private LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers;
-
-    @Mock
+    private LogicAndDataForRegistrationUsers logic;
     private UsersData usersData;
-
-    @Mock
     private DatabaseConnection databaseConnection;
-
-    @Mock
     private EmailSender emailSender;
+    private DatebaseTables datebaseTables;
+    private Connection connection;
+    private Statement statement; // Объект Statement для операций с базой данных
 
-    @Mock
-    private TextForMessage textForMessage;
-
-    @Mock
-    private Update update;
-
-    @Mock
-    private Message message;
     /**
-     * Настройка тестового окружения перед каждым тестом.
-     * Инициализирует моки и устанавливает зависимости для тестируемого класса.
+     * Настраивает тестовую среду перед каждым тестом.
+     * Инициализирует моки и настраивает соединение с базой данных.
      */
-    @Before
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        logicAndDataForRegistrationUsers = new LogicAndDataForRegistrationUsers();
+    @BeforeEach
+    public void setUp() throws SQLException {
+        // Инициализация моков
+        usersData = Mockito.mock(UsersData.class);
+        databaseConnection = Mockito.mock(DatabaseConnection.class);
+        emailSender = Mockito.mock(EmailSender.class);
 
-        // Установка зависимостей через сеттеры
-        logicAndDataForRegistrationUsers.setUsersData(usersData);
-        logicAndDataForRegistrationUsers.setDatabaseConnection(databaseConnection);
-        logicAndDataForRegistrationUsers.setTextForMessage(textForMessage);
+        // Проверка на наличие нулевых моков
+        if (usersData == null || databaseConnection == null || emailSender == null) {
+            throw new IllegalStateException("usersData, databaseConnection или emailSender равны null");
+        }
 
-        when(update.getMessage()).thenReturn(message);
+        // Настройка соединений и заявлений
+        connection = Mockito.mock(Connection.class);
+        statement = Mockito.mock(Statement.class);
 
+        when(databaseConnection.connect()).thenReturn(connection);
+        when(connection.createStatement()).thenReturn(statement);
+
+        // Инициализация других объектов
+        logic = new LogicAndDataForRegistrationUsers(usersData, databaseConnection);
+        datebaseTables = new DatebaseTables(databaseConnection);
     }
+
     /**
-     * Тестирует процесс регистрации пользователя.
-     * Проверяет, что на каждом этапе регистрации возвращаются ожидаемые сообщения,
-     * и что данные пользователя сохраняются корректно.
+     * Тестирует успешный процесс регистрации, когда предоставлен корректный адрес электронной почты.
      */
     @Test
-    public void testWorksWithRegistration() {
+    public void testWorksWithRegistration_EnterMail() {
         Long userId = 1L;
+        logic.worksWithRegistration("/authorization", userId, emailSender, logic);
+        logic.worksWithRegistration("John", userId, emailSender, logic);
+        logic.worksWithRegistration("Doe", userId, emailSender, logic);
+        logic.worksWithRegistration("10", userId, emailSender, logic);
 
-        when(message.getText()).thenReturn("/authorization");
-        when(usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)).thenReturn(false);
-        when(textForMessage.setTheText("authorization")).thenReturn("Введите имя:");
+        String validEmail = "test@example.com";
+        Mockito.when(emailSender.isValidEmail(validEmail)).thenReturn(true);
 
-        String response = logicAndDataForRegistrationUsers.worksWithRegistration("/authorization", userId, emailSender, logicAndDataForRegistrationUsers);
-        assertEquals("Введите имя:", response);
+        String response = logic.worksWithRegistration(validEmail, userId, emailSender, logic);
+        assertEquals(MessageConstants.SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE, response);
 
-        logicAndDataForRegistrationUsers.setUserStateForRegistration(userId, "awaiting_nameUser ");
-        when(message.getText()).thenReturn("John");
-        when(textForMessage.setTheText("name")).thenReturn("Введите фамилию:");
+        // Проверка почты
+        assertEquals(validEmail, logic.getMailUser (userId));
+    }
 
-        response = logicAndDataForRegistrationUsers.worksWithRegistration("John", userId, emailSender, logicAndDataForRegistrationUsers);
-        assertEquals("Введите фамилию:", response);
-        assertEquals("John", logicAndDataForRegistrationUsers.getNameUser (userId));
+    /**
+     * Тестирует процесс регистрации, когда предоставлен некорректный адрес электронной почты.
+     */
+    @Test
+    public void testWorksWithRegistration_InvalidMail() {
+        Long userId = 1L;
+        logic.worksWithRegistration("/authorization", userId, emailSender, logic);
+        logic.worksWithRegistration("John", userId, emailSender, logic);
+        logic.worksWithRegistration("Doe", userId, emailSender, logic);
+        logic.worksWithRegistration("10", userId, emailSender, logic);
 
-        logicAndDataForRegistrationUsers.setUserStateForRegistration(userId, "awaiting_surnameUser ");
-        when(message.getText()).thenReturn("Doe");
-        when(textForMessage.setTheText("class")).thenReturn("Введите класс:");
+        String invalidEmail = "invalid-email";
+        Mockito.when(emailSender.isValidEmail(invalidEmail)).thenReturn(false);
 
-        response = logicAndDataForRegistrationUsers.worksWithRegistration("Doe", userId, emailSender, logicAndDataForRegistrationUsers);
-        assertEquals("Введите класс:", response);
-        assertEquals("Doe", logicAndDataForRegistrationUsers.getSurnameUser (userId));
+        String response = logic.worksWithRegistration(invalidEmail, userId, emailSender, logic);
+        assertEquals(MessageConstants.NOT_CORRECT_MAIL_COMMAND_RESPONSE, response);
 
-        logicAndDataForRegistrationUsers.setUserStateForRegistration(userId, "awaiting_schoolClassUser ");
-        when(message.getText()).thenReturn("10");
-        when(textForMessage.setTheText("mail")).thenReturn("Введите почту:");
+        // Проверка, что почта не была сохранена
+        assertEquals(null, logic.getMailUser (userId));
+    }
+    /**
+     * Тестирует процесс ввода имени пользователя во время регистрации.
+     */
+    @Test
+    public void testWorksWithRegistration_EnterName() {
+        Long userId = 1L;
+        logic.worksWithRegistration("/authorization", userId, emailSender, logic);
 
-        response = logicAndDataForRegistrationUsers.worksWithRegistration("10", userId, emailSender, logicAndDataForRegistrationUsers);
-        assertEquals("Введите почту:", response);
-        assertEquals("10", logicAndDataForRegistrationUsers.getSchoolClassUser (userId));
+        String response = logic.worksWithRegistration("John", userId, emailSender, logic);
+        assertEquals(MessageConstants.ENTER_SURNAME, response.trim()); // Обрезанный ответ
 
-        logicAndDataForRegistrationUsers.setUserStateForRegistration(userId, "awaiting_mailUser ");
-        when(message.getText()).thenReturn("test@example.com");
-        when(emailSender.isValidEmail("test@example.com")).thenReturn(true);
-        when(textForMessage.setTheText("successfulReg")).thenReturn("Регистрация успешна!");
+        // Проверка имени
+        assertEquals("John", logic.getNameUser (userId).trim()); // Обрезанное ожидаемое значение
+        assertEquals("awaiting_surnameUser", logic.getUserStatesForRegistration(userId).trim()); // Обрезанное ожидаемое значение
+    }
 
-        response = logicAndDataForRegistrationUsers.worksWithRegistration("test@example.com", userId, emailSender, logicAndDataForRegistrationUsers);
-        assertEquals("Регистрация успешна!", response);
+    /**
+     * Тестирует процесс ввода фамилии пользователя во время регистрации.
+     */
+    @Test
+    public void testWorksWithRegistration_EnterSurname() {
+        Long userId = 1L;
+        logic.worksWithRegistration("/authorization", userId, emailSender, logic);
+        logic.worksWithRegistration("John", userId, emailSender, logic);
+
+        String response = logic.worksWithRegistration("Doe", userId, emailSender, logic);
+        assertEquals(MessageConstants.ENTER_CLASS, response.trim()); // Обрезанный ответ
+
+        // Проверка фамилии
+        assertEquals("Doe", logic.getSurnameUser (userId).trim()); // Обрезанное ожидаемое значение
+        assertEquals("awaiting_schoolClassUser", logic.getUserStatesForRegistration(userId).trim()); // Обрезанное ожидаемое значение
+    }
+
+    /**
+     * Тестирует процесс ввода класса пользователя во время регистрации.
+     */
+    @Test
+    public void testWorksWithRegistration_EnterClass() {
+        Long userId = 1L;
+        logic.worksWithRegistration("/authorization", userId, emailSender, logic);
+        logic.worksWithRegistration("John", userId, emailSender, logic);
+        logic.worksWithRegistration("Doe", userId, emailSender, logic);
+
+        String response = logic.worksWithRegistration("10", userId, emailSender, logic);
+        assertEquals(MessageConstants.ENTER_MAIL, response.trim()); // Обрезанный ответ
+
+        // Проверка класса
+        assertEquals("10", logic.getSchoolClassUser (userId).trim()); // Обрезанное ожидаемое значение
+        assertEquals("awaiting_mailUser", logic.getUserStatesForRegistration(userId).trim()); // Обрезанное ожидаемое значение
     }
 }

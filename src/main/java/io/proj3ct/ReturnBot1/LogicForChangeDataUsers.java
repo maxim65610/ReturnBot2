@@ -10,9 +10,21 @@ import java.util.Map;
  * фамилия, класс и адрес электронной почты.
  */
 public class LogicForChangeDataUsers {
-    private final Map<Long, String> userStatesForChangeData = new HashMap<>();
+    private Map<Long, String> userStatesForChangeData = new HashMap<>();
     private UsersData usersData = new UsersData();
     private DatabaseConnection databaseConnection = new DatabaseConnection();
+
+    // Дефолтный конструктор
+    public LogicForChangeDataUsers() {
+
+    }
+    // Конструктор с параметрами для тестирования
+    public LogicForChangeDataUsers(Map<Long, String> userStatesForChangeData, UsersData usersData, DatabaseConnection databaseConnection) {
+        this.userStatesForChangeData = userStatesForChangeData;
+        this.usersData = usersData;
+        this.databaseConnection = databaseConnection;
+    }
+
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
      *
@@ -21,22 +33,6 @@ public class LogicForChangeDataUsers {
      */
     public String getUserStatesForChangeData(Long chatID) {
         return userStatesForChangeData.getOrDefault(chatID, "0");
-    }
-    /**
-     * Устанавливает объект UsersData(для тестов).
-     *
-     * @param usersData объект, отвечающий за управление данными пользователей.
-     */
-    public void setUsersData(UsersData usersData) {
-        this.usersData = usersData;
-    }
-    /**
-     * Устанавливает объект DatabaseConnection(для тестов).
-     *
-     * @param databaseConnection объект, представляющий соединение с базой данных.
-     */
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием изменения данных.

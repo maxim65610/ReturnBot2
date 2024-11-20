@@ -8,10 +8,15 @@ import java.util.*;
  * и определяет подходящий факультет на основе выборов пользователя.
  */
 public class LogicForTestABI {
+    /* Объект для получения данных из базы данных. */
     private final RetrieveData retrieveData = new RetrieveData();
+    /* Хранит идентификаторы тестов абитуриентов по их идентификаторам чата. */
     private final Map<Long, Integer> idTestABI = new HashMap<>();
+    /* Хранит выборы абитуриентов по их идентификаторам чата. */
     private final Map<Long, List<String>> choiceABI = new HashMap<>();
+    /* Хранит результаты тестов абитуриентов по их идентификаторам чата. */
     private final Map<Long, String> resultsTestAbi = new HashMap<>();
+    /* Хранит состояния тестов абитуриентов по их идентификаторам чата. */
     private final Map<Long, String> userStatesForTest = new HashMap<>();
     /**
      * Получает текущее состоян ие теста для указанного пользователя.

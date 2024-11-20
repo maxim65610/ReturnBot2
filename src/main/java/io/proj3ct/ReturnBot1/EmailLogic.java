@@ -42,15 +42,21 @@ public class EmailLogic {
         String currentState = userStatesForMail.get(userId);
         if ("/question".equals(messageText)) {
             if (!usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)) {
-                return "Эта функция недоступна, пока вы не зарегистрируетесь";
+                return MessageConstants.NOT_AVAILABLE;
             }
             userStatesForMail.put(userId, "awaiting_question");
         } else if ("awaiting_question".equals(currentState)) {
-            String mailUser = usersData.getUserMail(userId, databaseConnection);
+            if (usersData.checkUserIdExistsInRegistrationDataTable(userId,databaseConnection)) {
+                String mailUser = usersData.getUserMail(userId, databaseConnection);
+
             emailSender.sendEmail(emailSender.getUsername(), "Вопрос от абитуриента " + mailUser, messageText);
             userStatesForMail.remove(userId);
             userMails.remove(userId);
-            return "Ваш вопрос отправлен";
+            return MessageConstants.MAIL_SEND;
+            }
+            else{
+                return MessageConstants.NO_REGISTRATION;
+            }
         }
         return MessageConstants.QUESTION_COMMAND_RESPONSE;
     }

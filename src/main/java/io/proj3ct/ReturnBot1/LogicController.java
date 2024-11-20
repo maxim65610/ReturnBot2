@@ -19,11 +19,13 @@ public class LogicController {
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
     private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
             = new LogicAndDataForRegistrationUsers();
-    /**
-     * Сеттер для тестов
-     * @param departmentsInfo
-     */
-    public void setDepartmentsInfo(DepartmentsInfo departmentsInfo) {
+
+    // Добавляем конструктор, который принимает зависимости
+    public LogicController() {
+
+    }
+    // Добавляем конструктор, который принимает зависимости
+    public LogicController(DepartmentsInfo departmentsInfo) {
         this.departmentsInfo = departmentsInfo;
     }
     /**
@@ -79,13 +81,18 @@ public class LogicController {
                         (messageText, userId, emailSender));
             }
             else if("/userInfo".equals(messageText)){
-                listForWorkWithKeyboardAndMessage.add(usersData.takeData(userId,
-                                logicAndDataForRegistrationUsers.getDatabaseConnection()));
+                if(usersData.checkUserIdExistsInRegistrationDataTable(userId,databaseConnection)) {
+                    listForWorkWithKeyboardAndMessage.add(usersData.getRegistrationData(userId,
+                            logicAndDataForRegistrationUsers.getDatabaseConnection()));
+                }
+                else {
+                    listForWorkWithKeyboardAndMessage.add(MessageConstants.NO_REGISTRATION);
+                }
             }
             else if("/userDataDell".equals(messageText)){
                 usersData.deleteData(userId,
                         logicAndDataForRegistrationUsers.getDatabaseConnection());
-                listForWorkWithKeyboardAndMessage.add("Ваши данные успешно удалены");
+                listForWorkWithKeyboardAndMessage.add(MessageConstants.DATA_DELETED);
             }
             else if("/testAbit".equals(messageText)){
                 logicForTestABI.worksWithTestABI(messageText, userId, "100");
@@ -94,6 +101,10 @@ public class LogicController {
             }
             else if("/testres".equals(messageText)){
                 listForWorkWithKeyboardAndMessage.add(logicForTestABI.getResult(userId));
+            }
+            else if("/work".equals(messageText)){
+                listForWorkWithKeyboardAndMessage.add(MessageConstants.WORK_COMMAND_RESPONSE);
+                listForWorkWithKeyboardAndMessage.add(messageText);
             }
             else {
                 listForWorkWithKeyboardAndMessage.add(MessageConstants.DEFAULT_RESPONSE);

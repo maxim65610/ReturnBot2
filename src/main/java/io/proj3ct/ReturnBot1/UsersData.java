@@ -1,19 +1,27 @@
 package io.proj3ct.ReturnBot1;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- Класс для работы с данными пользователей в базе данных
+ * Класс для работы с данными пользователей в базе данных.
+ * Этот класс предоставляет методы для вставки, изменения, удаления и получения данных пользователей.
  */
 public class UsersData {
+    private final Logger logger = Logger.getLogger(UsersData.class.getName());
+
     /**
-     Метод для вставки данных пользователя в таблицу регистрации
-     @param userId идентификатор пользователя
-     @param logicAndDataForRegistrationUsers объект, содержащий логику и данные для регистрации пользователя
-     @param databaseConnection объект для подключения к базе данных
+     * Метод для вставки данных пользователя в таблицу регистрации
+     *
+     * @param userId                           идентификатор пользователя
+     * @param logicAndDataForRegistrationUsers объект, содержащий логику и данные для регистрации пользователя
+     * @param databaseConnection               объект для подключения к базе данных
      */
-    public String insertData(Long userId, LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
-            ,DatabaseConnection databaseConnection ) {
+    public void insertData(Long userId, LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
+            , DatabaseConnection databaseConnection ) {
 
         String dataRequest = "INSERT INTO RegistrationDataTable " +
                 "(id_chat, name, surname, school_class, mail) VALUES (?, ?, ?, ?, ?)";
@@ -26,11 +34,10 @@ public class UsersData {
             stmt.setString(4, logicAndDataForRegistrationUsers.getSchoolClassUser(userId));
             stmt.setString(5, logicAndDataForRegistrationUsers.getMailUser(userId));
             stmt.executeUpdate();
-
         } catch (SQLException e) {
-            System.out.println("Ошибка вставки данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
-        return "";
     }
     /**
      Метод для изменения поля имя пользователя в бд
@@ -50,19 +57,12 @@ public class UsersData {
             // Установка значений для параметров запроса
             stmt.setString(1, name); // Установка нового имени
             stmt.setString(2, userId.toString()); // Установка userId для фильтрации
+            stmt.executeUpdate();
 
-            // Выполнение обновления
-            int rowsAffected = stmt.executeUpdate();
-
-            // Проверка, обновлено ли хоть одно значение
-            if (rowsAffected > 0) {
-            } else {
-            }
 
         } catch (SQLException e) {
-            // Обработка исключений
-            System.out.println("Ошибка обновления данных: " + e.getMessage());
-            e.getMessage();
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
     /**
@@ -83,19 +83,12 @@ public class UsersData {
             // Установка значений для параметров запроса
             stmt.setString(1, surname); // Установка нового имени
             stmt.setString(2, userId.toString()); // Установка userId для фильтрации
-
-            // Выполнение обновления
-            int rowsAffected = stmt.executeUpdate();
-
-            // Проверка, обновлено ли хоть одно значение
-            if (rowsAffected > 0) {
-            } else {
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             // Обработка исключений
-            System.out.println("Ошибка обновления данных: " + e.getMessage());
-            e.getMessage();
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
     /**
@@ -116,19 +109,12 @@ public class UsersData {
             // Установка значений для параметров запроса
             stmt.setString(1, schoolClass); // Установка нового имени
             stmt.setString(2, userId.toString()); // Установка userId для фильтрации
-
-            // Выполнение обновления
-            int rowsAffected = stmt.executeUpdate();
-
-            // Проверка, обновлено ли хоть одно значение
-            if (rowsAffected > 0) {
-            } else {
-            }
+            stmt.executeUpdate();
 
         } catch (SQLException e) {
             // Обработка исключений
-            System.out.println("Ошибка обновления данных: " + e.getMessage());
-            e.getMessage();
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
     /**
@@ -149,19 +135,13 @@ public class UsersData {
             // Установка значений для параметров запроса
             stmt.setString(1, mail); // Установка нового имени
             stmt.setString(2, userId.toString()); // Установка userId для фильтрации
+            stmt.executeUpdate();
 
-            // Выполнение обновления
-            int rowsAffected = stmt.executeUpdate();
-
-            // Проверка, обновлено ли хоть одно значение
-            if (rowsAffected > 0) {
-            } else {
-            }
 
         } catch (SQLException e) {
             // Обработка исключений
-            System.out.println("Ошибка обновления данных: " + e.getMessage());
-            e.getMessage();
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
     /**
@@ -189,8 +169,8 @@ public class UsersData {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false; // Обработка ошибки
+              logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+              throw new RuntimeException(e);
         }
     }
     /**
@@ -210,7 +190,8 @@ public class UsersData {
              stmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println("Ошибка удаления данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
     /**
@@ -219,7 +200,7 @@ public class UsersData {
      @param databaseConnection объект для подключения к базе данных
      @return данные пользователя или сообщение об ошибке
      */
-    public String takeData(Long userId,DatabaseConnection databaseConnection ) {
+    public String getRegistrationData(Long userId, DatabaseConnection databaseConnection ) {
 
         String takeData = "SELECT * FROM RegistrationDataTable WHERE id_chat = ?";
         try (Connection conn = databaseConnection.connect();
@@ -229,7 +210,7 @@ public class UsersData {
             if (rs.next()) {
                 String name = rs.getString("name");
                 String surname = rs.getString("surname");
-                String schoolClass = rs.getString("school_class ");
+                String schoolClass = rs.getString("school_class");
                 String mail = rs.getString("mail");
                 return "Ваше имя: " + name +
                         "\nВаша фамилия: " + surname +
@@ -237,9 +218,10 @@ public class UsersData {
                         "\nВаша почта: " + mail;
             }
         } catch (SQLException e) {
-            System.out.println("Ошибка получения данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
-        return "Вы не прошли регистрацию";
+        return null;
     }
     /**
      Метод для получения почты для EmailSender пользователя из таблицы регистрации
@@ -259,8 +241,9 @@ public class UsersData {
                 return rs.getString("mail");
             }
         } catch (SQLException e) {
-            System.out.println("Ошибка получения данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
-        return "Вы не прошли регистрацию";
+        return null;
     }
 }

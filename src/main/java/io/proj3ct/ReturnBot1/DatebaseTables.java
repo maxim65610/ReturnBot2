@@ -3,6 +3,8 @@ package io.proj3ct.ReturnBot1;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Класс для создания таблиц в базе данных.
@@ -11,6 +13,7 @@ public class DatebaseTables {
     /**
      * Объект для подключения к базе данных.
      */
+    private final Logger logger = Logger.getLogger(DatebaseTables.class.getName());
     private DatabaseConnection databaseConnection;
 
     /**
@@ -44,7 +47,8 @@ public class DatebaseTables {
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(createAnswersDataTableQuery);
         } catch (SQLException e) {
-            System.out.println("Ошибка создания таблицы: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -64,7 +68,8 @@ public class DatebaseTables {
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(createDepartsInfoTableQuery);
         } catch (SQLException e) {
-            System.out.println("Ошибка создания таблицы: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -87,7 +92,8 @@ public class DatebaseTables {
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(registrationDataTable);
         } catch (SQLException e) {
-            System.out.println("Ошибка создания таблицы: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 }

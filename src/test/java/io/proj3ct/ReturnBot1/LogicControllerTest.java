@@ -3,11 +3,11 @@ package io.proj3ct.ReturnBot1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 /**
  * Тестирование класса LogicController.
  * Этот класс содержит тесты для проверки функциональности методов LogicController.
@@ -17,19 +17,19 @@ import static org.mockito.Mockito.*;
 class LogicControllerTest {
     private LogicController logicController;
     private DepartmentsInfo mockDepartmentsInfo;
+
     /**
      * Инициализация перед каждым тестом.
      * В этом методе мы создаем замоканный объект DepartmentsInfo и инициализируем экземпляр LogicController.
-     * Также настраиваем зависимость DepartmentsInfo через сеттер.
      */
     @BeforeEach
     void setUp() {
         mockDepartmentsInfo = mock(DepartmentsInfo.class);
 
-        logicController = new LogicController();
-
-        logicController.setDepartmentsInfo(mockDepartmentsInfo);
+        // Используем конструктор для инициализации logicController
+        logicController = new LogicController(mockDepartmentsInfo);
     }
+
     /**
      * Тестирование метода handleMessage в случае, если факультет найден.
      * В этом тесте проверяется, что метод handleMessage правильно обрабатывает входные данные,
@@ -48,6 +48,7 @@ class LogicControllerTest {
         assertEquals(expectedResponse, result.get(0));
         assertEquals(input, result.get(1));
     }
+
     /**
      * Тестирование метода handleMessage в случае, если факультет не найден.
      * В этом тесте проверяется, что метод handleMessage корректно работает, когда метод
@@ -64,9 +65,10 @@ class LogicControllerTest {
         assertEquals("Неверный факультет", result.get(0));
         assertEquals(input, result.get(1));
     }
+
     /**
      * Тестирование метода handleMessage для обработки обычных сообщений.
-     * В этом тесте проверяется, что метод handleMessage}корректно обрабатывает сообщения
+     * В этом тесте проверяется, что метод handleMessage корректно обрабатывает сообщения
      * без участия системы факультетов, когда флаг для клавиатуры установлен в false.
      */
     @Test
@@ -79,5 +81,3 @@ class LogicControllerTest {
         assertTrue(result.contains("Any message"));
     }
 }
-
-
