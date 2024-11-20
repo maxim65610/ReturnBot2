@@ -9,13 +9,12 @@ import java.util.*;
  */
 public class LogicForTestABI {
     private final RetrieveData retrieveData = new RetrieveData();
-    private final TextForMessage textForMessage = new TextForMessage();
-    private Map<Long, Integer> idTestABI = new HashMap<>();
-    private Map<Long, List<String>> choiceABI = new HashMap<>();
-    private Map<Long, String> resultsTestAbi = new HashMap<>();
-    private Map<Long, String> userStatesForTest = new HashMap<>();
+    private final Map<Long, Integer> idTestABI = new HashMap<>();
+    private final Map<Long, List<String>> choiceABI = new HashMap<>();
+    private final Map<Long, String> resultsTestAbi = new HashMap<>();
+    private final Map<Long, String> userStatesForTest = new HashMap<>();
     /**
-     * Получает текущее состояние теста для указанного пользователя.
+     * Получает текущее состоян ие теста для указанного пользователя.
      * @param chatID идентификатор пользователя
      * @return состояние пользователя, или "0", если состояние отсутствует
      */
@@ -43,7 +42,7 @@ public class LogicForTestABI {
      * @return строка с результатом теста
      */
     public String getResult(long chatID) {
-        return textForMessage.setTheText("resultTestABI") + resultsTestAbi.get(chatID);
+        return MessageConstants.RESULT_TEST_ABI_COMMAND_RESPONSE + resultsTestAbi.get(chatID);
     }
     /**
      * Получает данные для теста по заданному идентификатору.
@@ -128,7 +127,7 @@ public class LogicForTestABI {
             if (stepForAwaiting_testABI == 10) {
                 resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
                 userStatesForTest.remove(userId);
-                dataBD.add(textForMessage.setTheText("userPassedTest"));
+                dataBD.add(MessageConstants.END_TEST_ABI_COMMAND_RESPONSE);
                 userStatesForTest.put(userId, "awaiting_testABI_11");
             } else {
                 dataBD = arrayBdForTestABI(idTestABI.get(userId) + stepForAwaiting_testABI - 1);

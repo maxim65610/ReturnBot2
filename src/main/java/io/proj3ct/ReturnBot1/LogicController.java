@@ -9,7 +9,6 @@ import java.util.List;
  */
 public class LogicController {
     private final LogicForTestABI logicForTestABI = new LogicForTestABI();
-    private final TextForMessage textForMessage = new TextForMessage();
     private DepartmentsInfo departmentsInfo = new DepartmentsInfo();
     private final EmailLogic emailLogic = new EmailLogic();
     private final String username = System.getenv("mail"); // Ваша почта
@@ -33,11 +32,12 @@ public class LogicController {
      * @return Обработанное сообщение или исходные данные.
      */
     private String checkWhatTodo(String data) {
-        if (data.equals("ИЕНИМ") || data.equals("РТФ") || data.equals("ХТИ")) {
-            return textForMessage.setTheText(data);
-        } else {
-            return data;
-        }
+        return switch (data) {
+            case "ИЕНИМ" -> MessageConstants.INST_IENIM_COMMAND_RESPONSE;
+            case "РТФ" -> MessageConstants.INST_RTF_COMMAND_RESPONSE;
+            case "ХТИ" -> MessageConstants.INST_CHTI_COMMAND_RESPONSE;
+            default -> data;
+        };
     }
     /**
      * Обрабатывает обновления и генерирует ответные сообщения.
@@ -89,14 +89,14 @@ public class LogicController {
             }
             else if("/testAbit".equals(messageText)){
                 logicForTestABI.worksWithTestABI(messageText, userId, "100");
-                listForWorkWithKeyboardAndMessage.add(textForMessage.setTheText(messageText));
+                listForWorkWithKeyboardAndMessage.add(MessageConstants.TEST_ABIT_COMMAND_RESPONSE);
                 listForWorkWithKeyboardAndMessage.add(messageText);
             }
             else if("/testres".equals(messageText)){
                 listForWorkWithKeyboardAndMessage.add(logicForTestABI.getResult(userId));
             }
             else {
-                listForWorkWithKeyboardAndMessage.add(textForMessage.setTheText(messageText));
+                listForWorkWithKeyboardAndMessage.add(MessageConstants.DEFAULT_RESPONSE);
                 listForWorkWithKeyboardAndMessage.add(messageText);
             }
         }

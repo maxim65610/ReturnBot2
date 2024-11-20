@@ -16,7 +16,7 @@ public class UsersData {
             ,DatabaseConnection databaseConnection ) {
 
         String dataRequest = "INSERT INTO RegistrationDataTable " +
-                "(id_chat, name, surname, school_сlass, mail) VALUES (?, ?, ?, ?, ?)";
+                "(id_chat, name, surname, school_class, mail) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
@@ -108,7 +108,7 @@ public class UsersData {
             , DatabaseConnection databaseConnection, String schoolClass) {
 
         // SQL-запрос для обновления имени в таблице RegistrationDataTable по userId
-        String dataRequest = "UPDATE RegistrationDataTable SET school_сlass = ? WHERE id_chat = ?";
+        String dataRequest = "UPDATE RegistrationDataTable SET school_class = ? WHERE id_chat = ?";
 
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
@@ -229,7 +229,7 @@ public class UsersData {
             if (rs.next()) {
                 String name = rs.getString("name");
                 String surname = rs.getString("surname");
-                String schoolClass = rs.getString("school_сlass");
+                String schoolClass = rs.getString("school_class ");
                 String mail = rs.getString("mail");
                 return "Ваше имя: " + name +
                         "\nВаша фамилия: " + surname +

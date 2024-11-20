@@ -13,7 +13,6 @@ public class LogicForChangeDataUsers {
     private final Map<Long, String> userStatesForChangeData = new HashMap<>();
     private UsersData usersData = new UsersData();
     private DatabaseConnection databaseConnection = new DatabaseConnection();
-    private TextForMessage textForMessage = new TextForMessage();
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
      *
@@ -28,22 +27,17 @@ public class LogicForChangeDataUsers {
      *
      * @param usersData объект, отвечающий за управление данными пользователей.
      */
-    public void setUsersData(UsersData usersData) {this.usersData = usersData;}
+    public void setUsersData(UsersData usersData) {
+        this.usersData = usersData;
+    }
     /**
      * Устанавливает объект DatabaseConnection(для тестов).
      *
      * @param databaseConnection объект, представляющий соединение с базой данных.
      */
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {this.databaseConnection = databaseConnection;}
-    /**
-     * Устанавливает объект TextForMessage(для тестов).
-     *
-     * @param textForMessage объект, отвечающий за формирование текстовых сообщений для пользователя.
-     */
-    public void setTextForMessage(TextForMessage textForMessage) {
-        this.textForMessage = textForMessage;
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
-
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием изменения данных.
      *
@@ -60,52 +54,50 @@ public class LogicForChangeDataUsers {
             if (messageText.equals("/userDataChangeName")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_name");
-                return textForMessage.setTheText("name");
+                return MessageConstants.ENTER_NAME;
             } else if (messageText.equals("/userDataChangeSurname")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_surname");
-                return textForMessage.setTheText("surname");
+                return MessageConstants.ENTER_SURNAME;
             } else if (messageText.equals("/userDataChangeClass")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_class");
-                return textForMessage.setTheText("class");
+                return MessageConstants.ENTER_CLASS;
             } else if (messageText.equals("/userDataChangeMail")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_mail");
-                return textForMessage.setTheText("mail");
+                return MessageConstants.ENTER_MAIL;
             }
         } else if ("awaiting_name".equals(currentState)) {
             usersData.changeName(userId, databaseConnection, messageText);
             userStatesForChangeData.remove(userId);
-            return textForMessage.setTheText("successful_name");
+            return MessageConstants.SUCCESSFUL_NAME;
         } else if ("awaiting_surname".equals(currentState)) {
             usersData.changeSurname(userId, databaseConnection, messageText);
             userStatesForChangeData.remove(userId);
-            return textForMessage.setTheText("successful_surname");
+            return MessageConstants.SUCCESSFUL_SURNAME;
         } else if ("awaiting_class".equals(currentState)) {
-            String schoolClass = messageText;
             try {
-                int classNumber = Integer.parseInt(schoolClass);
+                int classNumber = Integer.parseInt(messageText);
                 if (classNumber <= 11 && classNumber >= 1) {
                     usersData.changeClass(userId, databaseConnection, messageText);
                     userStatesForChangeData.remove(userId);
-                    return textForMessage.setTheText("successful_class");
+                    return MessageConstants.SUCCESSFUL_CLASS;
                 } else {
-                    return textForMessage.setTheText("clas_bad");
+                    return MessageConstants.UN_SUCCESSFUL_CLASS;
                 }
             } catch (NumberFormatException e) {
-                return textForMessage.setTheText("clas_bad");
+                return MessageConstants.UN_SUCCESSFUL_CLASS;
             }
         } else if ("awaiting_mail".equals(currentState)) {
-            String mail = messageText;
-            if (emailSender.isValidEmail(mail)) {
+            if (emailSender.isValidEmail(messageText)) {
                 usersData.changeMail(userId, databaseConnection, messageText);
                 userStatesForChangeData.remove(userId);
-                return textForMessage.setTheText("successful_mail");
+                return MessageConstants.SUCCESSFUL_MAIL;
             } else {
-                return textForMessage.setTheText("notСorrectMail");
+                return MessageConstants.NOT_CORRECT_MAIL_COMMAND_RESPONSE;
             }
         }
-        return textForMessage.setTheText("userDataChange");
+        return MessageConstants.CHANGEDATA_COMMAND_RESPONSE;
     }
 }

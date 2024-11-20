@@ -14,7 +14,6 @@ public class LogicAndDataForRegistrationUsers {
     private final Map<Long, String> userStatesForRegistration = new HashMap<>();
     private UsersData usersData = new UsersData();
     private DatabaseConnection databaseConnection = new DatabaseConnection();
-    private TextForMessage textForMessage = new TextForMessage();
     private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     /**
      * Получает объект подключения к базе данных.
@@ -60,18 +59,16 @@ public class LogicAndDataForRegistrationUsers {
      *
      * @param databaseConnection объект, представляющий соединение с базой данных.
      */
-    public void setDatabaseConnection(DatabaseConnection databaseConnection) {this.databaseConnection = databaseConnection;}
-    /**
-     * Устанавливает объект TextForMessage(для тестов).
-     *
-     * @param textForMessage объект, отвечающий за формирование текстовых сообщений для пользователя.
-     */
-    public void setTextForMessage(TextForMessage textForMessage) {this.textForMessage = textForMessage;
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
+
     /**
      * Устанавливает объект setUserStateForRegistration(для тестов).
      */
-    public void setUserStateForRegistration(Long userId, String state) {userStatesForRegistration.put(userId, state);}
+    public void setUserStateForRegistration(Long userId, String state) {
+        userStatesForRegistration.put(userId, state);
+    }
     /**
      * Получает состояние пользователя для регистрации по его идентификатору чата.
      *
@@ -97,19 +94,19 @@ public class LogicAndDataForRegistrationUsers {
             datebaseTables.createRegistrationDataTable();
             if (usersData.checkUserIdExistsInRegistrationDataTable(userId,
                     logicAndDataForRegistrationUsers.getDatabaseConnection())) {
-                return textForMessage.setTheText("registration");
+                return MessageConstants.AUTHORISATION_COMMAND_RESPONSE;
             }
             userStatesForRegistration.put(userId, "awaiting_nameUser ");
         } else if ("awaiting_nameUser ".equals(currentState)) {
             nameUser .put(userId, messageText);
             userStatesForRegistration.remove(userId);
             userStatesForRegistration.put(userId, "awaiting_surnameUser ");
-            return textForMessage.setTheText("name");
+            return MessageConstants.ENTER_NAME;
         } else if ("awaiting_surnameUser ".equals(currentState)) {
             surnameUser .put(userId, messageText);
             userStatesForRegistration.remove(userId);
             userStatesForRegistration.put(userId, "awaiting_schoolClassUser ");
-            return textForMessage.setTheText("class");
+            return MessageConstants.ENTER_CLASS;
         } else if ("awaiting_schoolClassUser ".equals(currentState)) {
             try {
                 int classNumber = Integer.parseInt(messageText);
@@ -117,24 +114,24 @@ public class LogicAndDataForRegistrationUsers {
                     schoolClassUser.put(userId, messageText);
                     userStatesForRegistration.remove(userId);
                     userStatesForRegistration.put(userId, "awaiting_mailUser ");
-                    return textForMessage.setTheText("mail");
+                    return MessageConstants.ENTER_MAIL;
                 } else {
-                    return textForMessage.setTheText("clas_bad");
+                    return MessageConstants.UN_SUCCESSFUL_CLASS;
                 }
             } catch (NumberFormatException e) {
-                return textForMessage.setTheText("clas_bad");
+                return MessageConstants.UN_SUCCESSFUL_CLASS;
             }
         } else if ("awaiting_mailUser ".equals(currentState)) {
             if (emailSender.isValidEmail(messageText)) {
                 mailUser .put(userId, messageText);
                 userStatesForRegistration.remove(userId);
                 usersData.insertData(userId, this, databaseConnection);
-                return textForMessage.setTheText("successfulReg");
+                return MessageConstants.SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE;
             } else {
                 mailUser .remove(userId, messageText);
-                return textForMessage.setTheText("notСorrectMail");
+                return MessageConstants.NOT_CORRECT_MAIL_COMMAND_RESPONSE;
             }
         }
-        return textForMessage.setTheText("authorization");
+        return MessageConstants.REGISTRATION_COMMAND_RESPONSE;
     }
 }

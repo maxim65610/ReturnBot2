@@ -10,7 +10,6 @@ import java.util.Map;
  * получения вопросов от пользователей.
  */
 public class EmailLogic {
-    private final TextForMessage textForMessage = new TextForMessage();
     private final Map<Long, String> userStatesForMail = new HashMap<>();
     private final Map<Long, String> userMails = new HashMap<>();
     private UsersData usersData = new UsersData();
@@ -53,6 +52,6 @@ public class EmailLogic {
             userMails.remove(userId);
             return "Ваш вопрос отправлен";
         }
-        return textForMessage.setTheText(messageText);
+        return MessageConstants.QUESTION_COMMAND_RESPONSE;
     }
 }

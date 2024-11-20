@@ -4,30 +4,31 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 /**
- * Класс для создания таблиц
+ * Класс для создания таблиц в базе данных.
  */
 public class DatebaseTables {
     /**
      * Объект для подключения к базе данных.
      */
     private DatabaseConnection databaseConnection;
+
     /**
      * Конструктор класса, который инициализирует объект подключения к базе данных.
      *
      * @param databaseConnection Объект для подключения к базе данных.
      */
-    public DatebaseTables(DatabaseConnection databaseConnection){
+    public DatebaseTables(DatabaseConnection databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
+
     /**
      * Метод для создания таблицы AnswersData в базе данных.
      * Таблица предназначена для хранения данных о вопросах, ответах и связанной информации.
      * Если таблица уже существует, она не будет создана повторно.
      */
     public void createAnswersDataTableQuery() {
-        String createAnswersDataTableQuery  = """
+        String createAnswersDataTableQuery = """
         CREATE TABLE IF NOT EXISTS AnswersData (
         id_question int PRIMARY KEY, 
         question text NOT NULL,
@@ -39,74 +40,54 @@ public class DatebaseTables {
         cash3 text NOT NULL
         );""";
 
-        try {
-            Connection conn = databaseConnection.connect();
-            if (conn != null ) {
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(createAnswersDataTableQuery);
-                }
-            } else {
-                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
-            }
+        try (Connection conn = databaseConnection.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(createAnswersDataTableQuery);
         } catch (SQLException e) {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
     }
+
     /**
      * Метод для создания таблицы DepartsInfo в базе данных.
      * Таблица предназначена для хранения информации о департаментах.
      * Если таблица уже существует, она не будет создана повторно.
      */
     public void createDepartsInfoTableQuery() {
-
-        String createDepartsInfoTableQuery  = """
+        String createDepartsInfoTableQuery = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
         id_depart text PRIMARY KEY, 
         info text NOT NULL  
         );""";
 
-        try {
-            Connection conn = databaseConnection.connect();
-            if (conn != null ) {
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(createDepartsInfoTableQuery);
-                }
-            } else {
-                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
-            }
+        try (Connection conn = databaseConnection.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(createDepartsInfoTableQuery);
         } catch (SQLException e) {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
     }
+
     /**
      * Метод для создания таблицы RegistrationDataTable в базе данных.
      * Таблица предназначена для хранения данных о регистрации пользователей.
      * Если таблица уже существует, она не будет создана повторно.
      */
     public void createRegistrationDataTable() {
-
         String registrationDataTable = """
         CREATE TABLE IF NOT EXISTS RegistrationDataTable (
         id_chat text PRIMARY KEY, 
         name text NOT NULL,
         surname text NOT NULL, 
-        school_сlass text NOT NULL,  
+        school_class text NOT NULL,  
         mail text NOT NULL
         );""";
-        try {
-            Connection conn = databaseConnection.connect();
-            if (conn != null ) {
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(registrationDataTable);
-                }
-            } else {
-                System.out.println("Не удалось создать таблицу: соединение с базой данных не установлено.");
-            }
+
+        try (Connection conn = databaseConnection.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(registrationDataTable);
         } catch (SQLException e) {
             System.out.println("Ошибка создания таблицы: " + e.getMessage());
         }
-
     }
-
 }
-
