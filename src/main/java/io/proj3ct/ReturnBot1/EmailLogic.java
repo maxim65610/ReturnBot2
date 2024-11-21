@@ -12,7 +12,13 @@ import java.util.Map;
 public class EmailLogic {
     private final Map<Long, String> userStatesForMail = new HashMap<>();
     private final Map<Long, String> userMails = new HashMap<>();
-    private UsersData usersData = new UsersData();
+    private UsersData usersData;
+    public EmailLogic(){
+        this.usersData = new UsersData();
+    }
+    public EmailLogic(UsersData usersData){
+        this.usersData = usersData;
+    }
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
      * @param chatID Идентификатор чата пользователя.
@@ -22,22 +28,14 @@ public class EmailLogic {
         return userStatesForMail.getOrDefault(chatID, "0");
     }
     /**
-     * Устанавливает объект UsersData, который будет использоваться для работы с данными пользователей(используется для тестов).
-     * @param usersData экземпляр класса UsersData, содержащий информацию о пользователях.
-     */
-    public void setUsersData(UsersData usersData) {
-        this.usersData = usersData;
-    }
-    /**
      * Обрабатывает сообщения пользователей и управляет состоянием.
      *
      * @param messageText  Текст сообщения пользователя.
      * @param userId      Идентификатор пользователя.
      * @param emailSender  Объект для отправки электронной почты.
-     * @param emailLogic   Объект EmailLogic, используемый для управления состоянием.
      * @return Ответ пользователю в зависимости от текущего состояния.
      */
-    public String worksWithMail(String messageText, Long userId, EmailSender emailSender, EmailLogic emailLogic,
+    public String worksWithMail(String messageText, Long userId, EmailSender emailSender,
                                  DatabaseConnection databaseConnection) {
         String currentState = userStatesForMail.get(userId);
         if ("/question".equals(messageText)) {
@@ -52,6 +50,7 @@ public class EmailLogic {
             emailSender.sendEmail(emailSender.getUsername(), "Вопрос от абитуриента " + mailUser, messageText);
             userStatesForMail.remove(userId);
             userMails.remove(userId);
+
             return MessageConstants.MAIL_SEND;
             }
             else{

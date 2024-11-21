@@ -1,7 +1,11 @@
 package io.proj3ct.ReturnBot1;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Контроллер логики обработки сообщений и взаимодействия с пользователями.
@@ -17,8 +21,8 @@ public class LogicController {
     private final LogicForChangeDataUsers logicForChangeDataUsers = new LogicForChangeDataUsers();
     private final UsersData usersData = new UsersData();
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
-    private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
-            = new LogicAndDataForRegistrationUsers();
+    private final LogicForRegistrationUsers logicAndDataForRegistrationUsers
+            = new LogicForRegistrationUsers();
 
     // Добавляем конструктор, который принимает зависимости
     public LogicController() {
@@ -67,8 +71,7 @@ public class LogicController {
         else{
             if ("/question".equals(messageText) || (!(emailLogic.getUserStatesForEmail(userId).equals("0")))) {
                 listForWorkWithKeyboardAndMessage.add(emailLogic.worksWithMail
-                        (messageText, userId, emailSender,
-                                emailLogic,databaseConnection));
+                        (messageText, userId, emailSender,databaseConnection));
             }
             else if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
                     getUserStatesForRegistration(userId).equals("0"))){

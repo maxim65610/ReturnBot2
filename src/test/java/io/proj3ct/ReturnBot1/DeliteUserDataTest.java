@@ -13,7 +13,7 @@ import java.sql.SQLException;
  */
 public class DeliteUserDataTest {
     private final UsersData usersData;
-    private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers;
+    private final DataUsersForRegistration dataUsersForRegistration;
     private final DatabaseConnection databaseConnection;
     private final Connection connection;
     private final PreparedStatement preparedStatement;
@@ -22,7 +22,7 @@ public class DeliteUserDataTest {
      */
     public DeliteUserDataTest() {
         usersData = new UsersData();
-        logicAndDataForRegistrationUsers = mock(LogicAndDataForRegistrationUsers.class);
+        dataUsersForRegistration = mock(DataUsersForRegistration.class);
         databaseConnection = mock(DatabaseConnection.class);
         connection = mock(Connection.class);
         preparedStatement = mock(PreparedStatement.class);
@@ -36,10 +36,10 @@ public class DeliteUserDataTest {
     public void setUp() throws SQLException {
         when(databaseConnection.connect()).thenReturn(connection);
         when(connection.prepareStatement(any(String.class))).thenReturn(preparedStatement);
-        when(logicAndDataForRegistrationUsers.getNameUser (anyLong())).thenReturn("qqqq");
-        when(logicAndDataForRegistrationUsers.getSurnameUser (anyLong())).thenReturn("wwww");
-        when(logicAndDataForRegistrationUsers.getSchoolClassUser (anyLong())).thenReturn("10");
-        when(logicAndDataForRegistrationUsers.getMailUser (anyLong())).thenReturn("test@example.com");
+        when(dataUsersForRegistration.getNameUser (anyLong())).thenReturn("qqqq");
+        when(dataUsersForRegistration.getSurnameUser (anyLong())).thenReturn("wwww");
+        when(dataUsersForRegistration.getSchoolClassUser (anyLong())).thenReturn("10");
+        when(dataUsersForRegistration.getMailUser (anyLong())).thenReturn("test@example.com");
     }
     /**
      * Тест для команды /userDataDell

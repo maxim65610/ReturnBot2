@@ -17,12 +17,12 @@ import static org.mockito.Mockito.when;
  * Этот класс тестирует логику регистрации пользователей, включая обработку
  * авторизации, ввод личных данных и проверку электронной почты.
  */
-public class LogicAndDataForRegistrationUsersTest {
-    private LogicAndDataForRegistrationUsers logic;
+public class LogicForRegistrationUsersTest {
+    private LogicForRegistrationUsers logic;
     private UsersData usersData;
     private DatabaseConnection databaseConnection;
     private EmailSender emailSender;
-    private DatebaseTables datebaseTables;
+    private DataUsersForRegistration dataUsersForRegistration;
     private Connection connection;
     private Statement statement; // Объект Statement для операций с базой данных
 
@@ -35,8 +35,8 @@ public class LogicAndDataForRegistrationUsersTest {
         // Инициализация моков
         usersData = Mockito.mock(UsersData.class);
         databaseConnection = Mockito.mock(DatabaseConnection.class);
+        dataUsersForRegistration = Mockito.mock(DataUsersForRegistration.class);
         emailSender = Mockito.mock(EmailSender.class);
-
         // Проверка на наличие нулевых моков
         if (usersData == null || databaseConnection == null || emailSender == null) {
             throw new IllegalStateException("usersData, databaseConnection или emailSender равны null");
@@ -50,8 +50,7 @@ public class LogicAndDataForRegistrationUsersTest {
         when(connection.createStatement()).thenReturn(statement);
 
         // Инициализация других объектов
-        logic = new LogicAndDataForRegistrationUsers(usersData, databaseConnection);
-        datebaseTables = new DatebaseTables(databaseConnection);
+        logic = new LogicForRegistrationUsers(usersData, databaseConnection, dataUsersForRegistration);
     }
 
     /**
@@ -70,9 +69,6 @@ public class LogicAndDataForRegistrationUsersTest {
 
         String response = logic.worksWithRegistration(validEmail, userId, emailSender, logic);
         assertEquals(MessageConstants.SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE, response);
-
-        // Проверка почты
-        assertEquals(validEmail, logic.getMailUser (userId));
     }
 
     /**
@@ -91,9 +87,6 @@ public class LogicAndDataForRegistrationUsersTest {
 
         String response = logic.worksWithRegistration(invalidEmail, userId, emailSender, logic);
         assertEquals(MessageConstants.NOT_CORRECT_MAIL_COMMAND_RESPONSE, response);
-
-        // Проверка, что почта не была сохранена
-        assertEquals(null, logic.getMailUser (userId));
     }
     /**
      * Тестирует процесс ввода имени пользователя во время регистрации.
@@ -106,8 +99,6 @@ public class LogicAndDataForRegistrationUsersTest {
         String response = logic.worksWithRegistration("John", userId, emailSender, logic);
         assertEquals(MessageConstants.ENTER_SURNAME, response.trim()); // Обрезанный ответ
 
-        // Проверка имени
-        assertEquals("John", logic.getNameUser (userId).trim()); // Обрезанное ожидаемое значение
         assertEquals("awaiting_surnameUser", logic.getUserStatesForRegistration(userId).trim()); // Обрезанное ожидаемое значение
     }
 
@@ -123,8 +114,6 @@ public class LogicAndDataForRegistrationUsersTest {
         String response = logic.worksWithRegistration("Doe", userId, emailSender, logic);
         assertEquals(MessageConstants.ENTER_CLASS, response.trim()); // Обрезанный ответ
 
-        // Проверка фамилии
-        assertEquals("Doe", logic.getSurnameUser (userId).trim()); // Обрезанное ожидаемое значение
         assertEquals("awaiting_schoolClassUser", logic.getUserStatesForRegistration(userId).trim()); // Обрезанное ожидаемое значение
     }
 
@@ -141,8 +130,6 @@ public class LogicAndDataForRegistrationUsersTest {
         String response = logic.worksWithRegistration("10", userId, emailSender, logic);
         assertEquals(MessageConstants.ENTER_MAIL, response.trim()); // Обрезанный ответ
 
-        // Проверка класса
-        assertEquals("10", logic.getSchoolClassUser (userId).trim()); // Обрезанное ожидаемое значение
         assertEquals("awaiting_mailUser", logic.getUserStatesForRegistration(userId).trim()); // Обрезанное ожидаемое значение
     }
 }

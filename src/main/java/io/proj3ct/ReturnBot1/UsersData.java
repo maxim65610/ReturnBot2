@@ -1,7 +1,5 @@
 package io.proj3ct.ReturnBot1;
 
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,15 +10,14 @@ import java.util.logging.Logger;
  */
 public class UsersData {
     private final Logger logger = Logger.getLogger(UsersData.class.getName());
-
     /**
      * Метод для вставки данных пользователя в таблицу регистрации
      *
      * @param userId                           идентификатор пользователя
-     * @param logicAndDataForRegistrationUsers объект, содержащий логику и данные для регистрации пользователя
+     * @param dataUsersForRegistration объект, содержащий данные для регистрации пользователя
      * @param databaseConnection               объект для подключения к базе данных
      */
-    public void insertData(Long userId, LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers
+    public void insertData(Long userId, DataUsersForRegistration dataUsersForRegistration
             , DatabaseConnection databaseConnection ) {
 
         String dataRequest = "INSERT INTO RegistrationDataTable " +
@@ -29,10 +26,10 @@ public class UsersData {
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             stmt.setString(1, userId.toString());
-            stmt.setString(2, logicAndDataForRegistrationUsers.getNameUser(userId));
-            stmt.setString(3, logicAndDataForRegistrationUsers.getSurnameUser(userId));
-            stmt.setString(4, logicAndDataForRegistrationUsers.getSchoolClassUser(userId));
-            stmt.setString(5, logicAndDataForRegistrationUsers.getMailUser(userId));
+            stmt.setString(2, dataUsersForRegistration.getNameUser(userId));
+            stmt.setString(3, dataUsersForRegistration.getSurnameUser(userId));
+            stmt.setString(4, dataUsersForRegistration.getSchoolClassUser(userId));
+            stmt.setString(5, dataUsersForRegistration.getMailUser(userId));
             stmt.executeUpdate();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
