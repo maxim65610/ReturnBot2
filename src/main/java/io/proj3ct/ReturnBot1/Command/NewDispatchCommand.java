@@ -1,6 +1,6 @@
 package io.proj3ct.ReturnBot1.Command;
 
-import io.proj3ct.ReturnBot1.dispatch.LogicAndDataForDispatch;
+import io.proj3ct.ReturnBot1.dispatch.LogicForNewDispatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * Реализует интерфейс Command и обрабатывает команду "/new_dispatch".
  */
 public class NewDispatchCommand implements Command {
-    private final LogicAndDataForDispatch logicAndDataForDispatch = new LogicAndDataForDispatch();
+    private final LogicForNewDispatch logicForNewDispatch = new LogicForNewDispatch();
     /**
      * Выполняет команду для обработки новых диспетчеризаций.
      *
@@ -23,8 +23,8 @@ public class NewDispatchCommand implements Command {
     public List<String> execute(long userId, String messageText, boolean flagForKeyboard) {
         List<String> response = new ArrayList<>();
         if ("/new_dispatch".equals(messageText) ||
-                (!logicAndDataForDispatch.getUserStatesForNewDispatch(userId).equals("0"))) {
-            response.add(logicAndDataForDispatch.worksWithNewDispatch(messageText, userId));
+                (!logicForNewDispatch.getUserStatesForNewDispatch(userId).equals("0"))) {
+            response.add(logicForNewDispatch.worksWithNewDispatch(messageText, userId));
         }
         return response;
     }

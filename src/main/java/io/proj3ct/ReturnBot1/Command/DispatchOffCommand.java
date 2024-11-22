@@ -1,6 +1,6 @@
 package io.proj3ct.ReturnBot1.Command;
 
-import io.proj3ct.ReturnBot1.dispatch.LogicAndDataForDispatch;
+import io.proj3ct.ReturnBot1.dispatch.LogicForOnOffDispatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * Реализует интерфейс Command и обрабатывает команду "/dispatch_off".
  */
 public class DispatchOffCommand implements Command {
-    private final LogicAndDataForDispatch logicAndDataForDispatch = new LogicAndDataForDispatch();
+    private final LogicForOnOffDispatch logicForOnOffDispatch = new LogicForOnOffDispatch();
     /**
      * Выполняет команду отключения диспетчеризации.
      *
@@ -23,7 +23,7 @@ public class DispatchOffCommand implements Command {
     public List<String> execute(long userId, String messageText, boolean flagForKeyboard) {
         List<String> response = new ArrayList<>();
         if ("/dispatch_off".equals(messageText)) {
-            response.add(logicAndDataForDispatch.dispatchOff(userId));
+            response.add(logicForOnOffDispatch.dispatchOff(userId));
         }
         return response;
     }

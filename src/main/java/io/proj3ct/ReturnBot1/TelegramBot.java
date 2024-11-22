@@ -2,7 +2,7 @@ package io.proj3ct.ReturnBot1;
 
 import io.proj3ct.ReturnBot1.baseClasses.KeyboardLogic;
 import io.proj3ct.ReturnBot1.baseClasses.LogicController;
-import io.proj3ct.ReturnBot1.dispatch.LogicAndDataForDispatch;
+import io.proj3ct.ReturnBot1.dispatch.LogicForOnOffDispatch;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -30,7 +30,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final String botToken;
     private final LogicController logicController = new LogicController();
     private final List<BotCommand> listCommands;
-    private final LogicAndDataForDispatch logicAndDataForDispatch= new LogicAndDataForDispatch();
+    private final LogicForOnOffDispatch logicForOnOffDispatch = new LogicForOnOffDispatch();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     /**
      * Конструктор класса TelegramBot.
@@ -86,7 +86,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
      * Метод для отправки сообщений пользователям на основе данных для рассылки.
      */
     private void sendMessageForDispatch(){
-        String[][] userIdAndTextToSendDataArray = logicAndDataForDispatch.checkDateForDispatch();
+        String[][] userIdAndTextToSendDataArray = logicForOnOffDispatch.checkDateForDispatch();
         for(int i = 0; i < userIdAndTextToSendDataArray.length; i++){
             Long userId = Long.parseLong(userIdAndTextToSendDataArray[i][0]);
             String textToSend = userIdAndTextToSendDataArray[i][1];

@@ -1,7 +1,6 @@
 package io.proj3ct.ReturnBot1.dispatch;
 
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
-import io.proj3ct.ReturnBot1.registration.UsersData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,10 +22,10 @@ public class DispatchData {
      * Вставляет данные диспетча в таблицу DispatchDataTable.
      *
      * @param userId                  идентификатор пользователя, который создает диспетч
-     * @param logicAndDataForDispatch объект логики и данных диспетча
+     * @param dispatchDataStorage объект данных диспетча
      * @param databaseConnection      объект подключения к базе данных
      */
-    public void insertData(Long userId, LogicAndDataForDispatch logicAndDataForDispatch
+    public void insertData(Long userId, DispatchDataStorage dispatchDataStorage
             , DatabaseConnection databaseConnection, Long newId) {
         String dataRequest = "INSERT INTO DispatchDataTable " +
                 "(id, text, time, category, department) VALUES (?, ?, ?, ?, ?)";
@@ -34,10 +33,10 @@ public class DispatchData {
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             stmt.setLong(1, newId); // Устанавливаем новый ID
-            stmt.setString(2, logicAndDataForDispatch.getDispatchText(userId));
-            stmt.setString(3, logicAndDataForDispatch.getDispatchTime(userId));
-            stmt.setString(4, logicAndDataForDispatch.getDispatchCategory(userId));
-            stmt.setString(5, logicAndDataForDispatch.getDispatchDepartment(userId));
+            stmt.setString(2, dispatchDataStorage.getDispatchText(userId));
+            stmt.setString(3, dispatchDataStorage.getDispatchTime(userId));
+            stmt.setString(4, dispatchDataStorage.getDispatchCategory(userId));
+            stmt.setString(5, dispatchDataStorage.getDispatchDepartment(userId));
             stmt.executeUpdate();
 
         } catch (SQLException e) {
