@@ -125,4 +125,22 @@ public class MessageConstants {
      */
     public static final String DATA_DELETED = "Ваши данные успешно удалены";
 
+    public static final String NEW_DISPATCH = "Введите пароль:";
+
+    public static final String BAD_PASSWORD_NEW_DISPATCH = "Пароль не верный, в доступе отказано";
+
+    public static final String SUCCESSFUL_PASSWORD_NEW_DISPATCH = "Пароль верный, введите текст рассылки:";
+
+    public static final String DISPATCH_TIME = "Введите дату отправки (в формате dd.MM.yyyy):";
+
+    public static final String DISPATCH_TIME_BAD = "Вы ввели некорректные данные:";
+
+    public static final String DISPATCH_CATEGORY = "Введите категорию (обычная / приемная комиссия):";
+
+    public static final String DISPATCH_DEPARTMENT= "Введите факультет:";
+
+    public static final String NEW_DISPATCH_SUCCESSFUL= "Рассылка успешно добавлена";
+    public static final String DISPATCH_ON_COMMAND_RESPONSE = "Вы подписались на рассылку, бот будет отправлять Вам важную информацию";
+    public static final String DISPATCH_OFF_COMMAND_RESPONSE = "Вы отписались от рассылки";
+
 }
