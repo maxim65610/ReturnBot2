@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.baseClasses;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -12,7 +12,12 @@ import java.util.List;
  */
 public class KeyboardLogic {
     /**
-     * Обрабатывает сообщение и выбирает клавиатуру, отправляющуюся вместе с сообщением
+     * Обрабатывает сообщение и выбирает соответствующую клавиатуру, которая будет отправлена вместе с сообщением.
+     * В зависимости от переданных данных метод генерирует одну из нескольких клавиатур с кнопками.
+     *
+     * @param message Сообщение, к которому добавляется клавиатура.
+     * @param data Данные, которые определяют, какая клавиатура будет сгенерирована.
+     * @return Изменённое сообщение с установленной клавиатурой.
      */
     public SendMessage keyboards(SendMessage message, String data) {
 
@@ -136,7 +141,7 @@ public class KeyboardLogic {
                     .build();
             message.setReplyMarkup(keyboard);
         }
-        if (data.equals("/testAbit")) {
+        if (data.equals("/test_abit")) {
             InlineKeyboardMarkup keyboard = InlineKeyboardMarkup
                     .builder()
                     .keyboardRow(new InlineKeyboardRow(

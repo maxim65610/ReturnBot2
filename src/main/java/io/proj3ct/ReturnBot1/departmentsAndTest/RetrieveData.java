@@ -1,7 +1,9 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.departmentsAndTest;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.datebase.DatebaseTables;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +11,6 @@ import java.sql.SQLException;
  * Извлекает данные из базы данных для теста.
  */
 public class RetrieveData {
-
     private DatabaseConnection databaseConnection = new DatabaseConnection();
     private DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
     /**
@@ -19,7 +20,6 @@ public class RetrieveData {
      */
     public String getDataById(int id, String data) {
         datebaseTables.createAnswersDataTableQuery();
-
         String selectAnswersFromDataTable = "SELECT * FROM AnswersData WHERE id_question = ?";
 
         try (Connection conn = databaseConnection.connect();

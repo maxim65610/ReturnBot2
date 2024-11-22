@@ -1,6 +1,7 @@
 package io.proj3ct.ReturnBot1;
 
 
+import io.proj3ct.ReturnBot1.baseClasses.KeyboardLogic;
 import org.junit.jupiter.api.BeforeEach;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -16,9 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class KeyboardLogicTest {
     SendMessage message;
-
     /**
-     * Конструктор дял TextForMessageTest.
+     * Конструктор для TextForMessageTest.
      */
     private void KeyboardLogicTest() {
         message = SendMessage // Create a message object
@@ -27,7 +27,6 @@ public class KeyboardLogicTest {
                 .text("test")
                 .build();
     }
-
     /**
      * Создание объекта для тестов KeyboardLogicTest.
      */
@@ -35,7 +34,6 @@ public class KeyboardLogicTest {
     void setUp() {
         KeyboardLogicTest();
     }
-
     /**
      * Тест для проверки работы клавиатуры при вводе команды /work.
      * Проверяет, что клавиатура содержит три кнопки.
@@ -50,7 +48,6 @@ public class KeyboardLogicTest {
         InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
         assertEquals(3, markup.getKeyboard().size());
     }
-
     /**
      * Тест для проверки работы клавиатуры при вводе команды ИЕНИМ.
      * Проверяет, что клавиатура содержит пять кнопок.
@@ -65,7 +62,6 @@ public class KeyboardLogicTest {
         InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
         assertEquals(5, markup.getKeyboard().size());
     }
-
     /**
      * Тест для проверки работы клавиатуры при вводе команды РТФ.
      * Проверяет, что клавиатура содержит пять кнопок.
@@ -81,7 +77,6 @@ public class KeyboardLogicTest {
         InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
         assertEquals(5, markup.getKeyboard().size());
     }
-
     /**
      * Тест для проверки работы клавиатуры при вводе команды ХТИ.
      * Проверяет, что клавиатура содержит три кнопки.
@@ -96,7 +91,6 @@ public class KeyboardLogicTest {
         InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
         assertEquals(3, markup.getKeyboard().size());
     }
-
     /**
      * Тест для проверки работы клавиатуры при вводе команды /testAbit.
      * Проверяет, что клавиатура содержит один ряд кнопок.
@@ -105,7 +99,7 @@ public class KeyboardLogicTest {
     public void testKeyboardsTestAbitCommand() {
         KeyboardLogic logic = new KeyboardLogic();
 
-        String data = "/testAbit";
+        String data = "/test_abit";
         SendMessage resultMessage = logic.keyboards(message, data);
 
         InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();

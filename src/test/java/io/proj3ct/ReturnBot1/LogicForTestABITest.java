@@ -1,6 +1,7 @@
 package io.proj3ct.ReturnBot1;
 
 
+import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -8,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * Содержит тесты, проверяющие корректность работы методов получения состояний пользователя и данных из базы.
+ */
 class LogicForTestABITest {
 
     private LogicForTestABI logicForTestABI;
@@ -51,7 +54,7 @@ class LogicForTestABITest {
         Long userId = 1L;
         String messageText = "/testAbit";
         String data = "100";
-        List<String> dataBD = logicForTestABI.getDataBd(messageText, userId, data);
+        List<String> dataBD = logicForTestABI.worksWithTestABI(messageText, userId, data);
         assertNotNull(dataBD);
         assertTrue(dataBD.isEmpty());
     }
@@ -64,7 +67,7 @@ class LogicForTestABITest {
         Long userId = 1L;
         String messageText = "/testAbit";
         String data = "100";
-        List<String> dataBD = logicForTestABI.getDataBd(messageText, userId, data);
+        List<String> dataBD = logicForTestABI.worksWithTestABI(messageText, userId, data);
         assertNotNull(dataBD);
     }
 }

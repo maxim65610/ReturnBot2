@@ -1,5 +1,7 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.baseClasses.KeyboardLogic;
+import io.proj3ct.ReturnBot1.baseClasses.LogicController;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -7,9 +9,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 
 /**
@@ -36,15 +37,19 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     @Override
     public void consume(Update update) {
         long userId;
+        boolean flagForKeyboard = false;
+        String messageText;
         if (update.hasCallbackQuery() && update.getCallbackQuery() != null) {
             userId = update.getCallbackQuery().getFrom().getId();
+            flagForKeyboard = true;
+            messageText = update.getCallbackQuery().getData();
         } else if (update.hasMessage() && update.getMessage() != null) {
             userId = update.getMessage().getChatId();
+            messageText = update.getMessage().getText();
         } else {
             return; // Неизвестный тип обновления
         }
-
-        sendMessage(userId, logicController.getListStringWithTextToSendAndOptionForKeyboard(update, userId));
+        sendMessage(userId, logicController.handleMessage(userId, messageText, flagForKeyboard));
     }
     /**
      * Подготавливает и отправляет сообщение в указанный чат.
