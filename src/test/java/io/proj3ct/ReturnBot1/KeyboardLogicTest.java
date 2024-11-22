@@ -99,7 +99,7 @@ public class KeyboardLogicTest {
     public void testKeyboardsTestAbitCommand() {
         KeyboardLogic logic = new KeyboardLogic();
 
-        String data = "/testabit";
+        String data = "/test_abit";
         SendMessage resultMessage = logic.keyboards(message, data);
 
         InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();

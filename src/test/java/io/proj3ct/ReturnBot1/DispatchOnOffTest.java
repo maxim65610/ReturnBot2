@@ -1,6 +1,7 @@
 package io.proj3ct.ReturnBot1;
 
-import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
+
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 import io.proj3ct.ReturnBot1.dispatch.DispatchData;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,6 @@ public class DispatchOnOffTest {
     private Connection connection;
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
-    private TextForMessage textForMessage;
 
     /**
      * Выполняется перед каждым тестом.
@@ -38,7 +38,6 @@ public class DispatchOnOffTest {
     public void setUp() throws SQLException {
         dispatchData = new DispatchData();
         databaseConnection = mock(DatabaseConnection.class);
-        textForMessage = new TextForMessage();
         connection = mock(Connection.class);
         preparedStatement = mock(PreparedStatement.class);
         resultSet = mock(ResultSet.class);
@@ -55,7 +54,7 @@ public class DispatchOnOffTest {
      */
     @Test
     public void dispatchOn() throws SQLException {
-        String answerCommandDispatchOn = textForMessage.setTheText("/dispatchOn");
+        String answerCommandDispatchOn = MessageConstants.DISPATCH_ON_COMMAND_RESPONSE;
         String expectedMessageDispatchOn = "Вы подписались на рассылку, бот будет отправлять Вам важную информацию";
 
         String[][] expectedData = {
@@ -83,7 +82,7 @@ public class DispatchOnOffTest {
      */
     @Test
     public void dispatchOff() throws SQLException {
-        String answerCommandDispatchOff = textForMessage.setTheText("/dispatchOff");
+        String answerCommandDispatchOff = MessageConstants.DISPATCH_OFF_COMMAND_RESPONSE;
         String expectedMessageDispatchOff = "Вы отписались от рассылки";
 
         String[][] expectedData = {

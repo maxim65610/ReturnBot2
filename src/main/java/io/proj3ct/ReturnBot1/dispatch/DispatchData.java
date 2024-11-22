@@ -8,20 +8,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Класс для работы с данными диспетча в базе данных.
  * Предоставляет методы для вставки данных и генерации нового идентификатора.
  */
 public class DispatchData {
+    private final Logger logger = Logger.getLogger(DispatchData.class.getName());
+
     /**
      * Вставляет данные диспетча в таблицу DispatchDataTable.
      *
      * @param userId                  идентификатор пользователя, который создает диспетч
-     * @param logicAndDataForDispatch объект логики и данных диспетча
+     * @param dispatchDataStorage объект данных диспетча
      * @param databaseConnection      объект подключения к базе данных
      */
-    public void insertData(Long userId, LogicAndDataForDispatch logicAndDataForDispatch
+    public void insertData(Long userId, DispatchDataStorage dispatchDataStorage
             , DatabaseConnection databaseConnection, Long newId) {
         String dataRequest = "INSERT INTO DispatchDataTable " +
                 "(id, text, time, category, department) VALUES (?, ?, ?, ?, ?)";
@@ -29,14 +33,15 @@ public class DispatchData {
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             stmt.setLong(1, newId); // Устанавливаем новый ID
-            stmt.setString(2, logicAndDataForDispatch.getDispatchText(userId));
-            stmt.setString(3, logicAndDataForDispatch.getDispatchTime(userId));
-            stmt.setString(4, logicAndDataForDispatch.getDispatchCategory(userId));
-            stmt.setString(5, logicAndDataForDispatch.getDispatchDepartment(userId));
+            stmt.setString(2, dispatchDataStorage.getDispatchText(userId));
+            stmt.setString(3, dispatchDataStorage.getDispatchTime(userId));
+            stmt.setString(4, dispatchDataStorage.getDispatchCategory(userId));
+            stmt.setString(5, dispatchDataStorage.getDispatchDepartment(userId));
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println("Ошибка вставки данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка добавления данных: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -56,54 +61,14 @@ public class DispatchData {
                 return rs.getLong("maxId") + 1; // Возвращаем maxId + 1
             }
         } catch (SQLException e) {
-            System.out.println("Ошибка получения максимального ID: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка получения максимального ID: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
         return 1L; // Если таблица пуста, возвращаем 1
     }
     /**
-     * Получает все данные диспетча по указанному идентификатору.
-     *
-     * @param userId              идентификатор пользователя, для которого запрашиваются данные
-     * @param databaseConnection   объект подключения к базе данных
-     * @return двумерный массив строк, содержащий данные диспетча
-     */
-    public String[][] getAllDispatchDataById(int userId, DatabaseConnection databaseConnection) {
-        String query = "SELECT * FROM DispatchDataTable WHERE id = ?";
-        List<String[]> dispatchDataList = new ArrayList<>();
-
-        try (Connection conn = databaseConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setLong(1, userId);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                String[] dispatchData = new String[5];
-                dispatchData[0] = rs.getString("dispatch_text");
-                dispatchData[1] = rs.getString("dispatch_time");
-                dispatchData[2] = rs.getString("dispatch_category");
-                dispatchData[3] = rs.getString("dispatch_department");
-                dispatchData[4] = rs.getString("user_id");
-
-                dispatchDataList.add(dispatchData);
-            }
-        } catch (SQLException e) {
-            System.out.println("Ошибка получения данных: " + e.getMessage());
-        }
-
-        // Преобразуем список в двумерный массив
-        String[][] dispatchDataArray = new String[dispatchDataList.size()][5];
-        for (int i = 0; i < dispatchDataList.size(); i++) {
-            dispatchDataArray[i] = dispatchDataList.get(i);
-        }
-
-        return dispatchDataArray;
-    }
-    /**
-
      Метод для получения всех данных о dispatch из таблицы DispatchDataTable.
-
      @param databaseConnection объект для подключения к базе данных.
-
      @return двумерный массив строк, где каждая строка содержит данные о dispatch.
      */
     public String[][] getAllDispatchData(DatabaseConnection databaseConnection) {
@@ -128,7 +93,8 @@ public class DispatchData {
                 dispatchDataList.add(dispatchData);
             }
         } catch (SQLException e) {
-            System.out.println("Ошибка получения данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка получения данных: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
 
         // Преобразуем список в двумерный массив
@@ -161,7 +127,8 @@ public class DispatchData {
                 dispatchDataList.add(dispatchData);
             }
         } catch (SQLException e) {
-            System.out.println("Ошибка получения данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка получения данных: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
         // Преобразуем список в двумерный массив
         String[][] dispatchDataArray = new String[dispatchDataList.size()][2];
@@ -192,7 +159,8 @@ public class DispatchData {
                 return rs.getString("year_end_school");
             }
         } catch (SQLException e) {
-            System.out.println("Ошибка получения данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка получения данных: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
         return "Вы не прошли регистрацию";
     }
@@ -217,7 +185,8 @@ public class DispatchData {
                 return rs.getString("department");
             }
         } catch (SQLException e) {
-            System.out.println("Ошибка получения данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка получения данных: " + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
         return "Вы не прошли регистрацию";
     }

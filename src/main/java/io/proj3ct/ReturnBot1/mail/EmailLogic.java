@@ -1,8 +1,8 @@
 package io.proj3ct.ReturnBot1.mail;
 
-import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
-import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 import io.proj3ct.ReturnBot1.registration.UsersData;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,31 +14,40 @@ import java.util.Map;
  * получения вопросов от пользователей.
  */
 public class EmailLogic {
-    private final TextForMessage textForMessage = new TextForMessage();
-    private final Map<Long, String> userStatesForMail = new HashMap<>();
-    private final Map<Long, String> userMails = new HashMap<>();
-    private UsersData usersData = new UsersData();
     /**
-     * Возвращает текущее состояние пользователя по идентификатору.
-     * @param chatID Идентификатор чата пользователя.
-     * @return Строка с состоянием пользователя или "0", если состояний нет.
+     * Хранит состояния пользователей для отправки электронных писем.
      */
-    public String getUserStatesForEmail(Long chatID){
-        return userStatesForMail.getOrDefault(chatID, "0");
+    private final Map<Long, String> userStatesForMail = new HashMap<>();
+    /**
+     * Хранит электронные адреса пользователей.
+     */
+    private final Map<Long, String> userMails = new HashMap<>();
+    /**
+     * Объект для работы с данными пользователей.
+     */
+    private UsersData usersData;
+    /**
+     * Дефолтный конструктор, инициализирующий объект UsersData.
+     */
+    public EmailLogic() {
+        this.usersData = new UsersData();
     }
     /**
-     * Устанавливает объект UsersData, который будет использоваться для работы с данными пользователей(используется для тестов).
-     * @param usersData экземпляр класса UsersData, содержащий информацию о пользователях.
+     * Конструктор с параметрами для тестирования.
+     *
+     * @param usersData объект для работы с данными пользователей
      */
-    public void setUsersData(UsersData usersData) {
+    public EmailLogic(UsersData usersData) {
         this.usersData = usersData;
     }
     /**
-     * Вызывает worksWithMail
+     * Возвращает текущее состояние пользователя по идентификатору.
+     *
+     * @param chatID Идентификатор чата пользователя.
+     * @return Строка с состоянием пользователя или "0", если состояний нет.
      */
-    public String getWorksWithMail(String messageText, Long userId, EmailSender emailSender,
-                                   EmailLogic emailLogic, DatabaseConnection databaseConnection){
-        return worksWithMail(messageText,userId,emailSender,emailLogic, databaseConnection);
+    public String getUserStatesForEmail(Long chatID) {
+        return userStatesForMail.getOrDefault(chatID, "0");
     }
     /**
      * Обрабатывает сообщения пользователей и управляет состоянием.
@@ -46,24 +55,30 @@ public class EmailLogic {
      * @param messageText  Текст сообщения пользователя.
      * @param userId      Идентификатор пользователя.
      * @param emailSender  Объект для отправки электронной почты.
-     * @param emailLogic   Объект EmailLogic, используемый для управления состоянием.
      * @return Ответ пользователю в зависимости от текущего состояния.
      */
-    private String worksWithMail(String messageText, Long userId, EmailSender emailSender, EmailLogic emailLogic,
+    public String worksWithMail(String messageText, Long userId, EmailSender emailSender,
                                  DatabaseConnection databaseConnection) {
         String currentState = userStatesForMail.get(userId);
         if ("/question".equals(messageText)) {
             if (!usersData.checkUserIdExistsInRegistrationDataTable(userId, databaseConnection)) {
-                return "Эта функция недоступна, пока вы не зарегистрируетесь";
+                return MessageConstants.NOT_AVAILABLE;
             }
             userStatesForMail.put(userId, "awaiting_question");
         } else if ("awaiting_question".equals(currentState)) {
-            String mailUser = usersData.getUserMail(userId, databaseConnection);
+            if (usersData.checkUserIdExistsInRegistrationDataTable(userId,databaseConnection)) {
+                String mailUser = usersData.getUserMail(userId, databaseConnection);
+
             emailSender.sendEmail(emailSender.getUsername(), "Вопрос от абитуриента " + mailUser, messageText);
             userStatesForMail.remove(userId);
             userMails.remove(userId);
-            return "Ваш вопрос отправлен";
+
+            return MessageConstants.MAIL_SEND;
+            }
+            else{
+                return MessageConstants.NO_REGISTRATION;
+            }
         }
-        return textForMessage.setTheText(messageText);
+        return MessageConstants.QUESTION_COMMAND_RESPONSE;
     }
 }

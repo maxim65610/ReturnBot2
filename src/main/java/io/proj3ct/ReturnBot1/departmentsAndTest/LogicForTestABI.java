@@ -1,8 +1,6 @@
 package io.proj3ct.ReturnBot1.departmentsAndTest;
 
-import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
-import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
-import io.proj3ct.ReturnBot1.registration.UsersData;
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 
 import java.util.*;
 
@@ -12,16 +10,18 @@ import java.util.*;
  * и определяет подходящий факультет на основе выборов пользователя.
  */
 public class LogicForTestABI {
+    /* Объект для получения данных из базы данных. */
     private final RetrieveData retrieveData = new RetrieveData();
-    private final TextForMessage textForMessage = new TextForMessage();
-    private Map<Long, Integer> idTestABI = new HashMap<>();
-    private Map<Long, List<String>> choiceABI = new HashMap<>();
-    private Map<Long, String> resultsTestAbi = new HashMap<>();
-    private Map<Long, String> userStatesForTest = new HashMap<>();
-    private final UsersData usersData = new UsersData();
-    private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    /* Хранит идентификаторы тестов абитуриентов по их идентификаторам чата. */
+    private final Map<Long, Integer> idTestABI = new HashMap<>();
+    /* Хранит выборы абитуриентов по их идентификаторам чата. */
+    private final Map<Long, List<String>> choiceABI = new HashMap<>();
+    /* Хранит результаты тестов абитуриентов по их идентификаторам чата. */
+    private final Map<Long, String> resultsTestAbi = new HashMap<>();
+    /* Хранит состояния тестов абитуриентов по их идентификаторам чата. */
+    private final Map<Long, String> userStatesForTest = new HashMap<>();
     /**
-     * Получает текущее состояние теста для указанного пользователя.
+     * Получает текущее состоян ие теста для указанного пользователя.
      * @param chatID идентификатор пользователя
      * @return состояние пользователя, или "0", если состояние отсутствует
      */
@@ -35,7 +35,6 @@ public class LogicForTestABI {
     public void removeUserStatesForTest(Long chatID) {
         userStatesForTest.remove(chatID);
     }
-
     /**
      * Получает название факультета из базы данных по заданному идентификатору.
      * @param id_getfaculty идентификатор факультета
@@ -45,18 +44,12 @@ public class LogicForTestABI {
         return retrieveData.getDataById(id_getfaculty, "cash3");
     }
     /**
-     * Вызывает worksWithTestABI
-     */
-    public List<String> getDataBd(String messageText, Long userId, String data) {
-        return worksWithTestABI(messageText, userId, data);
-    }
-    /**
      * Возвращает результат теста для указанного идентификатора чата.
      * @param chatID идентификатор чата
      * @return строка с результатом теста
      */
     public String getResult(long chatID) {
-        return textForMessage.setTheText("resultTestABI") + resultsTestAbi.get(chatID);
+        return MessageConstants.RESULT_TEST_ABI_COMMAND_RESPONSE + resultsTestAbi.get(chatID);
     }
     /**
      * Получает данные для теста по заданному идентификатору.
@@ -114,7 +107,7 @@ public class LogicForTestABI {
      * @param data данные, полученные с getCallbackQuery().getData()
      * @return список данных, полученных из базы данных для текущего состояния теста
      */
-    private List<String> worksWithTestABI(String messageText, Long userId, String data) {
+    public List<String> worksWithTestABI(String messageText, Long userId, String data) {
         String currentState = userStatesForTest.get(userId);
         List<String> dataBD = new ArrayList<>();
 
@@ -130,7 +123,7 @@ public class LogicForTestABI {
             choiceABI.get(userId).add(data);
         }
         // Обрабатываем переходы состояний теста
-        if (messageText.equals("/testabit") && (!userStatesForTest.containsKey(userId))) {
+        if (messageText.equals("/test_abit") && (!userStatesForTest.containsKey(userId))) {
             userStatesForTest.put(userId, "awaiting_testABI_1");
         } else if ("awaiting_testABI_1".equals(currentState)) {
             dataBD = arrayBdForTestABI(idTestABI.get(userId));
@@ -139,13 +132,9 @@ public class LogicForTestABI {
         } else if (currentState != null && currentState.startsWith("awaiting_testABI")) {
             int stepForAwaiting_testABI = Integer.parseInt(currentState.split("_")[2]);
             if (stepForAwaiting_testABI == 10) {
-                String res = gettingResult(userId, choiceABI);
-                if(usersData.checkUserIdExistsInRegistrationDataTable(userId,databaseConnection)) {
-                    usersData.changeDepartment(userId,databaseConnection,res);
-                }
-                resultsTestAbi.put(userId, res);
+                resultsTestAbi.put(userId, gettingResult(userId, choiceABI));
                 userStatesForTest.remove(userId);
-                dataBD.add(textForMessage.setTheText("userPassedTest"));
+                dataBD.add(MessageConstants.END_TEST_ABI_COMMAND_RESPONSE);
                 userStatesForTest.put(userId, "awaiting_testABI_11");
             } else {
                 dataBD = arrayBdForTestABI(idTestABI.get(userId) + stepForAwaiting_testABI - 1);
