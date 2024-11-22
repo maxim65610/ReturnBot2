@@ -3,6 +3,10 @@ package io.proj3ct.ReturnBot1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.registration.DataUsersForRegistration;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 import org.junit.Before;
 import org.junit.Test;
 import java.sql.Connection;
@@ -15,7 +19,7 @@ import java.sql.SQLException;
  */
 public class UsersDataTest {
     private final UsersData usersData;
-    private final LogicAndDataForRegistrationUsers logicAndDataForRegistrationUsers;
+    private final DataUsersForRegistration dataUsersForRegistration;
     private final DatabaseConnection databaseConnection;
     private final Connection connection;
     private final PreparedStatement preparedStatement;
@@ -25,7 +29,7 @@ public class UsersDataTest {
      */
     public UsersDataTest() {
         usersData = new UsersData();
-        logicAndDataForRegistrationUsers = mock(LogicAndDataForRegistrationUsers.class);
+        dataUsersForRegistration = mock(DataUsersForRegistration.class);
         databaseConnection = mock(DatabaseConnection.class);
         connection = mock(Connection.class);
         preparedStatement = mock(PreparedStatement.class);
@@ -39,10 +43,10 @@ public class UsersDataTest {
     public void setUp() throws SQLException {
         when(databaseConnection.connect()).thenReturn(connection);
         when(connection.prepareStatement(any(String.class))).thenReturn(preparedStatement);
-        when(logicAndDataForRegistrationUsers.getNameUser (anyLong())).thenReturn("qqqq");
-        when(logicAndDataForRegistrationUsers.getSurnameUser (anyLong())).thenReturn("wwww");
-        when(logicAndDataForRegistrationUsers.getSchoolClassUser (anyLong())).thenReturn("10");
-        when(logicAndDataForRegistrationUsers.getMailUser (anyLong())).thenReturn("test@example.com");
+        when(dataUsersForRegistration.getNameUser (anyLong())).thenReturn("qqqq");
+        when(dataUsersForRegistration.getSurnameUser (anyLong())).thenReturn("wwww");
+        when(dataUsersForRegistration.getSchoolClassUser (anyLong())).thenReturn("10");
+        when(dataUsersForRegistration.getMailUser (anyLong())).thenReturn("test@example.com");
     }
     /**
      * Тест для проверки вставки данных пользователя в таблицу.
@@ -51,7 +55,7 @@ public class UsersDataTest {
     @Test
     public void testInsertData() throws SQLException {
         Long userId = 1L;
-        usersData.insertData(userId, logicAndDataForRegistrationUsers, databaseConnection);
+        usersData.insertData(userId, dataUsersForRegistration, databaseConnection);
         verify(preparedStatement).setString(1, userId.toString());
         verify(preparedStatement).setString(2, "qqqq");
         verify(preparedStatement).setString(3, "wwww");
@@ -140,15 +144,15 @@ public class UsersDataTest {
      * Проверяет, что данные пользователя возвращаются корректно.
      */
     @Test
-    public void testTakeData() throws SQLException {
+    public void testGetRegistrationData() throws SQLException {
         Long userId = 1L;
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getString("name")).thenReturn("qqqq");
         when(resultSet.getString("surname")).thenReturn("wwww");
-        when(resultSet.getString("school_сlass")).thenReturn("10");
+        when(resultSet.getString("school_class")).thenReturn("10");
         when(resultSet.getString("mail")).thenReturn("test@example.com");
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
-        String data = usersData.takeData(userId, databaseConnection);
+        String data = usersData.getRegistrationData(userId, databaseConnection);
         assertEquals("Ваше имя: qqqq\nВаша фамилия: wwww\nВаш класс: 10\nВаша почта: test@example.com", data);
     }
     /**

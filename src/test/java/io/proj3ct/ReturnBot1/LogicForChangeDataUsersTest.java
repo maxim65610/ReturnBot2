@@ -1,136 +1,101 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
+import io.proj3ct.ReturnBot1.registration.LogicForChangeDataUsers;
+import io.proj3ct.ReturnBot1.registration.UsersData;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-/**
- * Тестовый класс для проверки логики изменения данных пользователей в классе
- * LogicForChangeDataUsers.
- */
 public class LogicForChangeDataUsersTest {
-
-    private LogicForChangeDataUsers logicForChangeDataUsers;
-
-    @Mock
+    private LogicForChangeDataUsers logic;
     private UsersData usersData;
-
-    @Mock
     private DatabaseConnection databaseConnection;
-
-    @Mock
-    private TextForMessage textForMessage;
-
-    @Mock
     private EmailSender emailSender;
 
-    private Long userId = 1L;
-    /**
-     * Настройка тестового окружения перед каждым тестом.
-     * Инициализирует моки и устанавливает зависимости для тестируемого класса.
-     */
-    @Before
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        logicForChangeDataUsers = new LogicForChangeDataUsers();
+        // Инициализация зависимостей
+        usersData = Mockito.mock(UsersData.class);
+        databaseConnection = Mockito.mock(DatabaseConnection.class);
+        emailSender = Mockito.mock(EmailSender.class);
 
-        // Установка зависимостей через сеттеры
-        logicForChangeDataUsers.setUsersData(usersData);
-        logicForChangeDataUsers.setDatabaseConnection(databaseConnection);
-        logicForChangeDataUsers.setTextForMessage(textForMessage);
+        // Создание объекта LogicForChangeDataUsers с заглушками
+        logic = new LogicForChangeDataUsers(new HashMap<>(), usersData, databaseConnection);
     }
-    /**
-     * Тестирует процесс изменения имени пользователя.
-     */
+
     @Test
-    public void testWorksWithChangeDataName() {
-        // Начало процесса изменения данных
-        when(textForMessage.setTheText("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
+    public void testWorksWithChangeData_ChangeName() {
+        Long userId = 1L;
+        String messageText = "/user_data_change";
+        logic.worksWithChangeData(messageText, userId, emailSender);
 
-        String response = logicForChangeDataUsers.worksWithChangeData("/userDataChange", userId, emailSender);
-        assertEquals("Выберите, что хотите изменить: имя, фамилию, класс или почту.", response);
+        messageText = "/user_data_change_name";
+        String response = logic.worksWithChangeData(messageText, userId, emailSender);
+        assertEquals(MessageConstants.ENTER_NAME, response);
 
-        // Изменение имени
-        when(textForMessage.setTheText("name")).thenReturn("Введите новое имя:");
-        response = logicForChangeDataUsers.worksWithChangeData("/userDataChangeName", userId, emailSender);
-        assertEquals("Введите новое имя:", response);
-
-        // Ввод нового имени
-        when(textForMessage.setTheText("successful_name")).thenReturn("Имя успешно изменено!");
-        response = logicForChangeDataUsers.worksWithChangeData("John", userId, emailSender);
-        assertEquals("Имя успешно изменено!", response);
-        verify(usersData).changeName(userId, databaseConnection, "John");
+        // Установка имени
+        String newName = "John";
+        Mockito.doNothing().when(usersData).changeName(userId, databaseConnection, newName);
+        response = logic.worksWithChangeData(newName, userId, emailSender);
+        assertEquals(MessageConstants.SUCCESSFUL_NAME, response);
     }
-    /**
-     * Тестирует процесс изменения фамилии пользователя.
-     */
+
     @Test
-    public void testWorksWithChangeDataSurname() {
-        // Начало процесса изменения данных
-        when(textForMessage.setTheText("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
+    public void testWorksWithChangeData_ChangeSurname() {
+        Long userId = 2L;
+        String messageText = "/user_data_change";
+        logic.worksWithChangeData(messageText, userId, emailSender);
 
-        String response = logicForChangeDataUsers.worksWithChangeData("/userDataChange", userId, emailSender);
-        assertEquals("Выберите, что хотите изменить: имя, фамилию, класс или почту.", response);
+        messageText = "/user_data_change_surname";
+        String response = logic.worksWithChangeData(messageText, userId, emailSender);
+        assertEquals(MessageConstants.ENTER_SURNAME, response);
 
-        // Изменение фамилии
-        when(textForMessage.setTheText("surname")).thenReturn("Введите новую фамилию:");
-        response = logicForChangeDataUsers.worksWithChangeData("/userDataChangeSurname", userId, emailSender);
-        assertEquals("Введите новую фамилию:", response);
-
-        // Ввод новой фамилии
-        when(textForMessage.setTheText("successful_surname")).thenReturn("Фамилия успешно изменена!");
-        response = logicForChangeDataUsers.worksWithChangeData("Doe", userId, emailSender);
-        assertEquals("Фамилия успешно изменена!", response);
-        verify(usersData).changeSurname(userId, databaseConnection, "Doe");
+        // Установка фамилии
+        String newSurname = "Doe";
+        Mockito.doNothing().when(usersData).changeSurname(userId, databaseConnection, newSurname);
+        response = logic.worksWithChangeData(newSurname, userId, emailSender);
+        assertEquals(MessageConstants.SUCCESSFUL_SURNAME, response);
     }
-    /**
-     * Тестирует процесс изменения класса пользователя.
-     */
+
     @Test
-    public void testWorksWithChangeDataClass() {
-        // Начало процесса изменения данных
-        when(textForMessage.setTheText("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
+    public void testWorksWithChangeData_ChangeClass() {
+        Long userId = 3L;
+        String messageText = "/user_data_change";
+        logic.worksWithChangeData(messageText, userId, emailSender);
 
-        String response = logicForChangeDataUsers.worksWithChangeData("/userDataChange", userId, emailSender);
-        assertEquals("Выберите, что хотите изменить: имя, фамилию, класс или почту.", response);
+        messageText = "/user_data_change_class";
+        String response = logic.worksWithChangeData(messageText, userId, emailSender);
+        assertEquals(MessageConstants.ENTER_CLASS, response);
 
-        // Изменение класса
-        when(textForMessage.setTheText("class")).thenReturn("Введите новый класс:");
-        response = logicForChangeDataUsers.worksWithChangeData("/userDataChangeClass", userId, emailSender);
-        assertEquals("Введите новый класс:", response);
-
-        // Ввод нового класса
-        when(textForMessage.setTheText("successful_class")).thenReturn("Класс успешно изменен!");
-        response = logicForChangeDataUsers.worksWithChangeData("10", userId, emailSender);
-        assertEquals("Класс успешно изменен!", response);
-        verify(usersData).changeClass(userId, databaseConnection, "10");
+        // Установка класса
+        String newClass = "10";
+        Mockito.doNothing().when(usersData).changeClass(userId, databaseConnection, newClass);
+        response = logic.worksWithChangeData(newClass, userId, emailSender);
+        assertEquals(MessageConstants.SUCCESSFUL_CLASS, response);
     }
-    /**
-     * Тестирует процесс изменения почты пользователя.
-     */
+
     @Test
-    public void testWorksWithChangeDataMail() {
-        // Начало процесса изменения данных
-        when(textForMessage.setTheText("userDataChange")).thenReturn("Выберите, что хотите изменить: имя, фамилию, класс или почту.");
+    public void testWorksWithChangeData_ChangeMail() {
+        Long userId = 4L;
+        String messageText = "/user_data_change";
+        logic.worksWithChangeData(messageText, userId, emailSender);
 
-        String response = logicForChangeDataUsers.worksWithChangeData("/userDataChange", userId, emailSender);
-        assertEquals("Выберите, что хотите изменить: имя, фамилию, класс или почту.", response);
+        messageText = "/user_data_change_mail";
+        String response = logic.worksWithChangeData(messageText, userId, emailSender);
+        assertEquals(MessageConstants.ENTER_MAIL, response);
 
-        // Изменение почты
-        when(textForMessage.setTheText("mail")).thenReturn("Введите новый адрес электронной почты:");
-        response = logicForChangeDataUsers.worksWithChangeData("/userDataChangeMail", userId, emailSender);
-        assertEquals("Введите новый адрес электронной почты:", response);
-
-        // Ввод новой почты
-        when(emailSender.isValidEmail("test@example.com")).thenReturn(true);
-        when(textForMessage.setTheText("successful_mail")).thenReturn("Почта успешно изменена!");
-        response = logicForChangeDataUsers.worksWithChangeData("test@example.com", userId, emailSender);
-        assertEquals("Почта успешно изменена!", response);
-        verify(usersData).changeMail(userId, databaseConnection, "test@example.com");
+        // Установка email
+        String newEmail = "test@example.com";
+        Mockito.when(emailSender.isValidEmail(newEmail)).thenReturn(true);
+        Mockito.doNothing().when(usersData).changeMail(userId, databaseConnection, newEmail);
+        response = logic.worksWithChangeData(newEmail, userId, emailSender);
+        assertEquals(MessageConstants.SUCCESSFUL_MAIL, response);
     }
-
 }

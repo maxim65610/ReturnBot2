@@ -3,6 +3,10 @@ package io.proj3ct.ReturnBot1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.mail.EmailLogic;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,11 +23,10 @@ public class EmailLogicTest {
      */
     @Before
     public void setUp() {
-        emailLogic = new EmailLogic();
         usersDataMock = mock(UsersData.class);
         emailSenderMock = mock(EmailSender.class);
         databaseConnectionMock = mock(DatabaseConnection.class);
-        emailLogic.setUsersData(usersDataMock);
+        emailLogic = new EmailLogic(usersDataMock);
     }
     /**
      Тест для проверки получения состояния пользователя, когда оно отсутствует.
@@ -45,7 +48,7 @@ public class EmailLogicTest {
 
         when(usersDataMock.checkUserIdExistsInRegistrationDataTable(userId, databaseConnectionMock))
                 .thenReturn(false);
-        String response = emailLogic.worksWithMail(messageText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
+        String response = emailLogic.worksWithMail(messageText, userId, emailSenderMock, databaseConnectionMock);
 
         assertEquals("Эта функция недоступна, пока вы не зарегистрируетесь", response);
     }
@@ -61,14 +64,14 @@ public class EmailLogicTest {
         when(usersDataMock.checkUserIdExistsInRegistrationDataTable(userId, databaseConnectionMock))
                 .thenReturn(true);
         emailLogic.getUserStatesForEmail(userId); // Это нужно для инициализации состояния
-        emailLogic.worksWithMail(messageText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
+        emailLogic.worksWithMail(messageText, userId, emailSenderMock, databaseConnectionMock);
 
         String questionText = "Как зарегистрироваться?";
         String mailUser  = "test@example.com";
 
         when(usersDataMock.getUserMail(userId, databaseConnectionMock)).thenReturn(mailUser );
         when(emailSenderMock.getUsername()).thenReturn("testUser ");
-        String response = emailLogic.worksWithMail(questionText, userId, emailSenderMock, emailLogic, databaseConnectionMock);
+        String response = emailLogic.worksWithMail(questionText, userId, emailSenderMock, databaseConnectionMock);
         verify(emailSenderMock).sendEmail(eq("testUser "), eq("Вопрос от абитуриента " + mailUser ), eq(questionText));
         assertEquals("Ваш вопрос отправлен", response);
     }
