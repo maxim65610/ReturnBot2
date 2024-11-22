@@ -76,13 +76,13 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     /**
      * Метод для запуска таймера, который периодически запускает метод sendMessageForDispatch.
      */
-    public void timerWithPeriodicityOfDay() {
+    private void timerWithPeriodicityOfDay() {
         scheduler.scheduleAtFixedRate(this::sendMessageForDispatch, 0, 1, TimeUnit.DAYS);
     }
     /**
      * Метод для отправки сообщений пользователям на основе данных для рассылки.
      */
-    public void sendMessageForDispatch(){
+    private void sendMessageForDispatch(){
         String[][] userIdAndTextToSendDataArray = logicAndDataForDispatch.checkDateForDispatch();
         for(int i = 0; i < userIdAndTextToSendDataArray.length; i++){
             Long userId = Long.parseLong(userIdAndTextToSendDataArray[i][0]);
