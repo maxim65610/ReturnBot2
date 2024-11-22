@@ -141,7 +141,7 @@ public class KeyboardLogic {
                     .build();
             message.setReplyMarkup(keyboard);
         }
-        if (data.equals("/testAbit")) {
+        if (data.equals("/testabit")) {
             InlineKeyboardMarkup keyboard = InlineKeyboardMarkup
                     .builder()
                     .keyboardRow(new InlineKeyboardRow(

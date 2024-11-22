@@ -7,8 +7,8 @@ import java.util.Map;
  * Класс для обработки логики пользователей при регистрации.
  */
 public class LogicForRegistrationUsers {
-    private DataUsersForRegistration dataUsersForRegistration = new DataUsersForRegistration();
     private final Map<Long, String> userStatesForRegistration = new HashMap<>();
+    private DataUsersForRegistration dataUsersForRegistration = new DataUsersForRegistration();
     private UsersData usersData = new UsersData();
     private DatabaseConnection databaseConnection = new DatabaseConnection();
     private DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);

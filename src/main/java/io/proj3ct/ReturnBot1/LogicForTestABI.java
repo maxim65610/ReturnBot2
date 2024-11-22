@@ -121,7 +121,7 @@ public class LogicForTestABI {
             choiceABI.get(userId).add(data);
         }
         // Обрабатываем переходы состояний теста
-        if (messageText.equals("/testAbit") && (!userStatesForTest.containsKey(userId))) {
+        if (messageText.equals("/testabit") && (!userStatesForTest.containsKey(userId))) {
             userStatesForTest.put(userId, "awaiting_testABI_1");
         } else if ("awaiting_testABI_1".equals(currentState)) {
             dataBD = arrayBdForTestABI(idTestABI.get(userId));

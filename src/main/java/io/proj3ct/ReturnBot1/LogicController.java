@@ -1,117 +1,67 @@
 package io.proj3ct.ReturnBot1;
 
-import org.checkerframework.checker.units.qual.A;
+import io.proj3ct.ReturnBot1.Command.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Контроллер логики обработки сообщений и взаимодействия с пользователями.
- * Обрабатывает различные типы входящих обновлений и управляет состояниями пользователей.
+ * Контроллер логики, который обрабатывает сообщения пользователей и выполняет команды.
+ * Этот класс управляет списком команд и обрабатывает сообщения от пользователей. Каждое сообщение
+ * проходит через серию команд, и если хотя бы одна команда возвращает результат, он немедленно
+ * возвращается. Команды могут работать с пользователем и возвращать сообщения, а также
+ * опции для клавиатуры.
  */
 public class LogicController {
-    private final LogicForTestABI logicForTestABI = new LogicForTestABI();
-    private DepartmentsInfo departmentsInfo = new DepartmentsInfo();
-    private final EmailLogic emailLogic = new EmailLogic();
     private final String username = System.getenv("mail"); // Ваша почта
     private final String password = System.getenv("passwordForMail");
     private final EmailSender emailSender = new EmailSender(username, password);
-    private final LogicForChangeDataUsers logicForChangeDataUsers = new LogicForChangeDataUsers();
-    private final UsersData usersData = new UsersData();
-    private final DatabaseConnection databaseConnection = new DatabaseConnection();
-    private final LogicForRegistrationUsers logicAndDataForRegistrationUsers
-            = new LogicForRegistrationUsers();
+    private final List<Command> commands = new ArrayList<>();
 
-    // Добавляем конструктор, который принимает зависимости
+    /**
+     * Конструктор по умолчанию, создающий стандартный набор команд.
+     */
     public LogicController() {
-
-    }
-    // Добавляем конструктор, который принимает зависимости
-    public LogicController(DepartmentsInfo departmentsInfo) {
-        this.departmentsInfo = departmentsInfo;
+        commands.add(new QuestionCommand(emailSender));
+        commands.add(new AuthorizationCommand(emailSender));
+        commands.add(new TestAbitCommand());
+        commands.add(new UserDataChangeCommand(emailSender));
+        commands.add(new UserDataDeleteCommand());
+        commands.add(new UserInfoCommand());
+        commands.add(new AuthorizationCommand(emailSender));
+        commands.add(new WorkCommand());
+        commands.add(new DepartmentsInfoCommand());
+        commands.add(new DefaultCommand());
     }
     /**
-     * Проверяет, что делать с переданными данными для клавиатуры.
-     * @param data Входные данные для обработки.
-     * @return Обработанное сообщение или исходные данные.
+     * Конструктор, принимающий на вход команды для инициализации(для тестов).
+     *
+     * @param testAbitCommand команда для тестирования
+     * @param defaultCommand команда по умолчанию
      */
-    private String checkWhatTodo(String data) {
-        return switch (data) {
-            case "ИЕНИМ" -> MessageConstants.INST_IENIM_COMMAND_RESPONSE;
-            case "РТФ" -> MessageConstants.INST_RTF_COMMAND_RESPONSE;
-            case "ХТИ" -> MessageConstants.INST_CHTI_COMMAND_RESPONSE;
-            default -> data;
-        };
+    public LogicController(TestAbitCommand testAbitCommand, DefaultCommand defaultCommand){
+        commands.add(testAbitCommand);
+        commands.add(defaultCommand);
     }
     /**
      * Обрабатывает обновления и генерирует ответные сообщения.
-     * @param userId ID пользователя, отправившего сообщение.
-     * @return Список строк, представляющих сообщения и опции для клавиатуры.
+     * Этот метод перебирает все команды в списке и вызывает их метод execute, передавая
+     * ID пользователя, текст сообщения и флаг для работы с клавиатурой. Если хотя бы одна команда
+     * возвращает непустой список, метод немедленно завершает выполнение и возвращает этот список.
+     * Если ни одна команда не возвращает результата, то в любом случае возвращается дефолтная команда.
+     *
+     * @param userId ID пользователя, отправившего сообщение
+     * @param messageText текст сообщения от пользователя
+     * @param flagForKeyboard флаг, указывающий, нужно ли возвращать опции для клавиатуры
+     * @return Список строк, представляющих сообщения и опции для клавиатуры. Если команда
+     *         не сработала, возвращается список с дефолтной командой.
      */
     public List<String> handleMessage(long userId, String messageText,boolean flagForKeyboard) {
         List<String> listForWorkWithKeyboardAndMessage = new ArrayList<>();
-        if (flagForKeyboard){
-            if (!(logicForTestABI.getUserStatesForTest(userId).equals("0"))) {
-                listForWorkWithKeyboardAndMessage = logicForTestABI.worksWithTestABI("", userId, messageText);
-                if (logicForTestABI.getUserStatesForTest(userId).equals("awaiting_testABI_11")) {
-                    logicForTestABI.removeUserStatesForTest(userId);
-                }
-            }
-            else if (departmentsInfo.extract(messageText) == null){
-                listForWorkWithKeyboardAndMessage.add(checkWhatTodo(messageText));
-                listForWorkWithKeyboardAndMessage.add(messageText);
-            }
-            else {
-                listForWorkWithKeyboardAndMessage.add(departmentsInfo.extract(messageText));
-                listForWorkWithKeyboardAndMessage.add(messageText);
-            }
-        }
-        else{
-            if ("/question".equals(messageText) || (!(emailLogic.getUserStatesForEmail(userId).equals("0")))) {
-                listForWorkWithKeyboardAndMessage.add(emailLogic.worksWithMail
-                        (messageText, userId, emailSender,databaseConnection));
-            }
-            else if("/authorization".equals(messageText) || (!logicAndDataForRegistrationUsers.
-                    getUserStatesForRegistration(userId).equals("0"))){
-                listForWorkWithKeyboardAndMessage.add(logicAndDataForRegistrationUsers.worksWithRegistration
-                        (messageText, userId,emailSender, logicAndDataForRegistrationUsers));
-            }
-            else if("/userDataChange".equals(messageText) || (!logicForChangeDataUsers.
-                    getUserStatesForChangeData(userId).equals("0"))){
-                listForWorkWithKeyboardAndMessage.add(logicForChangeDataUsers.worksWithChangeData
-                        (messageText, userId, emailSender));
-            }
-            else if("/userInfo".equals(messageText)){
-                if(usersData.checkUserIdExistsInRegistrationDataTable(userId,databaseConnection)) {
-                    listForWorkWithKeyboardAndMessage.add(usersData.getRegistrationData(userId,
-                            logicAndDataForRegistrationUsers.getDatabaseConnection()));
-                }
-                else {
-                    listForWorkWithKeyboardAndMessage.add(MessageConstants.NO_REGISTRATION);
-                }
-            }
-            else if("/userDataDell".equals(messageText)){
-                usersData.deleteData(userId,
-                        logicAndDataForRegistrationUsers.getDatabaseConnection());
-                listForWorkWithKeyboardAndMessage.add(MessageConstants.DATA_DELETED);
-            }
-            else if("/testAbit".equals(messageText)){
-                logicForTestABI.worksWithTestABI(messageText, userId, "100");
-                listForWorkWithKeyboardAndMessage.add(MessageConstants.TEST_ABIT_COMMAND_RESPONSE);
-                listForWorkWithKeyboardAndMessage.add(messageText);
-            }
-            else if("/testres".equals(messageText)){
-                listForWorkWithKeyboardAndMessage.add(logicForTestABI.getResult(userId));
-            }
-            else if("/work".equals(messageText)){
-                listForWorkWithKeyboardAndMessage.add(MessageConstants.WORK_COMMAND_RESPONSE);
-                listForWorkWithKeyboardAndMessage.add(messageText);
-            }
-            else {
-                listForWorkWithKeyboardAndMessage.add(MessageConstants.DEFAULT_RESPONSE);
-                listForWorkWithKeyboardAndMessage.add(messageText);
+        for (Command command : commands) {
+            listForWorkWithKeyboardAndMessage = command.execute(userId, messageText, flagForKeyboard);
+            if (!listForWorkWithKeyboardAndMessage.isEmpty()) {
+                return listForWorkWithKeyboardAndMessage;  // Если команда дала результат, сразу возвращаем его.
             }
         }
         return listForWorkWithKeyboardAndMessage;

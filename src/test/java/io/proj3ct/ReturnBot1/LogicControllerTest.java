@@ -1,83 +1,66 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.Command.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
- * Тестирование класса LogicController.
- * Этот класс содержит тесты для проверки функциональности методов LogicController.
- * Мы используем Mockito для замоканивания зависимости DepartmentsInfo,
- * чтобы изолировать логику тестируемого класса от реального взаимодействия с базой данных.
+ * Тестовый класс для LogicController.
+ * Этот класс содержит тесты для проверки корректной работы методов LogicController,
+ * в частности для команд DefaultCommand и TestAbitCommand.
  */
-class LogicControllerTest {
+public class LogicControllerTest {
     private LogicController logicController;
-    private DepartmentsInfo mockDepartmentsInfo;
-
+    private DefaultCommand defaultCommand;
+    private TestAbitCommand testAbitCommand;
     /**
-     * Инициализация перед каждым тестом.
-     * В этом методе мы создаем замоканный объект DepartmentsInfo и инициализируем экземпляр LogicController.
+     * Инициализация объектов перед каждым тестом.
+     * В данном методе создаются экземпляры команд DefaultCommand и TestAbitCommand,
+     * а также инициализируется LogicController с этими командами.
      */
     @BeforeEach
-    void setUp() {
-        mockDepartmentsInfo = mock(DepartmentsInfo.class);
-
-        // Используем конструктор для инициализации logicController
-        logicController = new LogicController(mockDepartmentsInfo);
+    public void setUp() {
+        defaultCommand = new DefaultCommand();
+        testAbitCommand = new TestAbitCommand();
+        logicController = new LogicController(testAbitCommand, defaultCommand);
     }
-
     /**
-     * Тестирование метода handleMessage в случае, если факультет найден.
-     * В этом тесте проверяется, что метод handleMessage правильно обрабатывает входные данные,
-     * когда метод DepartmentsInfo.extract(String) возвращает информацию о факультете.
+     * Тестирует выполнение команды DefaultCommand.
+     * Этот тест проверяет, что при получении сообщения с командой "Abdad"
+     * возвращает правильный ответ из  DefaultCommand, а именно MessageConstants.DEFAULT_RESPONSE.
      */
     @Test
-    void testHandleMessage_withDepartmentFound() {
-        String input = "ИЕНИМ";
-        String expectedResponse = "Информация о факультете ИЕНИМ";
+    public void testDefaultCommand() {
+        long userId = 123L;
+        String messageText = "Abdad";
+        boolean flagForKeyboard = false;
+        // Вызываем метод
+        List<String> response = logicController.handleMessage(userId, messageText, flagForKeyboard);
 
-        when(mockDepartmentsInfo.extract(input)).thenReturn(expectedResponse);
-
-        List<String> result = logicController.handleMessage(123L, input, true);
-
-        assertEquals(2, result.size());
-        assertEquals(expectedResponse, result.get(0));
-        assertEquals(input, result.get(1));
+        // Проверяем, что метод возвращает правильный результат
+        assertNotNull(response);
+        assertFalse(response.isEmpty());
+        assertEquals(MessageConstants.DEFAULT_RESPONSE, response.get(0));
     }
-
     /**
-     * Тестирование метода handleMessage в случае, если факультет не найден.
-     * В этом тесте проверяется, что метод handleMessage корректно работает, когда метод
-     * DepartmentsInfo.extract(String) возвращает null, что означает отсутствие информации о факультете.
+     * Тестирует выполнение команды TestAbitCommand.
+     * Этот тест проверяет, что при получении сообщения с командой "/testabit"
      */
     @Test
-    void testHandleMessage_withDepartmentNotFound() {
-        String input = "Неверный факультет";
-        when(mockDepartmentsInfo.extract(input)).thenReturn(null);
+    public void testTestAbitCommand(){
+        long userId = 123L;
+        String messageText = "/testabit";
+        boolean flagForKeyboard = false;
 
-        List<String> result = logicController.handleMessage(123L, input, true);
+        List<String> response = logicController.handleMessage(userId, messageText, flagForKeyboard);
 
-        assertEquals(2, result.size());
-        assertEquals("Неверный факультет", result.get(0));
-        assertEquals(input, result.get(1));
+        assertNotNull(response);
+        assertFalse(response.isEmpty());
+        assertEquals(MessageConstants.TEST_ABIT_COMMAND_RESPONSE, response.get(0));
+        assertEquals(messageText, response.get(1));
     }
 
-    /**
-     * Тестирование метода handleMessage для обработки обычных сообщений.
-     * В этом тесте проверяется, что метод handleMessage корректно обрабатывает сообщения
-     * без участия системы факультетов, когда флаг для клавиатуры установлен в false.
-     */
-    @Test
-    public void testHandleMessage_DefaultCase() {
-        // Проверяем, что обработка обычного сообщения работает
-        List<String> result = logicController.handleMessage(123L, "Any message", false);
-
-        // Проверяем, что обычное сообщение было возвращено
-        assertNotNull(result);
-        assertTrue(result.contains("Any message"));
-    }
 }
