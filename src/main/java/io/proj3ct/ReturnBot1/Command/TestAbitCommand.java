@@ -1,7 +1,7 @@
 package io.proj3ct.ReturnBot1.Command;
 
-import io.proj3ct.ReturnBot1.LogicForTestABI;
-import io.proj3ct.ReturnBot1.MessageConstants;
+import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +21,12 @@ public class TestAbitCommand implements Command {
     @Override
     public List<String> execute(long userId, String messageText, boolean flagForKeyboard) {
         List<String> response = new ArrayList<>();
-        if ("/testabit".equals(messageText)) {
+        if ("/test_abit".equals(messageText)) {
             logicForTestABI.worksWithTestABI(messageText, userId, "100");
             response.add(MessageConstants.TEST_ABIT_COMMAND_RESPONSE);
             response.add(messageText);
         }
-        else if("/testres".equals(messageText)) {
+        else if("/test_res".equals(messageText)) {
             response.add(logicForTestABI.getResult(userId));
         }
         else if(flagForKeyboard){

@@ -1,4 +1,6 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.departmentsAndTest;
+
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 
 import java.util.*;
 
@@ -121,7 +123,7 @@ public class LogicForTestABI {
             choiceABI.get(userId).add(data);
         }
         // Обрабатываем переходы состояний теста
-        if (messageText.equals("/testabit") && (!userStatesForTest.containsKey(userId))) {
+        if (messageText.equals("/test_abit") && (!userStatesForTest.containsKey(userId))) {
             userStatesForTest.put(userId, "awaiting_testABI_1");
         } else if ("awaiting_testABI_1".equals(currentState)) {
             dataBD = arrayBdForTestABI(idTestABI.get(userId));

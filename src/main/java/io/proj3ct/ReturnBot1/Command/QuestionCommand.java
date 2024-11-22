@@ -1,8 +1,8 @@
 package io.proj3ct.ReturnBot1.Command;
 
-import io.proj3ct.ReturnBot1.DatabaseConnection;
-import io.proj3ct.ReturnBot1.EmailLogic;
-import io.proj3ct.ReturnBot1.EmailSender;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.mail.EmailLogic;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,8 @@
 package io.proj3ct.ReturnBot1;
 
 import io.proj3ct.ReturnBot1.Command.*;
+import io.proj3ct.ReturnBot1.baseClasses.LogicController;
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +54,7 @@ public class LogicControllerTest {
     @Test
     public void testTestAbitCommand(){
         long userId = 123L;
-        String messageText = "/testabit";
+        String messageText = "/test_abit";
         boolean flagForKeyboard = false;
 
         List<String> response = logicController.handleMessage(userId, messageText, flagForKeyboard);

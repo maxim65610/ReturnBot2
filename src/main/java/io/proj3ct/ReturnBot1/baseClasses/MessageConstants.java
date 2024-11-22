@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.baseClasses;
 
 /**
  * Константы для сообщений, используемых ботом.
@@ -12,7 +12,7 @@ public class MessageConstants {
         Если у тебя остались вопросы, можешь воспользоваться командой /question.
         Если хотите начать работу, напишите /work.
         Также у тебя есть возможность пройти тест на то, какое направление вам больше подходит, 
-        просто напиши /testAbit.
+        просто напиши /test_abit.
         Если вы хотите получить больший функционал бота воспользуйтесь /authorization.
         """;
 
@@ -43,7 +43,7 @@ public class MessageConstants {
     /** Ответ бота на то, что пользователь прошел тест. */
     public static final String END_TEST_ABI_COMMAND_RESPONSE = """
         Поздравляю, вы прошли тест. 
-        Чтобы узнать результат напишите /testres.
+        Чтобы узнать результат напишите /test_res.
         """;
 
     /** Ответ бота на то, какой результат у пользователя после прохождения теста. */
@@ -59,9 +59,9 @@ public class MessageConstants {
     /** Ответ бота на успешную авторизацию. */
     public static final String SUCCESSFUL_REGISTRATION_COMMAND_RESPONSE = """
         Авторизация окончена успешно.
-        Если хотите проверить данные воспользуйтесь /userInfo.
-        Если хотите удалить данные воспользуйтесь /userDataDell.
-        Если хотите поменять данные воспользуйтесь /userDataChange.
+        Если хотите проверить данные воспользуйтесь /user_info.
+        Если хотите удалить данные воспользуйтесь /user_data_dell.
+        Если хотите поменять данные воспользуйтесь /user_data_change.
         """;
 
     /** Сообщение о некорректном классе. */
@@ -70,18 +70,18 @@ public class MessageConstants {
     /** Ответ бота на замену данных. */
     public static final String CHANGEDATA_COMMAND_RESPONSE = """
         Выберите данные, которые хотите поменять:
-        /userDataChangeName - поменять имя
-        /userDataChangeSurname - поменять фамилию
-        /userDataChangeClass - поменять класс
-        /userDataChangeMail - поменять почту.
+        /user_data_change_name - поменять имя
+        /user_data_change_surname - поменять фамилию
+        /user_data_change_class - поменять класс
+        /user_data_change_mail - поменять почту.
         """;
 
     /** Ответ бота на то, что пользователь уже прошел регистрацию. */
     public static final String AUTHORISATION_COMMAND_RESPONSE = """
         Вы уже зарегистрированы!!!
-        Если хотите проверить данные воспользуйтесь /userInfo.
-        Если хотите удалить данные воспользуйтесь /userDataDell.
-        Если хотите поменять данные воспользуйтесь /userDataChange.
+        Если хотите проверить данные воспользуйтесь /user_info.
+        Если хотите удалить данные воспользуйтесь /user_data_dell.
+        Если хотите поменять данные воспользуйтесь /user_data_change.
         """;
 
     /** Сообщение с просьбой ввести фамилию. */

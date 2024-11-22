@@ -1,5 +1,11 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
+import io.proj3ct.ReturnBot1.registration.DataUsersForRegistration;
+import io.proj3ct.ReturnBot1.registration.LogicForRegistrationUsers;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

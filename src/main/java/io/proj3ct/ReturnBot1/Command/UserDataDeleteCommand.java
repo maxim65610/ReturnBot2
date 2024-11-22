@@ -1,8 +1,8 @@
 package io.proj3ct.ReturnBot1.Command;
 
-import io.proj3ct.ReturnBot1.LogicForRegistrationUsers;
-import io.proj3ct.ReturnBot1.MessageConstants;
-import io.proj3ct.ReturnBot1.UsersData;
+import io.proj3ct.ReturnBot1.registration.LogicForRegistrationUsers;
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
+import io.proj3ct.ReturnBot1.registration.UsersData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class UserDataDeleteCommand implements Command {
     @Override
     public List<String> execute(long userId, String messageText, boolean flagForKeyboard) {
         List<String> response = new ArrayList<>();
-        if ("/userDataDell".equals(messageText)) {
+        if ("/user_data_dell".equals(messageText)) {
             usersData.deleteData(userId, logicForRegistrationUsers.getDatabaseConnection());
             response.add(MessageConstants.DATA_DELETED);
         }

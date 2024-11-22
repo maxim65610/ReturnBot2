@@ -1,5 +1,9 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.registration;
 
+
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,22 +69,22 @@ public class LogicForChangeDataUsers {
      */
     public String worksWithChangeData(String messageText, Long userId, EmailSender emailSender) {
         String currentState = userStatesForChangeData.get(userId);
-        if ("/userDataChange".equals(messageText)) {
+        if ("/user_data_change".equals(messageText)) {
             userStatesForChangeData.put(userId, "awaiting_response");
         } else if ("awaiting_response".equals(currentState)) {
-            if (messageText.equals("/userDataChangeName")) {
+            if (messageText.equals("/user_data_change_name")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_name");
                 return MessageConstants.ENTER_NAME;
-            } else if (messageText.equals("/userDataChangeSurname")) {
+            } else if (messageText.equals("/user_data_change_surname")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_surname");
                 return MessageConstants.ENTER_SURNAME;
-            } else if (messageText.equals("/userDataChangeClass")) {
+            } else if (messageText.equals("/user_data_change_class")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_class");
                 return MessageConstants.ENTER_CLASS;
-            } else if (messageText.equals("/userDataChangeMail")) {
+            } else if (messageText.equals("/user_data_change_mail")) {
                 userStatesForChangeData.remove(userId);
                 userStatesForChangeData.put(userId, "awaiting_mail");
                 return MessageConstants.ENTER_MAIL;

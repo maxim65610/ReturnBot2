@@ -1,7 +1,9 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.departmentsAndTest;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.datebase.DatebaseTables;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

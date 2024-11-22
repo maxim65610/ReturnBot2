@@ -1,4 +1,6 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.registration;
+
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
 import java.sql.*;
 import java.util.logging.Level;

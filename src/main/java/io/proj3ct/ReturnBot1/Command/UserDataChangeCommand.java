@@ -1,7 +1,7 @@
 package io.proj3ct.ReturnBot1.Command;
 
-import io.proj3ct.ReturnBot1.EmailSender;
-import io.proj3ct.ReturnBot1.LogicForChangeDataUsers;
+import io.proj3ct.ReturnBot1.mail.EmailSender;
+import io.proj3ct.ReturnBot1.registration.LogicForChangeDataUsers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class UserDataChangeCommand implements Command {
     @Override
     public List<String> execute(long userId, String messageText, boolean flagForKeyboard) {
         List<String> response = new ArrayList<>();
-        if ("/userDataChange".equals(messageText) || !logicForChangeDataUsers.getUserStatesForChangeData(userId).equals("0")) {
+        if ("/user_data_change".equals(messageText) || !logicForChangeDataUsers.getUserStatesForChangeData(userId).equals("0")) {
             response.add(logicForChangeDataUsers.worksWithChangeData(messageText, userId, emailSender));
 
         }

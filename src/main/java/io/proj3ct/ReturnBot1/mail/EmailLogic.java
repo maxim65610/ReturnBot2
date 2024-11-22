@@ -1,4 +1,8 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.mail;
+
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
+import io.proj3ct.ReturnBot1.registration.UsersData;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,21 +14,39 @@ import java.util.Map;
  * получения вопросов от пользователей.
  */
 public class EmailLogic {
+    /**
+     * Хранит состояния пользователей для отправки электронных писем.
+     */
     private final Map<Long, String> userStatesForMail = new HashMap<>();
+    /**
+     * Хранит электронные адреса пользователей.
+     */
     private final Map<Long, String> userMails = new HashMap<>();
+    /**
+     * Объект для работы с данными пользователей.
+     */
     private UsersData usersData;
-    public EmailLogic(){
+    /**
+     * Дефолтный конструктор, инициализирующий объект UsersData.
+     */
+    public EmailLogic() {
         this.usersData = new UsersData();
     }
-    public EmailLogic(UsersData usersData){
+    /**
+     * Конструктор с параметрами для тестирования.
+     *
+     * @param usersData объект для работы с данными пользователей
+     */
+    public EmailLogic(UsersData usersData) {
         this.usersData = usersData;
     }
     /**
      * Возвращает текущее состояние пользователя по идентификатору.
+     *
      * @param chatID Идентификатор чата пользователя.
      * @return Строка с состоянием пользователя или "0", если состояний нет.
      */
-    public String getUserStatesForEmail(Long chatID){
+    public String getUserStatesForEmail(Long chatID) {
         return userStatesForMail.getOrDefault(chatID, "0");
     }
     /**
