@@ -2,7 +2,7 @@ package io.proj3ct.ReturnBot1;
 
 import io.proj3ct.ReturnBot1.baseClasses.KeyboardLogic;
 import io.proj3ct.ReturnBot1.baseClasses.LogicController;
-import io.proj3ct.ReturnBot1.dispatch.LogicAndDataForDispatch;
+import io.proj3ct.ReturnBot1.dispatch.LogicForOnOffDispatch;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -30,7 +30,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
     private final String botToken;
     private final LogicController logicController = new LogicController();
     private final List<BotCommand> listCommands;
-    private final LogicAndDataForDispatch logicAndDataForDispatch= new LogicAndDataForDispatch();
+    private final LogicForOnOffDispatch logicForOnOffDispatch = new LogicForOnOffDispatch();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     /**
      * Конструктор класса TelegramBot.
@@ -43,11 +43,14 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         listCommands = new ArrayList<>();
         listCommands.add(new BotCommand("/work","Посмотреть описания факультетов"));
         listCommands.add(new BotCommand("/authorization", "Пройти регистрацию"));
-        listCommands.add(new BotCommand("/testabit", "Пройти тест на определение факультета"));
+        listCommands.add(new BotCommand("/test_abit", "Пройти тест на определение факультета"));
         listCommands.add(new BotCommand("/question", "Задать вопрос"));
-        listCommands.add(new BotCommand("/userdatachange", "Изменить данные, веденные при регистрации"));
-        listCommands.add(new BotCommand("/userdatadell", "Удалить данные, веденные при регистрации"));
-        listCommands.add(new BotCommand("/userinfo", "Узнать информацию, которую вы ввели при регистрации"));
+        listCommands.add(new BotCommand("/user_data_change", "Изменить данные, веденные при регистрации"));
+        listCommands.add(new BotCommand("/user_data_dell", "Удалить данные, веденные при регистрации"));
+        listCommands.add(new BotCommand("/user_info", "Узнать информацию, которую вы ввели при регистрации"));
+        listCommands.add(new BotCommand("/dispatch_on", "Подписаться на рассылку"));
+        listCommands.add(new BotCommand("/dispatch_off", "Отписаться от рассылки"));
+
 
         timerWithPeriodicityOfDay();
     }
@@ -83,7 +86,7 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
      * Метод для отправки сообщений пользователям на основе данных для рассылки.
      */
     private void sendMessageForDispatch(){
-        String[][] userIdAndTextToSendDataArray = logicAndDataForDispatch.checkDateForDispatch();
+        String[][] userIdAndTextToSendDataArray = logicForOnOffDispatch.checkDateForDispatch();
         for(int i = 0; i < userIdAndTextToSendDataArray.length; i++){
             Long userId = Long.parseLong(userIdAndTextToSendDataArray[i][0]);
             String textToSend = userIdAndTextToSendDataArray[i][1];

@@ -1,102 +1,68 @@
 package io.proj3ct.ReturnBot1;
 
+import io.proj3ct.ReturnBot1.Command.*;
 import io.proj3ct.ReturnBot1.baseClasses.LogicController;
-import io.proj3ct.ReturnBot1.baseClasses.TextForMessage;
-import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
+import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
-import org.telegram.telegrambots.meta.api.objects.message.Message;
 
-
-import java.lang.reflect.Field;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Тестовый класс для проверки функциональности LogicСontroller.
+ * Тестовый класс для LogicController.
+ * Этот класс содержит тесты для проверки корректной работы методов LogicController,
+ * в частности для команд DefaultCommand и TestAbitCommand.
  */
 public class LogicControllerTest {
-    private final LogicController logicController;
-    private final LogicForTestABI mockLogicForTestABI;
-    private final TextForMessage mockTextForMessage;
-
+    private LogicController logicController;
+    private DefaultCommand defaultCommand;
+    private TestAbitCommand testAbitCommand;
     /**
-     * Конструктор дял LogicControllerTest.
-     */
-    private LogicControllerTest() {
-        mockLogicForTestABI = Mockito.mock(LogicForTestABI.class);
-        mockTextForMessage = Mockito.mock(TextForMessage.class);
-        logicController = new LogicController();
-    }
-    /**
-     * Устанавливает моки для полей с помощью рефлексии.
+     * Инициализация объектов перед каждым тестом.
+     * В данном методе создаются экземпляры команд DefaultCommand и TestAbitCommand,
+     * а также инициализируется LogicController с этими командами.
      */
     @BeforeEach
-    public void setUp() throws NoSuchFieldException, IllegalAccessException {
-        // Заменяем логику контроллера на мок
-        Field logicForTestABIField = LogicController.class.getDeclaredField("logicForTestABI");
-        logicForTestABIField.setAccessible(true);
-        logicForTestABIField.set(logicController, mockLogicForTestABI);
-
-        Field textForMessageField = LogicController.class.getDeclaredField("textForMessage");
-        textForMessageField.setAccessible(true);
-        textForMessageField.set(logicController, mockTextForMessage);
+    public void setUp() {
+        defaultCommand = new DefaultCommand();
+        testAbitCommand = new TestAbitCommand();
+        logicController = new LogicController(testAbitCommand, defaultCommand);
     }
-
     /**
-     * Проверяет, что метод возвращает ожидаемый список строк
-     * на основании данных, полученных из мока.
+     * Тестирует выполнение команды DefaultCommand.
+     * Этот тест проверяет, что при получении сообщения с командой "Abdad"
+     * возвращает правильный ответ из  DefaultCommand, а именно MessageConstants.DEFAULT_RESPONSE.
      */
     @Test
-    public void testGetListStringWithTextToSendAndOptionForKeyboard_WithCallbackQuery() {
-        Update update = Mockito.mock(Update.class);
-        CallbackQuery callbackQuery = Mockito.mock(CallbackQuery.class);
-        User user = Mockito.mock(User.class);
+    public void testDefaultCommand() {
+        long userId = 123L;
+        String messageText = "Abdad";
+        boolean flagForKeyboard = false;
+        // Вызываем метод
+        List<String> response = logicController.handleMessage(userId, messageText, flagForKeyboard);
 
-        when(update.hasCallbackQuery()).thenReturn(true);
-        when(update.getCallbackQuery()).thenReturn(callbackQuery);
-        when(callbackQuery.getFrom()).thenReturn(user);
-        when(user.getId()).thenReturn(12345L);
-
-        when(mockLogicForTestABI.getUserStatesForTest(12345L)).thenReturn("awaiting_testABI_1");
-        when(mockLogicForTestABI.getDataBd("", 12345L, "someData")).thenReturn(List.of("response"));
-        when(callbackQuery.getData()).thenReturn("someData");
-
-        List<String> result = logicController.handleMessage(12345L, "someData",true);
-
-        assertEquals(List.of("response"), result);
-        verify(mockLogicForTestABI).getDataBd("", 12345L, "someData");
+        // Проверяем, что метод возвращает правильный результат
+        assertNotNull(response);
+        assertFalse(response.isEmpty());
+        assertEquals(MessageConstants.DEFAULT_RESPONSE, response.get(0));
     }
-
     /**
-     * Проверяет, что метод возвращает ожидаемый список строк
-     * на основании данных, полученных из мока.
+     * Тестирует выполнение команды TestAbitCommand.
+     * Этот тест проверяет, что при получении сообщения с командой "/testabit"
      */
     @Test
-    public void testGetListStringWithTextToSendAndOptionForKeyboard_WithMessage() {
-        Update update = Mockito.mock(Update.class);
-        Message messageMock = Mockito.mock(Message.class);
+    public void testTestAbitCommand(){
+        long userId = 123L;
+        String messageText = "/test_abit";
+        boolean flagForKeyboard = false;
 
-        when(update.hasMessage()).thenReturn(true);
-        when(update.getMessage()).thenReturn(messageMock);
-        when(messageMock.getText()).thenReturn("/testAbit");
+        List<String> response = logicController.handleMessage(userId, messageText, flagForKeyboard);
 
-        when(mockTextForMessage.setTheText("/testabit")).thenReturn("Тест начат");
-
-        long userId = 0L;
-        when(mockLogicForTestABI.getDataBd("/testabit", userId, "100"))
-                .thenReturn(List.of("Тест начат", "/testabit"));
-
-        List<String> result = logicController.handleMessage(0L, "/testabit",false);
-
-        assertEquals(List.of("Тест начат", "/testabit"), result);
-        verify(mockLogicForTestABI).getDataBd("/testabit", userId, "100");
+        assertNotNull(response);
+        assertFalse(response.isEmpty());
+        assertEquals(MessageConstants.TEST_ABIT_COMMAND_RESPONSE, response.get(0));
+        assertEquals(messageText, response.get(1));
     }
+
 }
-
