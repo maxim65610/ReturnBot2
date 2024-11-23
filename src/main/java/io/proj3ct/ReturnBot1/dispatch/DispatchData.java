@@ -12,14 +12,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Класс для работы с данными диспетча в базе данных.
+ * Класс для работы с данными рассылки в базе данных.
  * Предоставляет методы для вставки данных и генерации нового идентификатора.
  */
 public class DispatchData {
     private final Logger logger = Logger.getLogger(DispatchData.class.getName());
 
     /**
-     * Вставляет данные диспетча в таблицу DispatchDataTable.
+     * Вставляет данные рассылки в таблицу DispatchDataTable.
      *
      * @param userId                  идентификатор пользователя, который создает диспетч
      * @param dispatchDataStorage объект данных диспетча
@@ -46,7 +46,7 @@ public class DispatchData {
     }
 
     /**
-     * Генерирует новый уникальный идентификатор для диспетча.
+     * Генерирует новый уникальный идентификатор для рассылки.
      *
      * @param databaseConnection объект подключения к базе данных
      * @return новый идентификатор, который равен максимальному ID в таблице + 1
