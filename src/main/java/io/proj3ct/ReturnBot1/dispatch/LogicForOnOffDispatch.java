@@ -8,13 +8,31 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Класс, реализующий логику включения и выключения режима диспетча для пользователей,
+ * а также формирование сообщений для пользователей на основе данных рассылки.
+ * Используется для управления рассылками в зависимости от состояний пользователей и текущей даты.
+ */
 public class LogicForOnOffDispatch {
+    /**
+     * Форматтер для преобразования строковых значений в даты и наоборот в формате "dd.MM.yyyy".
+     */
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    /**
+     * Объект для взаимодействия с базой данных.
+     * Используется для установления соединения с базой данных и выполнения SQL-запросов.
+     */
     private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    /**
+     * Объект для работы с данными пользователей.
+     * Содержит методы для проверки наличия пользователя в базе данных и изменения статуса рассылки.
+     */
     private final UsersData usersData = new UsersData();
+    /**
+     * Объект для работы с данными рассылок.
+     * Предоставляет доступ к данным рассылок и помогает получать необходимую информацию для отправки.
+     */
     private final DispatchData dispatchData = new DispatchData();
-
     /**
      * Формирует сообщения для пользователей на основе данных диспетча.
      *

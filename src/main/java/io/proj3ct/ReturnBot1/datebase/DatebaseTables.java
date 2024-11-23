@@ -15,7 +15,6 @@ public class DatebaseTables {
      */
     private final Logger logger = Logger.getLogger(DatebaseTables.class.getName());
     private DatabaseConnection databaseConnection;
-
     /**
      * Конструктор класса, который инициализирует объект подключения к базе данных.
      *
@@ -24,7 +23,6 @@ public class DatebaseTables {
     public DatebaseTables(DatabaseConnection databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
-
     /**
      * Метод для создания таблицы AnswersData в базе данных.
      * Таблица предназначена для хранения данных о вопросах, ответах и связанной информации.

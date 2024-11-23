@@ -19,13 +19,37 @@ import java.util.Map;
  * включая проверку прав доступа, состояния пользователя.
  */
 public class LogicForNewDispatch {
+    /**
+     * Форматтер для преобразования и парсинга дат в формате "dd.MM.yyyy".
+     * Используется для форматирования дат перед их выводом и парсинга ввода пользователя.
+     */
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    /**
+     * Карта для хранения состояний пользователей, связанных с процессом создания новой рассылки.
+     * Ключом является уникальный идентификатор пользователя,
+     * значением — текущее состояние процесса рассылки.
+     */
     private final Map<Long, String> userStatesForNewDispatch = new HashMap<>();
+    /**
+     * Хранилище данных рассылки, Хранит текст, время, категорию и отдел диспетча,
+     * связанные с уникальными идентификаторами..
+     */
     private final DispatchDataStorage dispatchDataStorage = new DispatchDataStorage();
-    private DatabaseConnection databaseConnection = new DatabaseConnection();
-    private DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
-    private UsersData usersData = new UsersData();
-    private DispatchData dispatchData = new DispatchData();
+    /**
+     * Объект для взаимодействия с базой данных.
+     * Используется для установления соединения с базой данных и выполнения SQL-запросов.
+     */
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    /**
+     * Объект для работы с таблицами базы данных.
+     * Обрабатывает запросы к базе данных, связанные с таблицами данных рассылок.
+     */
+    private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
+    /**
+     * Объект, содержащий данные рассылки.
+     * Используется для хранения и передачи информации о рассылках в процессе создания или обновления.
+     */
+    private final DispatchData dispatchData = new DispatchData();
     /**
      * Получает объект подключения к базе данных.
      *
@@ -43,7 +67,6 @@ public class LogicForNewDispatch {
     public String getUserStatesForNewDispatch(Long chatID) {
         return userStatesForNewDispatch.getOrDefault(chatID, "0");
     }
-
     /**
      * Проверяет введенный пароль и обновляет состояние пользователя.
      *
@@ -75,7 +98,6 @@ public class LogicForNewDispatch {
             userStatesForNewDispatch.put(userId, "awaiting_dispatchCategory");
             return MessageConstants.DISPATCH_CATEGORY;
         } catch (DateTimeParseException e) {
-            System.out.println(2);
             return MessageConstants.DISPATCH_TIME_BAD;
         }
     }
@@ -99,7 +121,6 @@ public class LogicForNewDispatch {
                 return MessageConstants.NEW_DISPATCH_SUCCESSFUL;
             }
         } else {
-            System.out.println(1);
             return MessageConstants.DISPATCH_TIME_BAD;
         }
     }
@@ -114,7 +135,6 @@ public class LogicForNewDispatch {
         Long dispatchID = dispatchData.generateNewId(databaseConnection);
         datebaseTables.createDispatchDataTable();
         String currentState = userStatesForNewDispatch.get(userId);
-
         if ("/new_dispatch".equals(messageText)) {
             userStatesForNewDispatch.put(userId, "awaiting_dispatchPassword");
             return MessageConstants.NEW_DISPATCH;

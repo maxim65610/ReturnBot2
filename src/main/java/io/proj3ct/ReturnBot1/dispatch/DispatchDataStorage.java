@@ -16,7 +16,6 @@ public class DispatchDataStorage {
     private final Map<Long, String> dispatchCategory = new HashMap<>();
     // Хранит отдел диспетча, связанный с уникальными идентификаторами чатов
     private final Map<Long, String> dispatchDepartment = new HashMap<>();
-
     /**
      * Получает текст диспетча для указанного идентификатора чата.
      *
