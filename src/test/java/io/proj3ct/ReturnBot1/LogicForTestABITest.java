@@ -52,7 +52,7 @@ class LogicForTestABITest {
     @Test
     void testGetDataBd() {
         Long userId = 1L;
-        String messageText = "/testAbit";
+        String messageText = "/testabit";
         String data = "100";
         List<String> dataBD = logicForTestABI.worksWithTestABI(messageText, userId, data);
         assertNotNull(dataBD);
@@ -65,7 +65,7 @@ class LogicForTestABITest {
     @Test
     void testWorksWithTestAPI() {
         Long userId = 1L;
-        String messageText = "/testAbit";
+        String messageText = "/testabit";
         String data = "100";
         List<String> dataBD = logicForTestABI.worksWithTestABI(messageText, userId, data);
         assertNotNull(dataBD);

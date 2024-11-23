@@ -15,7 +15,6 @@ public class DatebaseTables {
      */
     private final Logger logger = Logger.getLogger(DatebaseTables.class.getName());
     private DatabaseConnection databaseConnection;
-
     /**
      * Конструктор класса, который инициализирует объект подключения к базе данных.
      *
@@ -24,7 +23,6 @@ public class DatebaseTables {
     public DatebaseTables(DatabaseConnection databaseConnection) {
         this.databaseConnection = databaseConnection;
     }
-
     /**
      * Метод для создания таблицы AnswersData в базе данных.
      * Таблица предназначена для хранения данных о вопросах, ответах и связанной информации.
@@ -84,13 +82,39 @@ public class DatebaseTables {
         id_chat text PRIMARY KEY, 
         name text NOT NULL,
         surname text NOT NULL, 
-        school_class text NOT NULL,  
-        mail text NOT NULL
+        school_сlass text NOT NULL,  
+        mail text NOT NULL,
+        dispatch text NOT NULL,
+        year_end_school int NOT NULL,
+        department text NOT NULL
         );""";
 
         try (Connection conn = databaseConnection.connect();
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(registrationDataTable);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * Метод для создания таблицы DispatchDataTable в базе данных.
+     * Таблица предназначена для хранения данных о рассылках.
+     * Если таблица уже существует, она не будет создана повторно.
+     */
+    public void createDispatchDataTable() {
+        String dispatchDataTableQuery = """
+        CREATE TABLE IF NOT EXISTS DispatchDataTable (
+        id int PRIMARY KEY, 
+        text text NOT NULL,
+        time text NOT NULL, 
+        category text NOT NULL,  
+        department text NOT NULL
+        );""";
+
+        try (Connection conn = databaseConnection.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(dispatchDataTableQuery);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
             throw new RuntimeException(e);

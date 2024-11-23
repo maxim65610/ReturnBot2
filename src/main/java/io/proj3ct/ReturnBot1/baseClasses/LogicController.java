@@ -32,6 +32,9 @@ public class LogicController {
         commands.add(new AuthorizationCommand(emailSender));
         commands.add(new WorkCommand());
         commands.add(new DepartmentsInfoCommand());
+        commands.add(new NewDispatchCommand());
+        commands.add(new DispatchOnCommand());
+        commands.add(new DispatchOffCommand());
         commands.add(new DefaultCommand());
     }
     /**
