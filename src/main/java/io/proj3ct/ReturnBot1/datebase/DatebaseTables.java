@@ -61,7 +61,9 @@ public class DatebaseTables {
         String createDepartsInfoTableQuery = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
         id_depart text PRIMARY KEY, 
-        info text NOT NULL  
+        info text NOT NULL,
+        name text NOT NULL,
+        inst text NOT NULL  
         );""";
 
         try (Connection conn = databaseConnection.connect();

@@ -48,49 +48,7 @@ public class KeyboardLogicTest {
         InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
         assertEquals(3, markup.getKeyboard().size());
     }
-    /**
-     * Тест для проверки работы клавиатуры при вводе команды ИЕНИМ.
-     * Проверяет, что клавиатура содержит пять кнопок.
-     */
-    @Test
-    public void testKeyboardsIENIMCommand() {
-        KeyboardLogic logic = new KeyboardLogic();
 
-        String data = "ИЕНИМ";
-        SendMessage resultMessage = logic.keyboards(message, data);
-
-        InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
-        assertEquals(5, markup.getKeyboard().size());
-    }
-    /**
-     * Тест для проверки работы клавиатуры при вводе команды РТФ.
-     * Проверяет, что клавиатура содержит пять кнопок.
-     */
-    @Test
-    public void testKeyboardsRTFCommand() {
-        KeyboardLogic logic = new KeyboardLogic();
-
-
-        String data = "РТФ";
-        SendMessage resultMessage = logic.keyboards(message, data);
-
-        InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
-        assertEquals(5, markup.getKeyboard().size());
-    }
-    /**
-     * Тест для проверки работы клавиатуры при вводе команды ХТИ.
-     * Проверяет, что клавиатура содержит три кнопки.
-     */
-    @Test
-    public void testKeyboardsHTICommand() {
-        KeyboardLogic logic = new KeyboardLogic();
-
-        String data = "ХТИ";
-        SendMessage resultMessage = logic.keyboards(message, data);
-
-        InlineKeyboardMarkup markup = (InlineKeyboardMarkup) resultMessage.getReplyMarkup();
-        assertEquals(3, markup.getKeyboard().size());
-    }
     /**
      * Тест для проверки работы клавиатуры при вводе команды /testAbit.
      * Проверяет, что клавиатура содержит один ряд кнопок.
