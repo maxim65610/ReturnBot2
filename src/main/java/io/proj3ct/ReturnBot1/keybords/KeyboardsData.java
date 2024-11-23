@@ -14,9 +14,7 @@ import java.util.logging.Logger;
  * Этот класс предоставляет методы для вставки, изменения, удаления и получения данных.
  */
 public class KeyboardsData {
-
     private final Logger logger = Logger.getLogger(KeyboardsData.class.getName());
-
     /**
      * Вставляет новые данные в таблицу DepartsInfo.
      *
@@ -29,7 +27,6 @@ public class KeyboardsData {
                 "(id_depart, info, name, inst) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
-
             stmt.setLong(1, newId); // Устанавливаем новый ID
             stmt.setString(2, "1");
             stmt.setString(3,"1" );
@@ -70,10 +67,8 @@ public class KeyboardsData {
      */
     public void updateData(Long userId, DatabaseConnection databaseConnection) {
         String dataRequest = "UPDATE DepartsInfo SET info = ?, name = ?, inst = ? WHERE id_depart = ?";
-
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
-
             // Устанавливаем новые значения
             stmt.setString(1, "1"); // Установите новое значение для info
             stmt.setString(2, "1"); // Установите новое значение для name

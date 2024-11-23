@@ -35,6 +35,9 @@ public class LogicController {
         commands.add(new NewDispatchCommand());
         commands.add(new DispatchOnCommand());
         commands.add(new DispatchOffCommand());
+        commands.add(new EditDepartmentCommand());
+        commands.add(new NewDepartmentCommand());
+        commands.add(new DeleteDepartmentCommand());
         commands.add(new DefaultCommand());
     }
     /**

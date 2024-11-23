@@ -46,9 +46,9 @@ public class LogicForNewDispatchTest {
         Long userId = 1L;
         logicForNewDispatch.worksWithNewDispatch("/new_dispatch", userId);
         when(logicForNewDispatch.worksWithNewDispatch("wrong_password", userId))
-                .thenReturn(MessageConstants.BAD_PASSWORD_NEW_DISPATCH);
+                .thenReturn(MessageConstants.BAD_PASSWORD_COMMAND_RESPONSE);
         String response = logicForNewDispatch.worksWithNewDispatch("wrong_password", userId);
-        assertEquals(MessageConstants.BAD_PASSWORD_NEW_DISPATCH, response);
+        assertEquals(MessageConstants.BAD_PASSWORD_COMMAND_RESPONSE, response);
     }
     /**
      * Тестирует поведение системы при вводе неверного формата времени.

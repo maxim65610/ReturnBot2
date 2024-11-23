@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -146,6 +148,49 @@ public class DepartmentsInfo {
 
         // Переворачиваем массив
         return reverseArray(nameArray);
+    }
+    /**
+     * Получает все имена и их идентификаторы (id_depart) из таблицы DepartsInfo.
+     *
+     * @return массив строк, где каждая строка содержит имя и соответствующий идентификатор в формате "name (id_depart)".
+     */
+    public String[] getAllNamesWithId() {
+        String query = "SELECT name, id_depart FROM DepartsInfo";
+        List<String> resultList = new ArrayList<>();
+
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            // Обрабатываем результат запроса
+            while (rs.next()) {
+                String name = rs.getString("name");
+                int idDepart = rs.getInt("id_depart");
+                resultList.add(idDepart + " - " + name);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Ошибка получения данных: " + e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+
+        // Преобразуем список в массив
+        String[] resultArray = resultList.toArray(new String[0]);
+
+        // Переворачиваем массив
+        return sortDepartmentsById(resultArray);
+    }
+    /**
+     * Сортирует массив строк по числовым значениям, которые находятся в начале каждой строки.
+     *
+     * @param departments массив строк, содержащих пары "id - название"
+     * @return отсортированный массив строк по числовым значениям (id)
+     */
+    public static String[] sortDepartmentsById(String[] departments) {
+        // Сортировка с использованием компаратора, который извлекает числовое значение из каждой строки
+        Arrays.sort(departments, Comparator.comparingInt(department -> Integer.parseInt(department.split(" - ")[0])));
+
+        return departments;
     }
     /**
      * Переворачивает массив строк.

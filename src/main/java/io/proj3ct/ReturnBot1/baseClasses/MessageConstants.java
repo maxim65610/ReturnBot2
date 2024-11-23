@@ -125,9 +125,9 @@ public class MessageConstants {
      */
     public static final String DATA_DELETED = "Ваши данные успешно удалены";
 
-    public static final String NEW_DISPATCH = "Введите пароль:";
+    public static final String PASSWORD_COMMAND_RESPONSE = "Введите пароль:";
 
-    public static final String BAD_PASSWORD_NEW_DISPATCH = "Пароль не верный, в доступе отказано";
+    public static final String BAD_PASSWORD_COMMAND_RESPONSE = "Пароль не верный, в доступе отказано";
 
     public static final String SUCCESSFUL_PASSWORD_NEW_DISPATCH = "Пароль верный, введите текст рассылки:";
 
@@ -142,5 +142,17 @@ public class MessageConstants {
     public static final String NEW_DISPATCH_SUCCESSFUL= "Рассылка успешно добавлена";
     public static final String DISPATCH_ON_COMMAND_RESPONSE = "Вы подписались на рассылку, бот будет отправлять Вам важную информацию";
     public static final String DISPATCH_OFF_COMMAND_RESPONSE = "Вы отписались от рассылки";
+    public static final String EDIT_DEPARTMENT_COMMAND_RESPONSE = "Выберете факультет для замены, напишите номер: ";
+    public static final String NEW_DEPARTMENT_COMMAND_RESPONSE = "Введите новый факультет";
+    public static final String CHANGE_DEPARTMENT_COMMAND_RESPONSE = "Факультет изменен";
+    public static final String CORRECT_PASSWORD_AND_INSTITUTE_COMMAND_RESPONSE = """
+            Пароль верный, введите институт, для которого хотите добавить факультет:""";
+    public static final String TEXT_FOR_DEPARTMENT_COMMAND_RESPONSE = "Введите текст для этого факультета:";
+    public static final String NAME_DEPARTMENT_INSTITUTE_COMMAND_RESPONSE = "Введите название факультета:";
+    public static final String SUCCESSFUL_ADD_DEPARTMENT_COMMAND_RESPONSE = "Факультет успешно добавлен";
+    public static final String CORRECT_PASSWORD_AND_INSTITUTE_DELETE_COMMAND_RESPONSE = """
+            Пароль верный, выберите факультет, который хотите удалить:""";
+    public static final String SUCCESSFUL_DELETE_DEPARTMENT_COMMAND_RESPONSE = "Факультет успешно удален";
+
 
 }

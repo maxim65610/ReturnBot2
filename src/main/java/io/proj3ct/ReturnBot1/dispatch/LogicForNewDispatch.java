@@ -57,7 +57,7 @@ public class LogicForNewDispatch {
             return MessageConstants.SUCCESSFUL_PASSWORD_NEW_DISPATCH;
         } else {
             userStatesForNewDispatch.remove(userId);
-            return MessageConstants.BAD_PASSWORD_NEW_DISPATCH;
+            return MessageConstants.BAD_PASSWORD_COMMAND_RESPONSE;
         }
     }
     /**
@@ -117,7 +117,7 @@ public class LogicForNewDispatch {
 
         if ("/new_dispatch".equals(messageText)) {
             userStatesForNewDispatch.put(userId, "awaiting_dispatchPassword");
-            return MessageConstants.NEW_DISPATCH;
+            return MessageConstants.PASSWORD_COMMAND_RESPONSE;
         } else if ("awaiting_dispatchPassword".equals(currentState)) {
             return checkValidPasswordInput(messageText, userId);
         } else if ("awaiting_dispatchText".equals(currentState)) {
@@ -138,6 +138,6 @@ public class LogicForNewDispatch {
             userStatesForNewDispatch.remove(userId); // Очистка статуса пользователя
             return MessageConstants.NEW_DISPATCH_SUCCESSFUL;
         }
-        return MessageConstants.NEW_DISPATCH;
+        return MessageConstants.PASSWORD_COMMAND_RESPONSE;
     }
 }
