@@ -27,7 +27,6 @@ public class DispatchOnOffTest {
     private Connection connection;
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
-
     /**
      * Выполняется перед каждым тестом.
      * Настраивает моки и инициализирует необходимые объекты.
@@ -55,7 +54,9 @@ public class DispatchOnOffTest {
     @Test
     public void dispatchOn() throws SQLException {
         String answerCommandDispatchOn = MessageConstants.DISPATCH_ON_COMMAND_RESPONSE;
-        String expectedMessageDispatchOn = "Вы подписались на рассылку, бот будет отправлять Вам важную информацию";
+        String expectedMessageDispatchOn = """
+        Вы подписались на рассылку,
+        бот будет отправлять Вам важную информацию""";
 
         String[][] expectedData = {
                 {"1", "on"}

@@ -19,7 +19,6 @@ public class UserDataChangeCommand implements Command {
     public UserDataChangeCommand(EmailSender emailSender) {
         this.emailSender = emailSender;
     }
-
     /**
      * Выполняет команду для изменения данных пользователя.
      *
@@ -31,7 +30,8 @@ public class UserDataChangeCommand implements Command {
     @Override
     public List<String> execute(long userId, String messageText, boolean flagForKeyboard) {
         List<String> response = new ArrayList<>();
-        if ("/user_data_change".equals(messageText) || !logicForChangeDataUsers.getUserStatesForChangeData(userId).equals("0")) {
+        if ("/user_data_change".equals(messageText) ||
+                !logicForChangeDataUsers.getUserStatesForChangeData(userId).equals("0")) {
             response.add(logicForChangeDataUsers.worksWithChangeData(messageText, userId, emailSender));
 
         }

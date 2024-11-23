@@ -51,7 +51,6 @@ public class TelegramBot implements LongPollingSingleThreadUpdateConsumer {
         listCommands.add(new BotCommand("/dispatch_on", "Подписаться на рассылку"));
         listCommands.add(new BotCommand("/dispatch_off", "Отписаться от рассылки"));
 
-
         timerWithPeriodicityOfDay();
     }
     /**
