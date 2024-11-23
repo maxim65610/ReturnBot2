@@ -1,6 +1,6 @@
 package io.proj3ct.ReturnBot1.Command;
 
-import io.proj3ct.ReturnBot1.LogicForNewDepartmentData;
+import io.proj3ct.ReturnBot1.keybords.LogicForNewDepartmentData;
 
 import java.util.ArrayList;
 import java.util.List;

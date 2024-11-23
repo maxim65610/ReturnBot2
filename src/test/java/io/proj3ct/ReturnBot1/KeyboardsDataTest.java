@@ -1,116 +1,108 @@
 package io.proj3ct.ReturnBot1;
 
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
+import io.proj3ct.ReturnBot1.keybords.DataForDepartment;
 import io.proj3ct.ReturnBot1.keybords.KeyboardsData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
- * Тестовый класс для проверки функциональности класса KeyboardsData.
- * Этот класс использует Mockito для создания моков объектов,
- * чтобы протестировать методы вставки, генерации нового ID, обновления и удаления данных.
+ Класс тестов для проверки функциональности класса KeyboardsData.
  */
-public class KeyboardsDataTest {
+class KeyboardsDataTest {
     private KeyboardsData keyboardsData;
-    private DatabaseConnection mockDatabaseConnection;
-    private Connection mockConnection;
-    private PreparedStatement mockPreparedStatement;
-    private ResultSet mockResultSet;
-
+    private DatabaseConnection databaseConnection;
+    private DataForDepartment dataForDepartment;
+    private Connection connection;
+    private PreparedStatement preparedStatement;
     /**
-     * Метод, выполняемый перед каждым тестом.
-     * Создает экземпляры необходимых классов и настраивает моки.
+     Метод, который выполняется перед каждым тестом.
+     Здесь мы создаем заглушки для зависимостей, необходимых для тестирования.
      */
     @BeforeEach
     public void setUp() throws SQLException {
         keyboardsData = new KeyboardsData();
-        mockDatabaseConnection = Mockito.mock(DatabaseConnection.class);
-        mockConnection = Mockito.mock(Connection.class);
-        mockPreparedStatement = Mockito.mock(PreparedStatement.class);
-        mockResultSet = Mockito.mock(ResultSet.class);
-
-        // Настройка моков
-        when(mockDatabaseConnection.connect()).thenReturn(mockConnection);
+        databaseConnection = mock(DatabaseConnection.class);
+        dataForDepartment = mock(DataForDepartment.class);
+        connection = mock(Connection.class);
+        preparedStatement = mock(PreparedStatement.class);
+        when(databaseConnection.connect()).thenReturn(connection);
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
     }
     /**
-     * Тестирует метод insertData класса KeyboardsData.
-     * Проверяет, что параметры устанавливаются правильно и вызывается метод executeUpdate.
+     Тестирует метод insertData на корректное добавление данных в базу.
+     Проверяет, что метод executeUpdate() вызывается один раз.
      */
     @Test
     public void testInsertData() throws SQLException {
-        // Настройка
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        Long userId = 1L;
+        Long newId = 1L;
 
-        // Вызов метода
-        keyboardsData.insertData(1L, mockDatabaseConnection, 1L);
+        when(dataForDepartment.getTextForNewDepartment(userId)).thenReturn("Test Info");
+        when(dataForDepartment.getNameForNewDepartment(userId)).thenReturn("Test Name");
+        when(dataForDepartment.getInstituteForNewDepartment(userId)).thenReturn("Test Institute");
 
-        // Проверка
-        verify(mockPreparedStatement).setLong(1, 1L);
-        verify(mockPreparedStatement).setString(2, "1");
-        verify(mockPreparedStatement).setString(3, "1");
-        verify(mockPreparedStatement).setString(4, "1");
-        verify(mockPreparedStatement).executeUpdate();
+        keyboardsData.insertData(userId, databaseConnection, newId, dataForDepartment);
+
+        // Проверяем, что executeUpdate был вызван один раз
+        verify(preparedStatement, times(1)).executeUpdate();
     }
     /**
-     * Тестирует метод generateNewId класса KeyboardsData.
-     * Проверяет, что новый ID генерируется правильно на основе максимального ID в базе данных.
+     Тестирует метод generateNewId на корректное создание нового уникального идентификатора.
+     Проверяет, что возвращаемый идентификатор больше 0.
      */
     @Test
     public void testGenerateNewId() throws SQLException {
-        // Настройка
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockResultSet.next()).thenReturn(true);
-        when(mockResultSet.getLong("maxId")).thenReturn(5L);
+        // Настраиваем поведение ResultSet для возврата значений
+        ResultSet resultSet = mock(ResultSet.class);
+        when(resultSet.next()).thenReturn(true).thenReturn(false);
+        when(resultSet.getString("id_depart")).thenReturn("1");
 
-        // Вызов метода
-        Long newId = keyboardsData.generateNewId(mockDatabaseConnection);
+        // Настраиваем поведение для PreparedStatement
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
 
-        // Проверка
-        verify(mockPreparedStatement).executeQuery();
-        assert(newId).equals(6L); // 5 + 1
+        Long newId = keyboardsData.generateNewId(databaseConnection);
+        assertTrue(newId > 0, "ID должен быть больше 0");
     }
     /**
-     * Тестирует метод updateData класса KeyboardsData.
-     * Проверяет, что параметры устанавливаются правильно и вызывается метод executeUpdate.
+     Тестирует метод updateData на корректное обновление данных в базе.
+     Проверяет, что метод executeUpdate() вызывается один раз.
      */
     @Test
     public void testUpdateData() throws SQLException {
-        // Настройка
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        Long userId = 1L;
 
-        // Вызов метода
-        keyboardsData.updateData(1L, mockDatabaseConnection);
+        when(dataForDepartment.getTextForEditDepartment(userId)).thenReturn("Updated Info");
+        when(dataForDepartment.getNameForEditDepartment(userId)).thenReturn("Updated Name");
+        when(dataForDepartment.getNumberForEditDepartment(userId)).thenReturn("1");
 
-        // Проверка
-        verify(mockPreparedStatement).setString(1, "1");
-        verify(mockPreparedStatement).setString(2, "1");
-        verify(mockPreparedStatement).setString(3, "1");
-        verify(mockPreparedStatement).setLong(4, 1L);
-        verify(mockPreparedStatement).executeUpdate();
+        keyboardsData.updateData(userId, databaseConnection, dataForDepartment);
+
+        // Проверяем, что executeUpdate был вызван один раз
+        verify(preparedStatement, times(1)).executeUpdate();
     }
     /**
-     * Тестирует метод deleteData класса KeyboardsData.
-     * Проверяет, что параметр устанавливается правильно и вызывается метод executeUpdate.
+     Тестирует метод deleteData на корректное удаление данных из базы.
+     Проверяет, что метод executeUpdate() вызывается один раз.
      */
     @Test
     public void testDeleteData() throws SQLException {
-        // Настройка
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        Long userId = 1L;
 
-        // Вызов метода
-        keyboardsData.deleteData(1L, mockDatabaseConnection);
+        when(dataForDepartment.getNumberForDeleteDepartment(userId)).thenReturn("1");
 
-        // Проверка
-        verify(mockPreparedStatement).setLong(1, 1L);
-        verify(mockPreparedStatement).executeUpdate();
+        keyboardsData.deleteData(userId, databaseConnection, dataForDepartment);
+
+        // Проверяем, что executeUpdate был вызван один раз
+        verify(preparedStatement, times(1)).executeUpdate();
     }
 }

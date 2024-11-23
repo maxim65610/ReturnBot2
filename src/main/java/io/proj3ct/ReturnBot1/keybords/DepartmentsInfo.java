@@ -54,7 +54,8 @@ public class DepartmentsInfo {
                 return rs.getString("info");
             }
         } catch (SQLException e) {
-            System.out.println("Ошибка извлечения данных: " + e.getMessage());
+            logger.log(Level.SEVERE, "Ошибка извлечения данных:" + e.getMessage(), e);
+            throw new RuntimeException(e);
         }
         return null;
     }
@@ -75,14 +76,14 @@ public class DepartmentsInfo {
 
             while (rs.next()) {
                 String[] departInfo = new String[2];
-                departInfo[0] = rs.getString("id_depart");
+                departInfo[0] = String.valueOf(rs.getInt("id_depart"));
                 departInfo[1] = rs.getString("inst");
                 if (departInfo[1].equals(data)) {
                     count++;
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Ошибка получения данных: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
         return count;
@@ -105,11 +106,12 @@ public class DepartmentsInfo {
 
             // Обрабатываем результат запроса
             while (rs.next()) {
-                idDepartList.add(rs.getString("id_depart"));
+                idDepartList.add(String.valueOf(rs.getInt("id_depart")));
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Ошибка получения данных: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка получения id: " + e.getMessage(), e);
             throw new RuntimeException(e);
+
         }
 
         // Преобразуем список в массив
@@ -139,8 +141,9 @@ public class DepartmentsInfo {
                 nameList.add(rs.getString("name"));
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Ошибка получения данных: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка получения имен: " + e.getMessage(), e);
             throw new RuntimeException(e);
+
         }
 
         // Преобразуем список в массив
@@ -170,8 +173,9 @@ public class DepartmentsInfo {
                 resultList.add(idDepart + " - " + name);
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Ошибка получения данных: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка: " + e.getMessage(), e);
             throw new RuntimeException(e);
+
         }
 
         // Преобразуем список в массив

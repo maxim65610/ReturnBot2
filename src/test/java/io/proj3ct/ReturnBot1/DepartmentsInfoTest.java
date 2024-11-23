@@ -89,13 +89,9 @@ public class DepartmentsInfoTest {
      */
     @Test
     public void testGetIdDeparts() throws SQLException {
-        List<String> ids = new ArrayList<>();
-        ids.add("1");
-        ids.add("2");
-
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(false);
-        when(mockResultSet.getString("id_depart")).thenReturn("1").thenReturn("2");
+        when(mockResultSet.getInt("id_depart")).thenReturn(1).thenReturn(2); // Возвращаем идентификаторы
 
         String[] result = departmentsInfo.getIdDeparts("1");
         assertArrayEquals(new String[]{"2", "1"}, result); // Проверяем, что массив перевернут

@@ -1,17 +1,40 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.keybords;
 
 import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
+import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Логика для создания новых факультетов.
+ * Этот класс обрабатывает состояние пользователей и управляет процессом создания новых факультетов.
+ */
 public class LogicForNewDepartmentData {
-    // Хранит состояния пользователей для смены департамента
+    /** Объект для хранения данных о факультетах. */
     private final DataForDepartment dataForDepartment = new DataForDepartment();
+    /** Map для хранения состояний пользователей*/
     private final Map<Long, String> userStatesForNewDepartment = new HashMap<>();
+    /** Объект для работы с клавиатурами. */
+    private final KeyboardsData keyboardsData = new KeyboardsData();
+    /** Объект для подключения к базе данных. */
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
+
+    /**
+     * Получает текущее состояние пользователя для создания нового факультета.
+     *
+     * @param chatID идентификатор чата пользователя
+     * @return текущее состояние пользователя или "0", если состояние не найдено
+     */
     public String getUserStatesForNewDepartment(Long chatID) {
         return userStatesForNewDepartment.getOrDefault(chatID, "0");
     }
+    /**
+     * Проверяет введённый пароль и обновляет состояние пользователя.
+     *
+     * @param messageText текст сообщения от пользователя
+     * @param userId идентификатор пользователя
+     * @return сообщение для пользователя о результате проверки пароля
+     */
     private String checkValidPasswordInput(String messageText, Long userId) {
         if (messageText.equals(System.getenv("password"))) {
             userStatesForNewDepartment.put(userId, "awaiting_institute");
@@ -21,6 +44,13 @@ public class LogicForNewDepartmentData {
             return MessageConstants.BAD_PASSWORD_COMMAND_RESPONSE;
         }
     }
+    /**
+     * Обрабатывает команды пользователя для создания нового факультета.
+     *
+     * @param messageText текст сообщения от пользователя
+     * @param userId идентификатор пользователя
+     * @return ответ пользователю в зависимости от состояния и команды
+     */
     public String worksWithNewDepartment(String messageText, Long userId) {
         String currentState = userStatesForNewDepartment.get(userId);
         if ("/new_department_data".equals(messageText)) {
@@ -41,6 +71,8 @@ public class LogicForNewDepartmentData {
         else if("awaiting_textForDepartment".equals(currentState)){
             dataForDepartment.setTextForNewDepartment(userId, messageText);
             userStatesForNewDepartment.remove(userId);
+            Long newID = keyboardsData.generateNewId(databaseConnection);
+            keyboardsData.insertData(userId,databaseConnection,newID,dataForDepartment);
             return MessageConstants.SUCCESSFUL_ADD_DEPARTMENT_COMMAND_RESPONSE;
         }
         return MessageConstants.DEFAULT_RESPONSE;

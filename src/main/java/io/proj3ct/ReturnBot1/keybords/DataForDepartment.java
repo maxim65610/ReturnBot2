@@ -1,8 +1,13 @@
-package io.proj3ct.ReturnBot1;
+package io.proj3ct.ReturnBot1.keybords;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Класс для хранения и управления данными о факультетах.
+ * Данные хранятся в виде карт, где ключом является идентификатор пользователя (Long),
+ * а значениями - соответствующая информация о факультете.
+ */
 public class DataForDepartment {
     private Map<Long, String> numberForEditDepartment = new HashMap<>();
     private Map<Long, String> nameForEditDepartment = new HashMap<>();
@@ -53,5 +58,4 @@ public class DataForDepartment {
     public String getNumberForDeleteDepartment(Long userId) {
         return numberForDeleteDepartment.get(userId);
     }
-
 }

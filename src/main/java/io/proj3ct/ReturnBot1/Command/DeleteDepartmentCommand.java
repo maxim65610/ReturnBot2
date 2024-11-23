@@ -1,7 +1,6 @@
 package io.proj3ct.ReturnBot1.Command;
 
-import io.proj3ct.ReturnBot1.LogicForDeleteDepartment;
-import io.proj3ct.ReturnBot1.LogicForEditDepartmentData;
+import io.proj3ct.ReturnBot1.keybords.LogicForDeleteDepartment;
 
 import java.util.ArrayList;
 import java.util.List;
