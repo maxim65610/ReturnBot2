@@ -1,7 +1,7 @@
 package io.proj3ct.ReturnBot1;
 
 
-import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
+import io.proj3ct.ReturnBot1.testAbit.LogicForTestABI;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

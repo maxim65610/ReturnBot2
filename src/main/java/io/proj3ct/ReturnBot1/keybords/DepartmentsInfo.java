@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1.departmentsAndTest;
+package io.proj3ct.ReturnBot1.keybords;
 
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 import io.proj3ct.ReturnBot1.datebase.DatebaseTables;

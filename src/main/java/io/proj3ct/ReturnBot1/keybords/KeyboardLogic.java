@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1.baseClasses;
+package io.proj3ct.ReturnBot1.keybords;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

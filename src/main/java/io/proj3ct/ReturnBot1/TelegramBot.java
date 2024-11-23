@@ -1,6 +1,6 @@
 package io.proj3ct.ReturnBot1;
 
-import io.proj3ct.ReturnBot1.baseClasses.KeyboardLogic;
+import io.proj3ct.ReturnBot1.keybords.KeyboardLogic;
 import io.proj3ct.ReturnBot1.baseClasses.LogicController;
 import io.proj3ct.ReturnBot1.dispatch.LogicForOnOffDispatch;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
