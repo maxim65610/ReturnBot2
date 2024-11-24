@@ -16,7 +16,19 @@ public class LogicForDeleteDepartment {
     /** Объект для работы с клавиатурами. */
     private KeyboardsData keyboardsData = new KeyboardsData();
     /** Объект для подключения к базе данных. */
-    private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
+
+    public LogicForDeleteDepartment(DatabaseConnection databaseConnection,DataForDepartment dataForDepartment,
+                                    DepartmentsInfo departmentsInfo,KeyboardsData keyboardsData) {
+        this.databaseConnection = databaseConnection;
+        this.dataForDepartment = dataForDepartment;
+        this.departmentsInfo = departmentsInfo;
+        this.keyboardsData = keyboardsData;
+
+    }
+
+    public LogicForDeleteDepartment() {
+    }
 
     /**
      * Получает текущее состояние пользователя для удаления факультета.
@@ -48,7 +60,7 @@ public class LogicForDeleteDepartment {
      *
      * @return строка с сообщением, содержащим все факультеты
      */
-    private String getAllDepartmentsFromBd(){
+    public String getAllDepartmentsFromBd(){
         String messageTextForUser = "";
         String[] allNamesDepartmentsWithId = departmentsInfo.getAllNamesWithId();
         messageTextForUser += MessageConstants.CORRECT_PASSWORD_AND_INSTITUTE_DELETE_COMMAND_RESPONSE + "\n";
