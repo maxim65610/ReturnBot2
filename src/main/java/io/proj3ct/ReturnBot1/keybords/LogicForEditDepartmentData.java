@@ -1,5 +1,6 @@
 package io.proj3ct.ReturnBot1.keybords;
 
+import io.proj3ct.ReturnBot1.baseClasses.EnvironmentService;
 import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
@@ -11,16 +12,30 @@ import java.util.Map;
  */
 public class LogicForEditDepartmentData {
     /** Объект для хранения данных о факультетах. */
-    private final DataForDepartment dataForDepartment = new DataForDepartment();
+    private DataForDepartment dataForDepartment = new DataForDepartment();
     /** Map для хранения состояний пользователей*/
     private final Map<Long, String> userStatesForEditDepartment = new HashMap<>();
     /** Объект для получения информации о факультетах. */
-    private final DepartmentsInfo departmentsInfo = new DepartmentsInfo();
+    private DepartmentsInfo departmentsInfo = new DepartmentsInfo();
     /** Объект для работы с клавиатурами. */
-    private final KeyboardsData keyboardsData = new KeyboardsData();
+    private KeyboardsData keyboardsData = new KeyboardsData();
     /** Объект для подключения к базе данных. */
-    private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    /** Объект для получения данных из переменных окружения. */
+    private EnvironmentService environmentService = new EnvironmentService();
 
+    public LogicForEditDepartmentData(DatabaseConnection databaseConnection,DataForDepartment dataForDepartment,
+                                      DepartmentsInfo departmentsInfo,
+                                      KeyboardsData keyboardsData, EnvironmentService environmentService) {
+        this.databaseConnection = databaseConnection;
+        this.dataForDepartment = dataForDepartment;
+        this.departmentsInfo = departmentsInfo;
+        this.keyboardsData = keyboardsData;
+        this.environmentService = environmentService;
+    }
+    public LogicForEditDepartmentData(){
+
+    }
     /**
      * Получает текущее состояние пользователя для редактирования факультета.
      *
@@ -38,7 +53,7 @@ public class LogicForEditDepartmentData {
      * @return сообщение для пользователя о результате проверки пароля
      */
     private String checkValidPasswordInput(String messageText, Long userId) {
-        if (messageText.equals(System.getenv("password"))) {
+        if (messageText.equals(environmentService.getPassword())) {
             userStatesForEditDepartment.put(userId, "awaiting_numberForEdit");
             return getAllDepartmentsFromBd();
         } else {
@@ -70,9 +85,9 @@ public class LogicForEditDepartmentData {
     public String worksWithEditDepartment(String messageText, Long userId) {
         String currentState = userStatesForEditDepartment.get(userId);
         if ("/edit_department_data".equals(messageText)) {
-            userStatesForEditDepartment.put(userId, "awaiting_Password");
+            userStatesForEditDepartment.put(userId, "awaiting_password");
             return MessageConstants.PASSWORD_COMMAND_RESPONSE;
-        } else if ("awaiting_Password".equals(currentState)) {
+        } else if ("awaiting_password".equals(currentState)) {
             return checkValidPasswordInput(messageText, userId);
         } else if ("awaiting_numberForEdit".equals(currentState)) {
             dataForDepartment.setNumberForEditDepartment(userId, messageText);

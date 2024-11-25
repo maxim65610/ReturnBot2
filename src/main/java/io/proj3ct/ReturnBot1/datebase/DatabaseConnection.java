@@ -1,5 +1,7 @@
 package io.proj3ct.ReturnBot1.datebase;
 
+import io.proj3ct.ReturnBot1.baseClasses.EnvironmentService;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -11,6 +13,7 @@ public class DatabaseConnection {
     private final String dbUrl;
     private final String dbUser;
     private final String dbPassword;
+
     /**
      * Конструктор для базы данных
      * dbUrl URL базы данных
@@ -18,9 +21,10 @@ public class DatabaseConnection {
      * dbPassword пароль пользователя базы данных
      */
     public DatabaseConnection() {
-        dbUrl = System.getenv("bdUrl");
-        dbUser = System.getenv("bdUser");
-        dbPassword = System.getenv("bdPassword");
+        EnvironmentService environmentService = new EnvironmentService();
+        dbUrl = environmentService.getBdUrl();
+        dbUser = environmentService.getBdUser();
+        dbPassword = environmentService.getBdPassword();
     }
     /**
      * Метод для установления соединения с базой данных

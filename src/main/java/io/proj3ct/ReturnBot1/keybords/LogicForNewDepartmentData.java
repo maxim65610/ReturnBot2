@@ -1,5 +1,6 @@
 package io.proj3ct.ReturnBot1.keybords;
 
+import io.proj3ct.ReturnBot1.baseClasses.EnvironmentService;
 import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
@@ -11,14 +12,24 @@ import java.util.Map;
  */
 public class LogicForNewDepartmentData {
     /** Объект для хранения данных о факультетах. */
-    private final DataForDepartment dataForDepartment = new DataForDepartment();
+    private DataForDepartment dataForDepartment = new DataForDepartment();
     /** Map для хранения состояний пользователей*/
     private final Map<Long, String> userStatesForNewDepartment = new HashMap<>();
     /** Объект для работы с клавиатурами. */
-    private final KeyboardsData keyboardsData = new KeyboardsData();
+    private KeyboardsData keyboardsData = new KeyboardsData();
     /** Объект для подключения к базе данных. */
-    private final DatabaseConnection databaseConnection = new DatabaseConnection();
-
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    /** Объект для получения данных из переменных окружения. */
+    private EnvironmentService environmentService = new EnvironmentService();
+    public LogicForNewDepartmentData(){
+    }
+    public LogicForNewDepartmentData(DatabaseConnection databaseConnection, DataForDepartment dataForDepartment,
+                                           KeyboardsData keyboardsData, EnvironmentService environmentService) {
+        this.databaseConnection = databaseConnection;
+        this.dataForDepartment = dataForDepartment;
+        this.keyboardsData = keyboardsData;
+        this.environmentService = environmentService;
+    }
     /**
      * Получает текущее состояние пользователя для создания нового факультета.
      *
@@ -36,7 +47,7 @@ public class LogicForNewDepartmentData {
      * @return сообщение для пользователя о результате проверки пароля
      */
     private String checkValidPasswordInput(String messageText, Long userId) {
-        if (messageText.equals(System.getenv("password"))) {
+        if (messageText.equals(environmentService.getPassword())) {
             userStatesForNewDepartment.put(userId, "awaiting_institute");
             return MessageConstants.CORRECT_PASSWORD_AND_INSTITUTE_COMMAND_RESPONSE;
         } else {
@@ -54,9 +65,9 @@ public class LogicForNewDepartmentData {
     public String worksWithNewDepartment(String messageText, Long userId) {
         String currentState = userStatesForNewDepartment.get(userId);
         if ("/new_department_data".equals(messageText)) {
-            userStatesForNewDepartment.put(userId, "awaiting_Password");
+            userStatesForNewDepartment.put(userId, "awaiting_password");
             return MessageConstants.PASSWORD_COMMAND_RESPONSE;
-        } else if ("awaiting_Password".equals(currentState)) {
+        } else if ("awaiting_password".equals(currentState)) {
             return checkValidPasswordInput(messageText, userId);
         } else if ("awaiting_institute".equals(currentState)) {
             dataForDepartment.setInstituteForNewDepartment(userId, messageText);
