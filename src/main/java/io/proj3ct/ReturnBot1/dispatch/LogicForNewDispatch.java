@@ -1,5 +1,6 @@
 package io.proj3ct.ReturnBot1.dispatch;
 
+import io.proj3ct.ReturnBot1.baseClasses.EnvironmentService;
 import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 import io.proj3ct.ReturnBot1.datebase.DatebaseTables;
@@ -19,13 +20,20 @@ import java.util.Map;
  * включая проверку прав доступа, состояния пользователя.
  */
 public class LogicForNewDispatch {
+    /**Форматтер даты, используемый для преобразования даты в строку в формате "дд.ММ.гггг".*/
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    /** Словарь, который хранит состояния пользователей для создания новой рассылки.*/
     private final Map<Long, String> userStatesForNewDispatch = new HashMap<>();
+    /**Объект, отвечающий за хранение данных о создании новой рассылки.*/
     private final DispatchDataStorage dispatchDataStorage = new DispatchDataStorage();
-    private DatabaseConnection databaseConnection = new DatabaseConnection();
-    private DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
-    private UsersData usersData = new UsersData();
-    private DispatchData dispatchData = new DispatchData();
+    /** Объект для подключения к базе данных.*/
+    private final DatabaseConnection databaseConnection = new DatabaseConnection();
+    /** Объект, который управляет таблицами базы данных.*/
+    private final DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
+    /**Объект, для работы с данными рассылки в базе данных.*/
+    private final DispatchData dispatchData = new DispatchData();
+    /**Объект для получения данных из переменных окружения.*/
+    private final EnvironmentService environmentService = new EnvironmentService();
     /**
      * Получает объект подключения к базе данных.
      *
@@ -43,7 +51,6 @@ public class LogicForNewDispatch {
     public String getUserStatesForNewDispatch(Long chatID) {
         return userStatesForNewDispatch.getOrDefault(chatID, "0");
     }
-
     /**
      * Проверяет введенный пароль и обновляет состояние пользователя.
      *
@@ -52,7 +59,7 @@ public class LogicForNewDispatch {
      * @return сообщение о результате проверки пароля
      */
     private String checkValidPasswordInput(String messageText, Long userId) {
-        if (messageText.equals(System.getenv("password"))) {
+        if (messageText.equals(environmentService.getPassword())) {
             userStatesForNewDispatch.put(userId, "awaiting_dispatchText");
             return MessageConstants.SUCCESSFUL_PASSWORD_NEW_DISPATCH;
         } else {

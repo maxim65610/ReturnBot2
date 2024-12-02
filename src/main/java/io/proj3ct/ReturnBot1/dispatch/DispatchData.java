@@ -17,7 +17,6 @@ import java.util.logging.Logger;
  */
 public class DispatchData {
     private final Logger logger = Logger.getLogger(DispatchData.class.getName());
-
     /**
      * Вставляет данные рассылки в таблицу DispatchDataTable.
      *

@@ -14,11 +14,9 @@ import java.util.List;
  * опции для клавиатуры.
  */
 public class LogicController {
-    private final String username = System.getenv("mail"); // Ваша почта
-    private final String password = System.getenv("passwordForMail");
-    private final EmailSender emailSender = new EmailSender(username, password);
+    private final EnvironmentService environmentService = new EnvironmentService();
+    private final EmailSender emailSender = new EmailSender(environmentService.getMail(), environmentService.getPasswordForMail());
     private final List<Command> commands = new ArrayList<>();
-
     /**
      * Конструктор по умолчанию, создающий стандартный набор команд.
      */

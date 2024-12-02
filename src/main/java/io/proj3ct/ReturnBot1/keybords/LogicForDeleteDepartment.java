@@ -1,11 +1,16 @@
 package io.proj3ct.ReturnBot1.keybords;
 
+import io.proj3ct.ReturnBot1.baseClasses.EnvironmentService;
 import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * Класс, реализующий логику для удаления факультетов.
+ * Он включает в себя обработку команд для удаления факультетов,
+ * управление состояниями пользователей, проверку пароля и формирование сообщений для пользователей.
+ */
 public class LogicForDeleteDepartment {
     /** Объект для хранения данных о факультетах. */
     private DataForDepartment dataForDepartment = new DataForDepartment();
@@ -17,19 +22,21 @@ public class LogicForDeleteDepartment {
     private KeyboardsData keyboardsData = new KeyboardsData();
     /** Объект для подключения к базе данных. */
     private DatabaseConnection databaseConnection = new DatabaseConnection();
+    /** Объект для получения данных из переменных окружения. */
+    private EnvironmentService environmentService =new EnvironmentService();
 
     public LogicForDeleteDepartment(DatabaseConnection databaseConnection,DataForDepartment dataForDepartment,
-                                    DepartmentsInfo departmentsInfo,KeyboardsData keyboardsData) {
+                                    DepartmentsInfo departmentsInfo,
+                                    KeyboardsData keyboardsData, EnvironmentService environmentService) {
         this.databaseConnection = databaseConnection;
         this.dataForDepartment = dataForDepartment;
         this.departmentsInfo = departmentsInfo;
         this.keyboardsData = keyboardsData;
-
+        this.environmentService = environmentService;
     }
 
     public LogicForDeleteDepartment() {
     }
-
     /**
      * Получает текущее состояние пользователя для удаления факультета.
      *
@@ -47,7 +54,7 @@ public class LogicForDeleteDepartment {
      * @return сообщение для пользователя о результате проверки пароля
      */
     private String checkValidPasswordInput(String messageText, Long userId) {
-        if (messageText.equals(System.getenv("password"))) {
+        if (messageText.equals(environmentService.getPassword())) {
             userStatesForDeleteDepartment.put(userId, "awaiting_numberForDelete");
             return getAllDepartmentsFromBd();
         } else {

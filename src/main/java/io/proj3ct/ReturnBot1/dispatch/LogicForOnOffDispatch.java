@@ -8,7 +8,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Класс, управляющий логикой включения и выключения режима диспетча для пользователей.
+ * Он включает методы для отправки сообщений пользователям в зависимости от состояния диспетча,
+ * а также для изменения состояния диспетча пользователей.
+ */
 public class LogicForOnOffDispatch {
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private DatabaseConnection databaseConnection = new DatabaseConnection();
