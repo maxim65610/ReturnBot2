@@ -7,7 +7,42 @@
     <groupId>io.proj3ct</groupId>
     <artifactId>ReturnBot1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <transformers>
+                                <transformer implementation=
+                                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>io.proj3ct.ReturnBot1.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>io.proj3ct.ReturnBot1.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <properties>
         <!-- Определяет версию Java для исходных кодов -->
         <maven.compiler.source>21</maven.compiler.source>
@@ -31,6 +66,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.16</version> <!-- Убедитесь, что используете совместимую версию -->
+        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -41,11 +81,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>${commons-collections4.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io.version}</version>
         </dependency>
 
         <!-- JUnit 5-->
@@ -83,15 +118,17 @@
             <artifactId>commons-codec</artifactId>
             <version>1.16.1</version>
         </dependency>
+
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots-longpolling</artifactId>
-            <version>7.10.0</version>
+            <version>7.0.0</version>
         </dependency>
+        <!-- OkHttp client implementation -->
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots-client</artifactId>
-            <version>7.10.0</version>
+            <version>7.0.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
