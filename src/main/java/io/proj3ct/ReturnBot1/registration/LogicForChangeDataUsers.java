@@ -16,10 +16,14 @@ public class LogicForChangeDataUsers {
     private UsersData usersData = new UsersData();
     private DatabaseConnection databaseConnection = new DatabaseConnection();
 
-    // Дефолтный конструктор
+    /**
+     * Дефолтный конструктор.
+     */
     public LogicForChangeDataUsers() {
     }
-    // Конструктор с параметрами для тестирования
+    /**
+     * Конструктор с заданными зависимостями.
+     */
     public LogicForChangeDataUsers(Map<Long, String> userStatesForChangeData, UsersData usersData,
                                    DatabaseConnection databaseConnection) {
         this.userStatesForChangeData = userStatesForChangeData;
