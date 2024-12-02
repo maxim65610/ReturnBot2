@@ -11,9 +11,24 @@ import java.util.List;
 
 public class LogicForOnOffDispatch {
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    private final DatabaseConnection databaseConnection = new DatabaseConnection();
-    private final UsersData usersData = new UsersData();
-    private final DispatchData dispatchData = new DispatchData();
+    private DatabaseConnection databaseConnection = new DatabaseConnection();
+    private UsersData usersData = new UsersData();
+    private DispatchData dispatchData = new DispatchData();
+    /**
+     * Конструктор дефолтный.
+     */
+    public LogicForOnOffDispatch(){
+
+    }
+    /**
+     * Конструктор с заданными зависимостями.
+     */
+    public LogicForOnOffDispatch(DatabaseConnection databaseConnection,UsersData usersData,DispatchData dispatchData){
+        this.databaseConnection = databaseConnection;
+        this.usersData = usersData;
+        this.dispatchData = dispatchData;
+    }
+
 
     /**
      * Формирует сообщения для пользователей на основе данных диспетча.

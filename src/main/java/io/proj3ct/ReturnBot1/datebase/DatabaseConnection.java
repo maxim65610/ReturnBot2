@@ -23,6 +23,14 @@ public class DatabaseConnection {
         dbPassword = System.getenv("bdPassword");
     }
     /**
+     * Конструктор с заданными зависимостями для теста.
+     */
+    public DatabaseConnection(String dbUrl, String dbUser, String dbPassword) {
+        this.dbUrl = dbUrl;
+        this.dbPassword =dbPassword;
+        this.dbUser = dbUser;
+    }
+    /**
      * Метод для установления соединения с базой данных
      * @return объект Connection
      */
