@@ -20,7 +20,7 @@ public class NewDepartmentCommand implements Command{
      */
     public List<String> execute(long userId, String messageText, boolean flagForKeyboard) {
         List<String> response = new ArrayList<>();
-        if ("/new_department_data".equals(messageText) ||
+        if ("/newDepartmentData".equals(messageText) ||
                 (!logicForNewDepartmentData.getUserStatesForNewDepartment(userId).equals("0"))) {
             response.add(logicForNewDepartmentData.worksWithNewDepartment(messageText, userId));
         }
