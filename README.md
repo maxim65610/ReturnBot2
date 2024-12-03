@@ -65,6 +65,15 @@
 1.  подключиться через putty к серверу
 2. установить jdk, если он не установлен
 3. запустить сборку проекта через install
+   (mvn clear install)
 3. зайти в приложениe fileZilla и перенести на сервер папку проекта
-4. установить необходимые переменные, в окружение
+4. установить необходимые переменные, в окружение:
+   1. export bdPassword=""
+   2. export tgToken=""
+   3. bdUrl=""
+   4. export bdPassword=""
+   5. export bdUser=""
+   6. export mail=""
+   7. export passwordForMail ="""
+   7. export password=""
 5. запустить файл ReturnBot1-0.0.1-SNAPSHOT-shaded.jar
