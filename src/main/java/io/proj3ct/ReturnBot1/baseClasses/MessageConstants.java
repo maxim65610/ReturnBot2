@@ -202,6 +202,6 @@ public class MessageConstants {
      * Сообщение, подтверждающее успешное удаление факультета.
      */
     public static final String SUCCESSFUL_DELETE_DEPARTMENT_COMMAND_RESPONSE = "Факультет успешно удален";
-
+    public static final String UN_CORRECT_NUMBER_COMMAND_RESPONSE = "Вы ввели некорректно";
 
 }

@@ -4,8 +4,13 @@ import io.proj3ct.ReturnBot1.baseClasses.EnvironmentService;
 import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Логика для редактирования данных факультетов.
  * Этот класс обрабатывает состояние пользователей и управляет процессом редактирования факультетов.
@@ -23,7 +28,7 @@ public class LogicForEditDepartmentData {
     private DatabaseConnection databaseConnection = new DatabaseConnection();
     /** Объект для получения данных из переменных окружения. */
     private EnvironmentService environmentService = new EnvironmentService();
-
+    private  Map<Long, String> messageTextForUser = new HashMap<>();
     public LogicForEditDepartmentData(DatabaseConnection databaseConnection,DataForDepartment dataForDepartment,
                                       DepartmentsInfo departmentsInfo,
                                       KeyboardsData keyboardsData, EnvironmentService environmentService) {
@@ -75,6 +80,30 @@ public class LogicForEditDepartmentData {
         }
         return messageTextForUser;
     }
+
+    private boolean checkValidNumberForDelete(String messageTextForUser, String messageText){
+        List<Integer> numbers = new ArrayList<>();
+
+        // Регулярное выражение для извлечения чисел
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(messageTextForUser);
+
+        // Найдем все числа и добавим их в список
+        while (matcher.find()) {
+            numbers.add(Integer.parseInt(matcher.group()));
+        }
+
+        try {
+            int messageTextInt = Integer.parseInt(messageText);
+            if(numbers.contains(messageTextInt)){
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return true;
+        }
+        return true;
+        //
+    }
     /**
      * Обрабатывает команды пользователя для редактирования факультета.
      *
@@ -88,8 +117,13 @@ public class LogicForEditDepartmentData {
             userStatesForEditDepartment.put(userId, "awaiting_password");
             return MessageConstants.PASSWORD_COMMAND_RESPONSE;
         } else if ("awaiting_password".equals(currentState)) {
-            return checkValidPasswordInput(messageText, userId);
+            messageTextForUser.put(userId,checkValidPasswordInput(messageText, userId));
+            return messageTextForUser.get(userId);
         } else if ("awaiting_numberForEdit".equals(currentState)) {
+            if(checkValidNumberForDelete(messageTextForUser.get(userId), messageText)){
+                userStatesForEditDepartment.remove(userId);
+                return MessageConstants.UN_CORRECT_NUMBER_COMMAND_RESPONSE;
+            }
             dataForDepartment.setNumberForEditDepartment(userId, messageText);
             userStatesForEditDepartment.put(userId, "awaiting_newDepartment");
             return MessageConstants.NEW_DEPARTMENT_COMMAND_RESPONSE;

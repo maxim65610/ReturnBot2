@@ -88,7 +88,7 @@ class LogicForDeleteDepartmentTest {
         assertEquals(logicForDeleteDepartment.getUserStatesForDeleteDepartment(chatId),
                 "awaiting_numberForDelete");
 
-        String numberForDeleteDepartment = "4";
+        String numberForDeleteDepartment = "3";
         response = logicForDeleteDepartment.worksWithDeleteDepartment(numberForDeleteDepartment, chatId);
         expectedTextForMessage = MessageConstants.SUCCESSFUL_DELETE_DEPARTMENT_COMMAND_RESPONSE;
         assertEquals(expectedTextForMessage, response);
@@ -105,6 +105,32 @@ class LogicForDeleteDepartmentTest {
         when(mockEnvironmentService.getPassword()).thenReturn("correctPassword");
         String response = logicForDeleteDepartment.worksWithDeleteDepartment("unCorrectPassword", chatId);
         assertEquals(MessageConstants.BAD_PASSWORD_COMMAND_RESPONSE, response);
+        assertEquals("0", logicForDeleteDepartment.getUserStatesForDeleteDepartment(chatId));
+    }
+    @Test
+    void testWorksWithDeleteDepartment_unCorrectNumber(){
+        Long chatId = 123L;
+        String messageText = "/delete_department_data";
+        String response = logicForDeleteDepartment.worksWithDeleteDepartment(messageText, chatId);
+        assertEquals(MessageConstants.PASSWORD_COMMAND_RESPONSE, response);
+        assertEquals("awaiting_password", logicForDeleteDepartment.getUserStatesForDeleteDepartment(chatId));
+
+        String[] mockDepartments = {
+                "1 - Компьютерные Науки" + "\n" + "2 - Радиотехника" + "\n" + "3 - Прикладная информатика"
+        };
+        when(mockDepartmentsInfo.getAllNamesWithId()).thenReturn(mockDepartments);
+        when(mockEnvironmentService.getPassword()).thenReturn("correctPassword");
+        response = logicForDeleteDepartment.worksWithDeleteDepartment("correctPassword", chatId);
+        String expectedTextForMessage = MessageConstants.CORRECT_PASSWORD_AND_INSTITUTE_DELETE_COMMAND_RESPONSE + "\n"
+                + "1 - Компьютерные Науки" + "\n" + "2 - Радиотехника" + "\n" + "3 - Прикладная информатика" + "\n";
+        assertEquals(expectedTextForMessage, response);
+        assertEquals(logicForDeleteDepartment.getUserStatesForDeleteDepartment(chatId),
+                "awaiting_numberForDelete");
+
+        String numberForDeleteDepartment = "7";
+        response = logicForDeleteDepartment.worksWithDeleteDepartment(numberForDeleteDepartment, chatId);
+        expectedTextForMessage = MessageConstants.UN_CORRECT_NUMBER_COMMAND_RESPONSE;
+        assertEquals(expectedTextForMessage, response);
         assertEquals("0", logicForDeleteDepartment.getUserStatesForDeleteDepartment(chatId));
     }
 }

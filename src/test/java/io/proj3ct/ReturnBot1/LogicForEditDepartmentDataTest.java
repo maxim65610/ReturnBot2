@@ -98,7 +98,7 @@ class LogicForEditDepartmentDataTest {
         assertEquals("awaiting_numberForEdit", logicForEditDepartmentData.getUserStatesForEditDepartment(chatId));
 
         // Ввод номера департамента для редактирования
-        response = logicForEditDepartmentData.worksWithEditDepartment("4", chatId);
+        response = logicForEditDepartmentData.worksWithEditDepartment("3", chatId);
         expectedTextForMessage = MessageConstants.NEW_DEPARTMENT_COMMAND_RESPONSE;
         assertEquals(expectedTextForMessage, response);
         assertEquals("awaiting_newDepartment", logicForEditDepartmentData.getUserStatesForEditDepartment(chatId));
@@ -133,5 +133,34 @@ class LogicForEditDepartmentDataTest {
         String response = logicForEditDepartmentData.worksWithEditDepartment("unCorrectPassword", chatId);
         assertEquals(MessageConstants.BAD_PASSWORD_COMMAND_RESPONSE, response);
         assertEquals("0", logicForEditDepartmentData.getUserStatesForEditDepartment(chatId));
+    }
+    @Test
+    void testWorksWithEditDepartment_unCorrectNumber() {
+        Long chatId = 123L;
+        String messageText = "/edit_department_data";
+
+        // Проверка ответа на команду /edit_department_data
+        String response = logicForEditDepartmentData.worksWithEditDepartment(messageText, chatId);
+        assertEquals(MessageConstants.PASSWORD_COMMAND_RESPONSE, response);
+        assertEquals("awaiting_password", logicForEditDepartmentData.getUserStatesForEditDepartment(chatId));
+
+        // Мокаем список департаментов
+        String[] mockDepartments = {
+                "1 - Компьютерные Науки" + "\n" + "2 - Радиотехника" + "\n" + "3 - Прикладная информатика"
+        };
+        when(mockDepartmentsInfo.getAllNamesWithId()).thenReturn(mockDepartments);
+        when(mockEnvironmentService.getPassword()).thenReturn("correctPassword");
+
+        // Ввод правильного пароля
+        response = logicForEditDepartmentData.worksWithEditDepartment("correctPassword", chatId);
+        String expectedTextForMessage = MessageConstants.EDIT_DEPARTMENT_COMMAND_RESPONSE + "\n"
+                + "1 - Компьютерные Науки" + "\n" + "2 - Радиотехника" + "\n" + "3 - Прикладная информатика" + "\n";
+        assertEquals(expectedTextForMessage, response);
+        assertEquals("awaiting_numberForEdit", logicForEditDepartmentData.getUserStatesForEditDepartment(chatId));
+
+        // Ввод номера департамента для редактирования
+        response = logicForEditDepartmentData.worksWithEditDepartment("6", chatId);
+        expectedTextForMessage = MessageConstants.UN_CORRECT_NUMBER_COMMAND_RESPONSE;
+        assertEquals(expectedTextForMessage, response);
     }
 }
