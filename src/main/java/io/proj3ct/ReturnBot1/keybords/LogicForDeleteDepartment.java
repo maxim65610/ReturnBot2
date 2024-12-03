@@ -85,7 +85,7 @@ public class LogicForDeleteDepartment {
      */
     public String worksWithDeleteDepartment(String messageText, Long userId) {
         String currentState = userStatesForDeleteDepartment.get(userId);
-        if ("/delete_department_data".equals(messageText)) {
+        if ("/deleteDepartmentData".equals(messageText)) {
             userStatesForDeleteDepartment.put(userId, "awaiting_password");
             return MessageConstants.PASSWORD_COMMAND_RESPONSE;
         } else if ("awaiting_password".equals(currentState)) {

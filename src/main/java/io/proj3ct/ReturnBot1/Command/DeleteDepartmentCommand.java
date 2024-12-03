@@ -20,7 +20,7 @@ public class DeleteDepartmentCommand implements Command{
      */
     public List<String> execute(long userId, String messageText, boolean flagForKeyboard) {
         List<String> response = new ArrayList<>();
-        if ("/delete_department_data".equals(messageText) ||
+        if ("/deleteDepartmentData".equals(messageText) ||
                 (!logicForDeleteDepartment.getUserStatesForDeleteDepartment(userId).equals("0"))) {
             response.add(logicForDeleteDepartment.worksWithDeleteDepartment(messageText, userId));
         }

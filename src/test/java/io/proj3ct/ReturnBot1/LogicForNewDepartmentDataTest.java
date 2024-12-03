@@ -67,7 +67,7 @@ class LogicForNewDepartmentDataTest {
     @Test
     void worksWithNewDepartmentTest_correctPassword() {
         Long chatId = 123L;
-        String messageText = "/new_department_data";
+        String messageText = "/newDepartmentData";
 
         // Проверка ответа на команду /new_department_data
         String response = logicForNewDepartmentData.worksWithNewDepartment(messageText, chatId);
@@ -102,7 +102,7 @@ class LogicForNewDepartmentDataTest {
     @Test
     void worksWithNewDepartmentTest_unCorrectPassword() {
         Long chatId = 123L;
-        String messageText = "/new_department_data";
+        String messageText = "/newDepartmentData";
 
         // Проверка ответа на команду /new_department_data
         logicForNewDepartmentData.worksWithNewDepartment(messageText, chatId);

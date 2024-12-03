@@ -71,7 +71,7 @@ class LogicForDeleteDepartmentTest {
     @Test
     void testWorksWithDeleteDepartment_correctPassword(){
         Long chatId = 123L;
-        String messageText = "/delete_department_data";
+        String messageText = "/deleteDepartmentData";
         String response = logicForDeleteDepartment.worksWithDeleteDepartment(messageText, chatId);
         assertEquals(MessageConstants.PASSWORD_COMMAND_RESPONSE, response);
         assertEquals("awaiting_password", logicForDeleteDepartment.getUserStatesForDeleteDepartment(chatId));
@@ -100,7 +100,7 @@ class LogicForDeleteDepartmentTest {
     @Test
     void testWorksWithDeleteDepartment_unCorrectPassword(){
         Long chatId = 123L;
-        String messageText = "/delete_department_data";
+        String messageText = "/deleteDepartmentData";
         logicForDeleteDepartment.worksWithDeleteDepartment(messageText, chatId);
         when(mockEnvironmentService.getPassword()).thenReturn("correctPassword");
         String response = logicForDeleteDepartment.worksWithDeleteDepartment("unCorrectPassword", chatId);

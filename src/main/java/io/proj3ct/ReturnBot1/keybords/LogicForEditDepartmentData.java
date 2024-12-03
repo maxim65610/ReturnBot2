@@ -84,7 +84,7 @@ public class LogicForEditDepartmentData {
      */
     public String worksWithEditDepartment(String messageText, Long userId) {
         String currentState = userStatesForEditDepartment.get(userId);
-        if ("/edit_department_data".equals(messageText)) {
+        if ("/editDepartmentData".equals(messageText)) {
             userStatesForEditDepartment.put(userId, "awaiting_password");
             return MessageConstants.PASSWORD_COMMAND_RESPONSE;
         } else if ("awaiting_password".equals(currentState)) {

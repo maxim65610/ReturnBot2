@@ -64,7 +64,7 @@ public class LogicForNewDepartmentData {
      */
     public String worksWithNewDepartment(String messageText, Long userId) {
         String currentState = userStatesForNewDepartment.get(userId);
-        if ("/new_department_data".equals(messageText)) {
+        if ("/newDepartmentData".equals(messageText)) {
             userStatesForNewDepartment.put(userId, "awaiting_password");
             return MessageConstants.PASSWORD_COMMAND_RESPONSE;
         } else if ("awaiting_password".equals(currentState)) {

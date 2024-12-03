@@ -45,7 +45,7 @@ class CommandTests {
         DeleteDepartmentCommand command = new DeleteDepartmentCommand();
 
         long userId = 123L;
-        String messageText = "/delete_department_data";
+        String messageText = "/deleteDepartmentData";
         boolean flagForKeyboard = false;
 
         // Настройка мока
@@ -72,7 +72,7 @@ class CommandTests {
         EditDepartmentCommand command = new EditDepartmentCommand();
 
         long userId = 123L;
-        String messageText = "/edit_department_data";
+        String messageText = "/editDepartmentData";
         boolean flagForKeyboard = false;
 
         // Настройка мока
