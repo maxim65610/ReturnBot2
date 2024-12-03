@@ -20,7 +20,7 @@ import java.util.Map;
  * включая проверку прав доступа, состояния пользователя.
  */
 public class LogicForNewDispatch {
-    /**Форматтер даты, используемый для преобразования даты в строку в формате "дд.ММ.гггг".*/
+    /** Форматтер даты, используемый для преобразования даты в строку в формате "дд.ММ.гггг".*/
     private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     /** Словарь, который хранит состояния пользователей для создания новой рассылки.*/
     private final Map<Long, String> userStatesForNewDispatch = new HashMap<>();

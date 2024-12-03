@@ -5,8 +5,19 @@ import io.proj3ct.ReturnBot1.keybords.LogicForEditDepartmentData;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Команда для редактирования данных Department
+ */
 public class EditDepartmentCommand implements Command{
     private final LogicForEditDepartmentData logicForEditDepartmentData = new LogicForEditDepartmentData();
+    /**
+     * Выполняет редактирование данных отдела.
+     *
+     * @param userId Идентификатор пользователя.
+     * @param messageText Текст команды.
+     * @param flagForKeyboard Флаг для отображения клавиатуры.
+     * @return Список ответов на команду.
+     */
     public List<String> execute(long userId, String messageText, boolean flagForKeyboard) {
         List<String> response = new ArrayList<>();
         if ("/edit_department_data".equals(messageText) ||

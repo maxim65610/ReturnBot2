@@ -63,8 +63,16 @@
 
 Инструкция к deploy бота:
 1.  подключиться через putty к серверу
-2. установить jdk, если он не установлен
+2. установить jdk, если он не установлен(apt install openjdk-21-jdk)
 3. запустить сборку проекта через install
+   (mvn clear install)
 3. зайти в приложениe fileZilla и перенести на сервер папку проекта
-4. установить необходимые переменные, в окружение
-5. запустить файл ReturnBot1-0.0.1-SNAPSHOT-shaded.jar
+4. установить необходимые переменные, в окружение:
+   1. export tgToken=""
+   2. export bdUrl=""
+   3. export bdPassword=""
+   4. export bdUser=""
+   5. export mail=""
+   6. export passwordForMail ="""
+   7. export password=""
+5. запустить jar файл (java -jar ReturnBot1-0.0.1-SNAPSHOT-shaded.jar)
