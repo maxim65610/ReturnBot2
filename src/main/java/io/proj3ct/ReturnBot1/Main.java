@@ -1,11 +1,6 @@
 package io.proj3ct.ReturnBot1;
 
-
 import org.telegram.telegrambots.longpolling.TelegramBotsLongPollingApplication;
-
-import java.util.HashMap;
-import java.util.Map;
-
 
 /**
  * Главный класс приложения для инициализации и запуска Telegram-бота.

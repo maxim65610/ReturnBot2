@@ -61,7 +61,9 @@ public class DatebaseTables {
         String createDepartsInfoTableQuery = """
         CREATE TABLE IF NOT EXISTS DepartsInfo (
         id_depart text PRIMARY KEY, 
-        info text NOT NULL  
+        info text NOT NULL,
+        name text NOT NULL,
+        inst text NOT NULL  
         );""";
 
         try (Connection conn = databaseConnection.connect();
@@ -84,13 +86,39 @@ public class DatebaseTables {
         id_chat text PRIMARY KEY, 
         name text NOT NULL,
         surname text NOT NULL, 
-        school_class text NOT NULL,  
-        mail text NOT NULL
+        school_сlass text NOT NULL,  
+        mail text NOT NULL,
+        dispatch text NOT NULL,
+        year_end_school int NOT NULL,
+        department text NOT NULL
         );""";
 
         try (Connection conn = databaseConnection.connect();
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(registrationDataTable);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * Метод для создания таблицы DispatchDataTable в базе данных.
+     * Таблица предназначена для хранения данных о рассылках.
+     * Если таблица уже существует, она не будет создана повторно.
+     */
+    public void createDispatchDataTable() {
+        String dispatchDataTableQuery = """
+        CREATE TABLE IF NOT EXISTS DispatchDataTable (
+        id int PRIMARY KEY, 
+        text text NOT NULL,
+        time text NOT NULL, 
+        category text NOT NULL,  
+        department text NOT NULL
+        );""";
+
+        try (Connection conn = databaseConnection.connect();
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(dispatchDataTableQuery);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
             throw new RuntimeException(e);

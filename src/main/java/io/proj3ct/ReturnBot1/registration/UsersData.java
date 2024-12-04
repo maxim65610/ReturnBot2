@@ -22,19 +22,28 @@ public class UsersData {
     public void insertData(Long userId, DataUsersForRegistration dataUsersForRegistration
             , DatabaseConnection databaseConnection ) {
 
+        Integer year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+        String year_end = dataUsersForRegistration.getSchoolClassUser (userId);
+        year = year + 12 - Integer.parseInt(year_end) - 1;
+
         String dataRequest = "INSERT INTO RegistrationDataTable " +
-                "(id_chat, name, surname, school_class, mail) VALUES (?, ?, ?, ?, ?)";
+                "(id_chat, name, surname, school_сlass, mail, dispatch, " +
+                "year_end_school, department) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
 
             stmt.setString(1, userId.toString());
-            stmt.setString(2, dataUsersForRegistration.getNameUser(userId));
-            stmt.setString(3, dataUsersForRegistration.getSurnameUser(userId));
-            stmt.setString(4, dataUsersForRegistration.getSchoolClassUser(userId));
-            stmt.setString(5, dataUsersForRegistration.getMailUser(userId));
+            stmt.setString(2, dataUsersForRegistration.getNameUser (userId));
+            stmt.setString(3, dataUsersForRegistration.getSurnameUser (userId));
+            stmt.setString(4, dataUsersForRegistration.getSchoolClassUser (userId));
+            stmt.setString(5, dataUsersForRegistration.getMailUser (userId));
+            stmt.setString(6, "False");
+            stmt.setInt(7, year);
+            stmt.setString(8, "-");
+
             stmt.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка добавления данных: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -60,7 +69,7 @@ public class UsersData {
 
 
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка смены имени: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -86,7 +95,7 @@ public class UsersData {
 
         } catch (SQLException e) {
             // Обработка исключений
-            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка смены фамилии: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -100,7 +109,7 @@ public class UsersData {
             , DatabaseConnection databaseConnection, String schoolClass) {
 
         // SQL-запрос для обновления имени в таблице RegistrationDataTable по userId
-        String dataRequest = "UPDATE RegistrationDataTable SET school_class = ? WHERE id_chat = ?";
+        String dataRequest = "UPDATE RegistrationDataTable SET school_сlass = ? WHERE id_chat = ?";
 
         try (Connection conn = databaseConnection.connect();
              PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
@@ -112,7 +121,7 @@ public class UsersData {
 
         } catch (SQLException e) {
             // Обработка исключений
-            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка смены класса: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -139,7 +148,7 @@ public class UsersData {
 
         } catch (SQLException e) {
             // Обработка исключений
-            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка смены почты: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -168,7 +177,7 @@ public class UsersData {
             }
 
         } catch (SQLException e) {
-              logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+              logger.log(Level.SEVERE, "Ошибка: " + e.getMessage(), e);
               throw new RuntimeException(e);
         }
     }
@@ -189,7 +198,7 @@ public class UsersData {
              stmt.executeUpdate();
 
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка удаления данных: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
@@ -209,7 +218,7 @@ public class UsersData {
             if (rs.next()) {
                 String name = rs.getString("name");
                 String surname = rs.getString("surname");
-                String schoolClass = rs.getString("school_class");
+                String schoolClass = rs.getString("school_сlass");
                 String mail = rs.getString("mail");
                 return "Ваше имя: " + name +
                         "\nВаша фамилия: " + surname +
@@ -217,7 +226,7 @@ public class UsersData {
                         "\nВаша почта: " + mail;
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
         return null;
@@ -240,9 +249,49 @@ public class UsersData {
                 return rs.getString("mail");
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Ошибка создания таблицы: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Ошибка: " + e.getMessage(), e);
             throw new RuntimeException(e);
         }
         return null;
     }
+
+    /**
+     * Метод для изменения статуса dispatch на "True" в базе данных.
+     *
+     * @param userId идентификатор пользователя.
+     * @param databaseConnection объект для подключения к базе данных.
+     */
+    public void changeDispatchStatusOn(Long userId, DatabaseConnection databaseConnection){
+        String dataRequest = "UPDATE RegistrationDataTable SET dispatch = ? WHERE id_chat = ?";
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
+
+            stmt.setString(1, "True");
+            stmt.setString(2, userId.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Ошибка: " + e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * Метод для изменения статуса dispatch на "False" в базе данных.
+     *
+     * @param userId идентификатор пользователя.
+     * @param databaseConnection объект для подключения к базе данных.
+     */
+    public void changeDispatchStatusOff(Long userId, DatabaseConnection databaseConnection){
+        String dataRequest = "UPDATE RegistrationDataTable SET dispatch = ? WHERE id_chat = ?";
+        try (Connection conn = databaseConnection.connect();
+             PreparedStatement stmt = conn.prepareStatement(dataRequest)) {
+
+            stmt.setString(1, "False");
+            stmt.setString(2, userId.toString());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Ошибка: " + e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
+
 }

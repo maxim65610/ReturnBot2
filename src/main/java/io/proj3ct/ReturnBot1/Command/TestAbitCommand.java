@@ -1,6 +1,6 @@
 package io.proj3ct.ReturnBot1.Command;
 
-import io.proj3ct.ReturnBot1.departmentsAndTest.LogicForTestABI;
+import io.proj3ct.ReturnBot1.testAbit.LogicForTestABI;
 import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1.departmentsAndTest;
+package io.proj3ct.ReturnBot1.testAbit;
 
 import io.proj3ct.ReturnBot1.datebase.DatabaseConnection;
 import io.proj3ct.ReturnBot1.datebase.DatebaseTables;
@@ -13,6 +13,19 @@ import java.sql.SQLException;
 public class RetrieveData {
     private DatabaseConnection databaseConnection = new DatabaseConnection();
     private DatebaseTables datebaseTables = new DatebaseTables(databaseConnection);
+    /**
+     * Дефолтный конструктор.
+     */
+    public RetrieveData() {
+    }
+    /**
+     * Конструктор с заданными зависимостями.
+     */
+    public RetrieveData(DatabaseConnection databaseConnection, DatebaseTables datebaseTables) {
+        this.databaseConnection = databaseConnection;
+        this.datebaseTables = datebaseTables;
+    }
+
     /**
      * Метод для извлечения строки данных из таблицы AnswersData по id_question
      * @param id идентификатор строки

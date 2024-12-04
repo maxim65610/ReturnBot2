@@ -1,4 +1,4 @@
-package io.proj3ct.ReturnBot1.departmentsAndTest;
+package io.proj3ct.ReturnBot1.testAbit;
 
 import io.proj3ct.ReturnBot1.baseClasses.MessageConstants;
 
